@@ -1,0 +1,45 @@
+.chat-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+  
+.messages {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+  
+.user-msg {
+    text-align: right;
+    color: blue;
+}
+  
+.assistant-msg {
+    text-align: left;
+    color: green;
+}
+  
+.input-area {
+    display: flex;
+  
+    input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+  
+    button {
+        padding: 10px 20px;
+        margin-left: 10px;
+        border: none;
+        background-color: #28a745;
+        color: white;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+}

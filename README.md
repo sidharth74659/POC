@@ -5,7 +5,7 @@ Check:
 - [x] Step 2: Implementing the MCP Server
 - [x] Step 3: Building the MCP Client
 - [x] Step 4: Integrating with an LLM
-- [ ] Step 5: Building a Frontend Chat Interface
+- [x] Step 5: Building a Frontend Chat Interface
 
 Sample Chat Interface:
 
