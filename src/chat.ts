@@ -1,7 +1,7 @@
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import OpenAI from "openai";
 import readline from "readline";
-import { OPENAI_API_KEY } from "../env.constants";
+import { OPENAI_API_KEY } from "../config.constants";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 
 // Initialize OpenAI client
