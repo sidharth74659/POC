@@ -1,3 +1,76 @@
+# Claude Todo MCP Server
+
+This is a simple MCP (Model Context Protocol) server that provides todo list functionality for Claude Desktop.
+
+## Features
+
+- Add todo items
+- List todo items
+- Delete todo items
+
+## Setup Instructions
+
+### For Claude Desktop
+
+1. Open Claude Desktop
+2. Go to Settings > Developer > Edit Config
+3. Add the following configuration:
+
+```json
+{
+  "mcpServers": {
+    "todo-mcp": {
+      "command": "node",
+      "args": ["claude-mcp.js"]
+    }
+  }
+}
+```
+
+4. Save and restart Claude Desktop
+5. You should now see "Claude Todo MCP" available in Claude Desktop
+
+### For Cursor
+
+1. Open Cursor IDE
+2. Go to Settings > MCP
+3. Click "Add Server"
+4. Add the following configuration:
+
+```json
+{
+  "mcpServers": {
+    "todo-mcp": {
+      "command": "node",
+      "args": ["claude-mcp.js"]
+    }
+  }
+}
+```
+
+5. Click "Add"
+
+## Usage
+
+You can use natural language to manage your todo list:
+
+- "Add 'Buy groceries' to my todo list"
+- "Show me my todo list"
+- "Delete 'Buy groceries' from my todo list"
+
+## Development
+
+To run the server locally:
+
+```
+node claude-mcp.js
+```
+
+## Requirements
+
+- Node.js v14 or later
+- @modelcontextprotocol/sdk package
+
 Check:
 - node_modules/@modelcontextprotocol/sdk/README.md
 
