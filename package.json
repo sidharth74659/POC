@@ -1,13 +1,19 @@
 {
-  "name": "with-datastax",
+  "name": "minimal-chatbot",
   "version": "1.0.0",
-  "description": "A clean, minimal chatbot interface with a lightweight Node.js backend that connects to DataStax Astra's LangFlow API for responses.",
+  "description": "A minimal chatbot that uses DataStax Astra's LangFlow API",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
 }
