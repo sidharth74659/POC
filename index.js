@@ -2,7 +2,7 @@ const http = require('http');
 const url = require('url');
 const https = require('https');
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // DataStax Astra API configuration
 const ASTRA_API_URL = 'api.langflow.astra.datastax.com';
@@ -61,13 +61,21 @@ function queryAstraAPI(question, sessionId, apiKey) {
 const server = http.createServer((req, res) => {
   // Set CORS headers to allow requests from any origin
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
     res.end();
+    return;
+  }
+
+  // Add a simple health check endpoint
+  if (req.method === 'GET' && req.url === '/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok' }));
     return;
   }
 
@@ -118,7 +126,7 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ error: 'Invalid JSON format' }));
       }
     });
-  } else {
+  } else if (req.url !== '/health') {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Not found' }));
   }
