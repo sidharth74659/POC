@@ -1,3 +1,9 @@
+
+```
+node --loader ts-node/esm src/index.ts
+```
+---
+
 # Claude Todo MCP Server
 
 This is a simple MCP (Model Context Protocol) server that provides todo list functionality for Claude Desktop.
