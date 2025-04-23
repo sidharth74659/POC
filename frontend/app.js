@@ -8,7 +8,8 @@ const saveApiKeyButton = document.getElementById('save-api-key');
 const apiStatusValue = document.getElementById('api-status-value');
 
 // Server endpoint
-const SERVER_URL = 'http://localhost:3000/ask';
+// const SERVER_URL = 'http://localhost:3000/ask';
+const SERVER_URL = 'https://poc-0rm7.onrender.com/ask';
 const API_KEY_STORAGE_KEY = 'astra_api_key';
 
 // Request state tracking
