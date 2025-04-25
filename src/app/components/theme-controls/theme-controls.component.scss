@@ -1,0 +1,19 @@
+.theme-controls {
+  padding: 1rem;
+  
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: var(--c-acc-text-primary);
+  }
+  
+  app-button {
+    display: block;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+  
+  .actions {
+    margin-top: 2rem;
+  }
+}

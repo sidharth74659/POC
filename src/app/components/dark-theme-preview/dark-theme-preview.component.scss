@@ -1,0 +1,24 @@
+.dark-theme-preview {
+  padding: 1rem;
+  
+  h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--d-c-acc-text-primary);
+  }
+  
+  p {
+    color: var(--d-c-acc-text-primary);
+    margin-bottom: 1rem;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .list-items {
+    margin-top: 1.5rem;
+  }
+}

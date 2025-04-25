@@ -1,0 +1,26 @@
+.color-token-viewer {
+  margin-top: 2rem;
+  
+  h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--c-acc-text-primary);
+  }
+  
+  .token-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .color-token {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+}

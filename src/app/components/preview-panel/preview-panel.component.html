@@ -1,0 +1,38 @@
+<div class="preview-panel">
+  <div class="button-group">
+    <app-button variant="primary">Primary</app-button>
+    <app-button variant="secondary">Secondary</app-button>
+    <app-button variant="tertiary">Tertiary</app-button>
+  </div>
+  
+  <app-card variant="notice">
+    <h3>Notice on app background</h3>
+  </app-card>
+  
+  <app-card>
+    <h3>Notice on card</h3>
+    <div class="button-group">
+      <app-button variant="primary">Primary</app-button>
+      <app-button variant="secondary">Secondary</app-button>
+      <app-button variant="tertiary">Tertiary</app-button>
+    </div>
+    
+    <p>This text contains <a href="#" class="preview-link">a preview link</a>. And here is some more text just to test its behavior.</p>
+    
+    <p>Another chunk of text.</p>
+    
+    <div class="button-group">
+      <app-button variant="primary">Primary</app-button>
+      <app-button variant="secondary">Secondary</app-button>
+      <app-button variant="tertiary">Tertiary</app-button>
+    </div>
+  </app-card>
+  
+  <div class="list-items">
+    @for (item of items; track item.id) {
+      <div class="list-item" [class.selected]="item.selected">
+        {{ item.text }}
+      </div>
+    }
+  </div>
+</div>

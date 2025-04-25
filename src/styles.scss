@@ -1,1 +1,251 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  // Base colors
+  --c-acc-base: hsl(327, 100%, 50%);
+  --c-acc-app-bg: hsl(0, 100%, 97%);
+  --c-acc-surface-normal: hsl(0, 100%, 97%);
+  --c-acc-surface-hover: hsl(327, 30%, 95%);
+  --c-acc-surface-active: hsl(327, 30%, 92%);
+  --c-acc-divider: hsl(327, 30%, 90%);
+  --c-acc-text-secondary: hsl(327, 80%, 50%);
+  --c-acc-text-primary: hsl(327, 100%, 10%);
+  --c-acc-btn-normal: hsl(327, 80%, 50%);
+  --c-acc-btn-hover: hsl(327, 80%, 45%);
+  --c-acc-btn-active: hsl(327, 80%, 40%);
+  --c-acc-btn-text: hsl(0, 0%, 100%);
+
+  // Dark theme variables
+  --d-c-acc-base: hsl(327, 100%, 50%);
+  --d-c-acc-app-bg: hsl(327, 30%, 15%);
+  --d-c-acc-surface-normal: hsl(327, 20%, 18%);
+  --d-c-acc-surface-hover: hsl(327, 20%, 22%);
+  --d-c-acc-surface-active: hsl(327, 20%, 25%);
+  --d-c-acc-divider: hsl(327, 20%, 30%);
+  --d-c-acc-text-secondary: hsl(327, 80%, 70%);
+  --d-c-acc-text-primary: hsl(0, 0%, 100%);
+  --d-c-acc-btn-normal: hsl(327, 70%, 50%);
+  --d-c-acc-btn-hover: hsl(327, 70%, 45%);
+  --d-c-acc-btn-active: hsl(327, 70%, 40%);
+  --d-c-acc-btn-text: hsl(0, 0%, 100%);
+
+  // Theme configuration
+  --btn-contrast: 7;
+  --hue: 327;
+  --hue-shift: 80;
+  --main-chroma: 0.01;
+  --accent-chroma: 0.3;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.panel {
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+// Left panel
+.theme-controls-panel {
+  flex: 1;
+  background-color: var(--c-acc-app-bg);
+  border-right: 1px solid var(--c-acc-divider);
+}
+
+// Middle panel
+.preview-panel {
+  flex: 2;
+  background-color: var(--c-acc-app-bg);
+}
+
+// Right panel
+.dark-theme-panel {
+  flex: 2;
+  background-color: var(--d-c-acc-app-bg);
+  color: var(--d-c-acc-text-primary);
+}
+
+// Common components
+.slider-container {
+  margin-bottom: 1.5rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    
+    span {
+      font-weight: normal;
+      color: var(--c-acc-text-secondary);
+    }
+  }
+  
+  input[type="range"] {
+    width: 100%;
+    background-color: var(--c-acc-surface-normal);
+  }
+}
+
+.btn {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &.primary {
+    background-color: var(--c-acc-btn-normal);
+    color: var(--c-acc-btn-text);
+    
+    &:hover {
+      background-color: var(--c-acc-btn-hover);
+    }
+    
+    &:active {
+      background-color: var(--c-acc-btn-active);
+    }
+  }
+  
+  &.secondary {
+    background-color: transparent;
+    color: var(--c-acc-text-secondary);
+    border: 1px solid var(--c-acc-text-secondary);
+    
+    &:hover {
+      background-color: var(--c-acc-surface-hover);
+    }
+    
+    &:active {
+      background-color: var(--c-acc-surface-active);
+    }
+  }
+  
+  &.tertiary {
+    background-color: transparent;
+    color: var(--c-acc-text-secondary);
+    
+    &:hover {
+      background-color: var(--c-acc-surface-hover);
+    }
+    
+    &:active {
+      background-color: var(--c-acc-surface-active);
+    }
+  }
+}
+
+.dark {
+  .btn {
+    &.primary {
+      background-color: var(--d-c-acc-btn-normal);
+      color: var(--d-c-acc-btn-text);
+      
+      &:hover {
+        background-color: var(--d-c-acc-btn-hover);
+      }
+      
+      &:active {
+        background-color: var(--d-c-acc-btn-active);
+      }
+    }
+    
+    &.secondary {
+      color: var(--d-c-acc-text-secondary);
+      border: 1px solid var(--d-c-acc-text-secondary);
+      
+      &:hover {
+        background-color: var(--d-c-acc-surface-hover);
+      }
+      
+      &:active {
+        background-color: var(--d-c-acc-surface-active);
+      }
+    }
+    
+    &.tertiary {
+      color: var(--d-c-acc-text-secondary);
+      
+      &:hover {
+        background-color: var(--d-c-acc-surface-hover);
+      }
+      
+      &:active {
+        background-color: var(--d-c-acc-surface-active);
+      }
+    }
+  }
+}
+
+.card {
+  background-color: var(--c-acc-surface-normal);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  
+  &.notice {
+    background-color: var(--c-acc-surface-hover);
+  }
+}
+
+.dark .card {
+  background-color: var(--d-c-acc-surface-normal);
+  
+  &.notice {
+    background-color: var(--d-c-acc-surface-hover);
+  }
+}
+
+.list-item {
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  background-color: var(--c-acc-surface-normal);
+  
+  &.selected {
+    background-color: var(--c-acc-surface-active);
+  }
+}
+
+.dark .list-item {
+  background-color: var(--d-c-acc-surface-normal);
+  
+  &.selected {
+    background-color: var(--d-c-acc-surface-active);
+  }
+}
+
+a.preview-link {
+  color: var(--c-acc-text-secondary);
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.dark a.preview-link {
+  color: var(--d-c-acc-text-secondary);
+}
+
+.color-token {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
