@@ -1,0 +1,172 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## Summary
+
+This implementation plan provides a comprehensive, step-by-step guide to integrate Storybook into an existing Angular project, covering prerequisites, installation, configuration, story authoring, addon setup, visual regression testing, CI/CD integration, hosting, and maintenance of your UI library ([blog.logrocket.com](mdc:https:/blog.logrocket.com/storybook-js-adoption-guide/?utm_source=chatgpt.com)).
+
+## Prerequisites
+
+- **Angular CLI project** (v12 or higher) set up and running; Storybook’s Angular support leverages the Ivy pipeline introduced in Angular 9, with tighter CLI integration in Angular 12+ ([storybook.js.org](mdc:https:/storybook.js.org/blog/storybook-for-angular-12/?utm_source=chatgpt.com)).
+- **Node.js** (LTS version, e.g., v14 or above) and **npm** (or **Yarn**) installed to manage dependencies ([storybook.js.org](mdc:https:/storybook.js.org/docs/get-started/frameworks/angular?utm_source=chatgpt.com)).
+- Basic familiarity with TypeScript, Angular modules, and component-driven development.
+
+## 1. Installation
+
+### 1.1 Initialize Storybook
+
+Run the Storybook init command in your project root to scaffold configuration files automatically:
+
+```bash
+npx storybook@latest init --type angular
+```
+
+This installs required dependencies, generates a `.storybook` folder, and updates your `package.json` with helper scripts ([angular.love](mdc:https:/angular.love/angular-storybook/?utm_source=chatgpt.com)).
+
+### 1.2 Verify Dependencies
+
+Ensure the following packages (minimum) are listed in `devDependencies`:
+
+- `@storybook/angular`
+- `@storybook/cli`
+- `@storybook/addon-essentials`
+
+These provide core framework support and common addons ([storybook.js.org](mdc:https:/storybook.js.org/docs/get-started/frameworks/angular?utm_source=chatgpt.com)).
+
+## 2. Configuration
+
+### 2.1 Configure Framework & Addons in `.storybook/main.js`
+
+Adjust your main configuration to specify the Angular framework and addons:
+
+```js
+module.exports = {
+  framework: "@storybook/angular",
+  stories: ["../src/**/*.stories.@(ts|mdx)"],
+  addons: [
+    "@storybook/addon-essentials",
+    "@storybook/addon-a11y",
+    "@storybook/addon-viewport",
+  ],
+};
+```
+
+This ensures Storybook picks up Angular components, generates controls, and enables accessibility and responsive testing addons ([blog.logrocket.com](mdc:https:/blog.logrocket.com/use-storybook-framework-api/?utm_source=chatgpt.com)).
+
+### 2.2 TypeScript & Webpack Overrides
+
+If your project uses custom Webpack or TypeScript paths, extend `main.js`:
+
+```js
+// .storybook/main.js
+module.exports = {
+  // ...
+  webpackFinal: async (config) => {
+    // merge Angular CLI aliases or custom loaders
+    return config;
+  },
+};
+```
+
+Use this hook to align Storybook’s build with your Angular CLI setup ([storybook.js.org](mdc:https:/storybook.js.org/docs/get-started/frameworks/angular?utm_source=chatgpt.com)).
+
+## 3. Writing Stories
+
+### 3.1 Story Format (CSF)
+
+Adopt the Component Story Format v3 with named exports:
+
+```ts
+// src/app/button/button.stories.ts
+import { Meta, Story } from "@storybook/angular";
+import { ButtonComponent } from "./button.component";
+
+export default {
+  title: "Atoms/Button",
+  component: ButtonComponent,
+  argTypes: { click: { action: "clicked" } },
+} as Meta<ButtonComponent>;
+
+export const Primary: Story<ButtonComponent> = (args) => ({ props: args });
+Primary.args = { label: "Primary Button" };
+```
+
+This pattern cleanly separates metadata and story definitions ([storybook.js.org](mdc:https:/storybook.js.org/tutorials/intro-to-storybook/angular/en/get-started/?utm_source=chatgpt.com)).
+
+### 3.2 Organizing Stories
+
+- Place `.stories.ts` files alongside their corresponding component directory (e.g., `src/app/button/button.stories.ts`) for cohesion and discoverability ([medium.com](mdc:https:/medium.com/knowledgelens/storybook-for-angular-87b22c585694?utm_source=chatgpt.com)).
+- Mirror your design system structure under `src/app` in the Storybook sidebar (Atoms → Molecules → Organisms).
+
+### 3.3 Documenting with MDX
+
+For richer docs, create `.stories.mdx` files:
+
+```mdx
+import { Meta, Story, Props } from "@storybook/addon-docs";
+import { CardComponent } from "./card.component";
+
+<Meta title="Molecules/Card" component={CardComponent} />
+
+# Card Component
+
+<Props of={CardComponent} />
+
+<Story name="Default">
+  <card-component title="Hello" description="World" />
+</Story>
+```
+
+MDX lets you embed Markdown, live previews, and auto-generated prop tables in one place ([medium.com](mdc:https:/medium.com/knowledgelens/storybook-for-angular-87b22c585694?utm_source=chatgpt.com)).
+
+## 4. Addons & Testing
+
+- **Controls & Actions**: Enable dynamic prop editing and event logging out of the box via `@storybook/addon-essentials` ([storybook.js.org](mdc:https:/storybook.js.org/tutorials/intro-to-storybook/angular/en/get-started/?utm_source=chatgpt.com)).
+- **Accessibility**: Use `@storybook/addon-a11y` to highlight ARIA issues in your stories ([storybook.js.org](mdc:https:/storybook.js.org/docs/get-started/frameworks/angular?utm_source=chatgpt.com)).
+- **Viewport**: Preview different screen sizes with `@storybook/addon-viewport` ([storybook.js.org](mdc:https:/storybook.js.org/docs/get-started/frameworks/angular?utm_source=chatgpt.com)).
+- **Visual Regression (Chromatic)**: Integrate Chromatic for automated UI snapshot testing and review workflows by adding the Chromatic GitHub Action and setting the `CHROMATIC_PROJECT_TOKEN` secret in your repo ([thinktecture.com](mdc:https:/www.thinktecture.com/en/angular/angular-component-visual-testing-with-storybook-and-chromatic/?utm_source=chatgpt.com)).
+
+## 5. CI/CD Integration
+
+Set up a pipeline step (e.g., GitHub Actions) to:
+
+1. Install dependencies (`npm ci`).
+2. Run `npm run build-storybook` to generate static assets.
+3. Deploy to a Storybook hosting service (GitHub Pages, Netlify, or Chromatic) ([chromatic.com](mdc:https:/www.chromatic.com/?utm_source=chatgpt.com)).
+
+Example GitHub Action snippet:
+
+```yaml
+- uses: actions/checkout@v3
+- uses: actions/setup-node@v3
+  with:
+    node-version: 16
+- run: npm ci
+- run: npm run build-storybook
+- uses: JamesIves/github-pages-deploy-action@v4
+  with:
+    folder: storybook-static
+```
+
+## 6. Publishing & Hosting
+
+- **Build**: `npm run build-storybook` outputs to `storybook-static` by default ([storybook.js.org](mdc:https:/storybook.js.org/docs/get-started/frameworks/angular?utm_source=chatgpt.com)).
+- **Host**: Deploy `storybook-static` to your preferred static site host:
+  - **GitHub Pages** via `gh-pages` or a GitHub Action.
+  - **Netlify/Vercel** by connecting your repository to automatically publish on merges to `main` ([github.com](mdc:https:/github.com/chromaui/intro-storybook-angular-template?utm_source=chatgpt.com)).
+  - **Chromatic** for integrated review and versioned hosting.
+
+## 7. Best Practices & Maintenance
+
+- **Version Alignment**: Tag Storybook with your UI library SemVer, so consumers know which version they’re viewing ([alfredo-perez.dev](mdc:https:/alfredo-perez.dev/storybook-setup-tips-for-your-angular-application?utm_source=chatgpt.com)).
+- **Keep Stories Focused**: One story per use case or state; avoid monolithic page-level stories in your core library ([blog.logrocket.com](mdc:https:/blog.logrocket.com/storybook-js-adoption-guide/?utm_source=chatgpt.com)).
+- **Automate Visual Tests**: Fail CI on unexpected UI diffs via Chromatic or Percy.
+- **Accessibility First**: Fix critical a11y warnings before merging stories.
+- **Documentation MDX**: Use `.stories.mdx` for design guidelines, code snippets, and `PropsTable` embeds.
+- **Periodic Cleanup**: Remove deprecated stories when components are retired or refactored.
+
+---
+
+_End of Storybook integration plan for Angular project._

@@ -1,0 +1,169 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## Blueprint Overview
+
+This blueprint outlines a structured, step-by-step plan to integrate Storybook into your Angular design system. We’ll start with high-level phases, break them into iterative chunks, refine those into implementation-ready tasks, and finally craft LLM prompts for each step. Each iteration ensures tasks are small enough to implement safely but substantial enough to make progress.
+
+Key references on Agile breakdown and prompt engineering informed this plan. We drew on Atlassian’s guidance on epics and stories ([community.atlassian.com](mdc:https:/community.atlassian.com/forums/Jira-articles/Best-Practices-for-Managing-Epics-and-Stories-in-Agile/ba-p/2857537?utm_source=chatgpt.com)), AgileSherpas’ work breakdown best practices ([agilesherpas.com](mdc:https:/www.agilesherpas.com/blog/agile-work-breakdown?utm_source=chatgpt.com)), and StoriesOnBoard’s story-splitting techniques ([storiesonboard.com](mdc:https:/storiesonboard.com/blog/9-techniques-for-splitting-user-stories?utm_source=chatgpt.com)) for task sizing. For LLM prompt engineering, we relied on iterative prompt-development insights ([towardsai.net](mdc:https:/towardsai.net/p/data-science/prompt-engineering-best-practices-iterative-prompt-development?utm_source=chatgpt.com), [restack.io](mdc:https:/www.restack.io/p/prompt-engineering-answer-code-generation-cat-ai?utm_source=chatgpt.com)).
+
+---
+
+## Level 1: High-Level Phases
+
+1. **Project Initialization** – Set up Storybook scaffold, validate environment.
+2. **Configuration & Core Setup** – Configure `.storybook` with Angular framework, TypeScript, and webpack overrides.
+3. **Story Authoring** – Write CSF stories for core UI atoms and molecules.
+4. **Docs & Addons** – Add MDX docs, Controls, Actions, A11y, and Viewport addons.
+5. **Visual Regression & CI/CD** – Integrate Chromatic or similar, and automate builds/deployments.
+6. **Hosting & Versioning** – Deploy static assets, align semver.
+7. **Maintenance & Cleanup** – Establish cleanup cadence, deprecate stories, update docs.
+
+---
+
+## Level 2: Iterative Chunks by Phase
+
+### Phase 1: Project Initialization
+
+- **Chunk 1.1**: Install Storybook CLI and dependencies.
+- **Chunk 1.2**: Verify Node, Angular version compatibility.
+- **Chunk 1.3**: Scaffold `.storybook` via `npx storybook init`.
+
+### Phase 2: Configuration & Core Setup
+
+- **Chunk 2.1**: Configure `main.js` with Angular framework and addon list.
+- **Chunk 2.2**: Set up `preview.js` for global decorators (e.g. theme provider).
+- **Chunk 2.3**: Apply webpackFinal for custom Angular CLI path aliases.
+
+### Phase 3: Story Authoring
+
+- **Chunk 3.1**: Create CSF stories for Button, Input, Card atoms.
+- **Chunk 3.2**: Write stories for Molecules (e.g. FormField, Modal).
+- **Chunk 3.3**: Validate prop tables and event actions with Controls & Actions addon.
+
+### Phase 4: Docs & Addons
+
+- **Chunk 4.1**: Add MDX stories for key components (Card, Modal) with `PropsTable`.
+- **Chunk 4.2**: Install and configure `@storybook/addon-a11y` and `@storybook/addon-viewport`.
+- **Chunk 4.3**: Write accessibility test stories (error states, keyboard nav).
+
+### Phase 5: Visual Regression & CI/CD
+
+- **Chunk 5.1**: Integrate Chromatic with GitHub Actions.
+- **Chunk 5.2**: Create GitHub Action to `build-storybook` and deploy static site.
+- **Chunk 5.3**: Review baseline snapshots and approve initial visual tests.
+
+### Phase 6: Hosting & Versioning
+
+- **Chunk 6.1**: Deploy `storybook-static` to GitHub Pages or Netlify.
+- **Chunk 6.2**: Tag Storybook site with UI library SemVer.
+- **Chunk 6.3**: Document hosting URL and update README.
+
+### Phase 7: Maintenance & Cleanup
+
+- **Chunk 7.1**: Schedule quarterly story review.
+- **Chunk 7.2**: Deprecate and archive unused stories.
+- **Chunk 7.3**: Update MDX docs for any breaking changes.
+
+---
+
+## Level 3: Task Breakdown (Example for Phase 1)
+
+**Chunk 1.1**: Install Storybook CLI and dependencies (estim. 2 hours).
+
+1. Confirm Node.js >= 14 & npm >= 6 versions (`node -v`, `npm -v`).
+2. Run `npm install --save-dev @storybook/angular @storybook/cli @storybook/addon-essentials`.
+3. Add npm scripts:
+   ```json
+   "scripts": {
+     "storybook": "start-storybook -p 6006",
+     "build-storybook": "build-storybook"
+   }
+   ```
+4. Commit `package.json` & lockfile.
+
+---
+
+## LLM Prompt Series for Code Generation
+
+Each prompt builds on the previous step, ensures context continuity, and ends by wiring generated code into the existing project. Follow iterative prompt-engineering best practices (provide context, expect small increments, refine prompts ([towardsai.net](mdc:https:/towardsai.net/p/data-science/prompt-engineering-best-practices-iterative-prompt-development?utm_source=chatgpt.com), [arxiv.org](mdc:https:/arxiv.org/abs/2503.11085?utm_source=chatgpt.com))).
+
+### Prompt 1: Scaffold Storybook in Angular
+
+```text
+You are an expert Angular developer integrating Storybook. The project uses Angular CLI v14,
+TypeScript, and default folder structure. Please:
+1. Verify Node.js (>=14) and npm (>=6) versions.
+2. Install @storybook/angular, @storybook/cli, @storybook/addon-essentials as devDependencies.
+3. Add npm scripts “storybook” and “build-storybook” to package.json.
+4. Provide the terminal commands and show the updated package.json section.
+Respond with code snippets only, no explanations.
+```
+
+### Prompt 2: Configure Storybook Main & Preview
+
+```text
+Project now has Storybook installed with scripts. Configure Storybook:
+1. Create .storybook/main.js with framework '@storybook/angular', stories pointing to src/**/*.stories.ts, and addons essentials, a11y, viewport.
+2. Create .storybook/preview.js to import global CSS and wrap all stories with the AppThemeProvider.
+Return the two JS files content.
+```
+
+### Prompt 3: Create CSF Stories for Atomic Components
+
+```text
+Storybook is configured. Author CSF v3 stories for ButtonComponent:
+- Title: 'Atoms/Button'
+- Display props: label (string) and disabled (boolean)
+- Log click events
+Generate src/app/button/button.stories.ts with imports, Meta, Story, and Primary, Disabled examples wired into existing ButtonComponent.
+```
+
+### Prompt 4: Add MDX Docs for Card Component
+
+```text
+Add documentation for CardComponent:
+1. Create src/app/card/card.stories.mdx
+2. Include Meta title 'Molecules/Card', import <Props>.
+3. Write a markdown overview of Card usage, embed <Props> table, and a default <Story> showing card with title and description.
+Provide the MDX content.
+```
+
+### Prompt 5: Integrate Accessibility & Viewport Addons
+
+```text
+Set up a11y and viewport tests:
+1. In .storybook/main.js, ensure '@storybook/addon-a11y' and '@storybook/addon-viewport' are in addons.
+2. Create a story for InputComponent error state demonstrating keyboard navigation and ARIA labels.
+Return updated main.js and src/app/input/input.stories.ts snippet.
+```
+
+### Prompt 6: Setup Chromatic CI for Visual Regression
+
+```text
+Integrate Chromatic:
+1. Add Chromatic GitHub Action in .github/workflows/storybook.yml to run on pull_request and push to main.
+2. Use CHROMATIC_PROJECT_TOKEN env var.
+3. Show YAML action snippet.
+```
+
+### Prompt 7: Deploy to GitHub Pages
+
+```text
+Deploy storybook-static to GitHub Pages:
+1. Add JamesIves/github-pages-deploy-action to .github/workflows/deploy.yml.
+2. Configure action to publish storybook-static from main branch.
+3. Provide the YAML configuration.
+```
+
+### Prompt 8: Document SemVer & Maintenance Instructions
+
+```text
+Finalize README.md:
+1. Add section 'Viewing Storybook' with URL to GitHub Pages.
+2. Note SemVer tagging process: tag releases with `vX.Y.Z` and update docs accordingly.
+3. Add quarterly cleanup checklist.
+Return updated README.md content.
+```
