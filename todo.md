@@ -29,20 +29,20 @@ Use this `todo.md` as a living checklist for your Angular Storybook integration.
   ```
 
 ### Commit Initial Changes
-- [ ] Commit `package.json`, lockfile (`package-lock.json` or `yarn.lock`), and `.storybook/` directory
+- [x] Commit `package.json`, lockfile (`package-lock.json` or `yarn.lock`), and `.storybook/` directory
 
 ---
 ## Phase 2: Configuration & Core Setup
 
 ### Main Configuration
-- [ ] Configure `.storybook/main.js`
-- [ ] Add story matching pattern (`'../src/**/*.stories.@(ts|mdx)'`)
-- [ ] Add addons: `@storybook/addon-essentials`, `@storybook/addon-a11y`, `@storybook/addon-viewport`
+- [x] Configure `.storybook/main.js`
+- [x] Add story matching pattern (`'../src/**/*.stories.@(ts|mdx)'`)
+- [x] Add addons: `@storybook/addon-essentials`, `@storybook/addon-a11y`, `@storybook/addon-viewport`
 
 ### Preview Setup
-- [ ] Configure `.storybook/preview.js`
-- [ ] Import global styles (e.g., `'../src/styles.css'`)
-- [ ] Define parameters (actions matching `^on[A-Z].*`, expanded controls)
+- [x] Configure `.storybook/preview.js`
+- [x] Import global styles (e.g., `'../src/styles.css'`)
+- [x] Define parameters (actions matching `^on[A-Z].*`, expanded controls)
 
 ### Webpack Overrides (Optional)
 - [ ] In `main.js`, add a `webpackFinal` function if needed for aliases/loaders
