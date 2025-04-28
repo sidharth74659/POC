@@ -13,6 +13,7 @@ venv/
 temp_uploads/
 # Directory for storing processed content from documents
 content/
+faiss_index/
 # Directory for storing figures and images related to the project
 figures/
 # Directory for storing project documentation files
@@ -25,3 +26,7 @@ docs/
 *.pkl
 # Pattern to ignore all files with .faiss extension, used for FAISS index files
 *.faiss
+
+# Zip Files
+**/*.zip
+.DS_Store
