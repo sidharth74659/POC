@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- Carefully analyze the design and the requirements in `./guides` folder.
+- Prepare a **task-based checklist** (in **Markdown format**) for everything that needs to be built(at `guides/implementation-checklist`).
+- **Categorize** the tasks properly (example: Theme Controls, Component Previews, Extensions, etc.)
+- **Sequence** the tasks in an effective development flow (basic to advanced features).
+
+🛠️ **Execution Process**:
+1. Start implementing **one feature at a time** from the checklist.
+2. After implementing a task, immediately **strike it off** in the Markdown checklist (using `~~strikethrough~~` syntax).
+3. Continue this process until the entire UI and functionality is completed.
+
+🏗️ **Additional Guidelines**:
+- Keep modularity in mind for future extensibility (like fonts, layout, responsiveness tuning).
+- Optimize the UI for real-time updates with minimal page reloads.
+- Make the styling to be of high standards while following UI/UX standards.
+- The flexibility or configurability should be of enterprise level.
+- Provide clean, component-based code.
+- Include comments or docstrings where necessary.

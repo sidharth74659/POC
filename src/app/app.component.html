@@ -1,12 +1,44 @@
 <div class="app-container">
-  <div class="panel theme-controls-panel">
+  <!-- Mobile navigation -->
+  <div class="mobile-nav" *ngIf="isMobile">
+    <button 
+      [class.active]="activePanel === 'theme-controls'"
+      (click)="setActivePanel('theme-controls')"
+    >
+      Controls
+    </button>
+    <button 
+      [class.active]="activePanel === 'preview-panel'"
+      (click)="setActivePanel('preview-panel')"
+    >
+      Light Theme
+    </button>
+    <button 
+      [class.active]="activePanel === 'dark-theme-panel'"
+      (click)="setActivePanel('dark-theme-panel')"
+    >
+      Dark Theme
+    </button>
+    <button 
+      [class.active]="activePanel === 'theme-management'"
+      (click)="setActivePanel('theme-management')"
+    >
+      Manage
+    </button>
+  </div>
+
+  <!-- Panels -->
+  <div class="panel theme-controls-panel" [class.active]="!isMobile || activePanel === 'theme-controls'">
     <app-theme-controls></app-theme-controls>
   </div>
-  <div class="panel preview-panel">
+  <div class="panel preview-panel" [class.active]="!isMobile || activePanel === 'preview-panel'">
     <app-preview-panel></app-preview-panel>
   </div>
-  <div class="panel dark-theme-panel">
+  <div class="panel dark-theme-panel" [class.active]="!isMobile || activePanel === 'dark-theme-panel'">
     <app-dark-theme-preview></app-dark-theme-preview>
+  </div>
+  <div class="panel theme-management-panel" [class.active]="!isMobile || activePanel === 'theme-management'">
+    <app-theme-management></app-theme-management>
   </div>
 </div>
 

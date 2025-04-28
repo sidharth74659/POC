@@ -5,7 +5,7 @@
     @for (token of colorTokens(); track token.name) {
       <div class="color-token" 
           [style.background-color]="token.value"
-          [style.color]="token.name.includes('btn-text') || token.name.includes('text-primary') ? '#fff' : '#000'"
+          [style.color]="token.textColor"
       >
         <span class="token-name">{{ token.name }}</span>
         <span class="token-value">{{ token.value }}</span>

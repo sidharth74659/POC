@@ -15,7 +15,11 @@
     [max]="10" 
     [step]="1" 
     (valueChange)="updateBtnContrast($event)"
-  ></app-slider>
+  >
+    <div class="slider-description">
+      Adjusts how much buttons stand out from the background. Higher values create darker, more contrasting buttons.
+    </div>
+  </app-slider>
   
   <app-slider 
     label="Hue" 
@@ -24,7 +28,11 @@
     [max]="359" 
     [step]="1" 
     (valueChange)="updateHue($event)"
-  ></app-slider>
+  >
+    <div class="slider-description">
+      Changes the main color of the theme. Try different values to completely change the color scheme.
+    </div>
+  </app-slider>
   
   <app-slider 
     label="Hue shift" 
@@ -33,7 +41,11 @@
     [max]="180" 
     [step]="1" 
     (valueChange)="updateHueShift($event)"
-  ></app-slider>
+  >
+    <div class="slider-description">
+      Creates a complementary color by shifting the main hue. Useful for creating pleasing color combinations.
+    </div>
+  </app-slider>
   
   <app-slider 
     label="Main chroma" 
@@ -42,7 +54,11 @@
     [max]="1" 
     [step]="0.01" 
     (valueChange)="updateMainChroma($event)"
-  ></app-slider>
+  >
+    <div class="slider-description">
+      Controls the color intensity of background elements. Lower values make backgrounds more neutral.
+    </div>
+  </app-slider>
   
   <app-slider 
     label="Accent chroma" 
@@ -51,7 +67,11 @@
     [max]="1" 
     [step]="0.01" 
     (valueChange)="updateAccentChroma($event)"
-  ></app-slider>
+  >
+    <div class="slider-description">
+      Adjusts the color intensity of interactive elements. Higher values create more vivid highlights.
+    </div>
+  </app-slider>
   
   <app-color-token-viewer></app-color-token-viewer>
   

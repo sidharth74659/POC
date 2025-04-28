@@ -1,0 +1,346 @@
+.theme-management {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: var(--font-family);
+  color: var(--text-color);
+}
+
+.management-section {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--heading-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+}
+
+.form-group {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  border: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &.primary {
+    background-color: var(--primary);
+    color: white;
+
+    &:hover {
+      background-color: var(--primary-dark);
+    }
+  }
+
+  &.secondary {
+    background-color: var(--accent);
+    color: white;
+
+    &:hover {
+      background-color: var(--accent-dark);
+    }
+  }
+
+  &.small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  &.delete {
+    background-color: var(--error);
+    color: white;
+    padding: 0.3rem 0.5rem;
+    border-radius: 50%;
+    font-size: 1rem;
+    line-height: 1;
+    min-width: 1.8rem;
+    height: 1.8rem;
+
+    &:hover {
+      background-color: var(--error-dark);
+    }
+  }
+
+  &.active {
+    background-color: var(--primary-dark);
+  }
+  
+  &.device-btn {
+    background-color: var(--surface-normal);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    
+    &:hover {
+      background-color: var(--surface-hover);
+    }
+    
+    &.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+  }
+}
+
+.saved-themes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.theme-item {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.75rem;
+  cursor: pointer;
+  position: relative;
+  background-color: var(--card-background);
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .theme-preview {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 0.5rem;
+
+    .color-sample {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+    }
+  }
+
+  .theme-info {
+    .theme-name {
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+  }
+
+  .btn.delete {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  &:hover .btn.delete {
+    opacity: 1;
+  }
+}
+
+.no-themes {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.error-message {
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: rgba(var(--error-rgb), 0.1);
+  color: var(--error);
+  font-size: 0.9rem;
+}
+
+.success-message {
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: rgba(var(--success-rgb), 0.1);
+  color: var(--success);
+  font-size: 0.9rem;
+}
+
+.accessibility-info {
+  margin-top: 1rem;
+
+  h4 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--heading-color);
+  }
+
+  .contrast-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+
+    th, td {
+      padding: 0.6rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      font-weight: 600;
+      background-color: var(--table-header-bg);
+    }
+
+    .pass {
+      color: var(--success);
+    }
+
+    .fail {
+      color: var(--error);
+    }
+  }
+
+  .accessibility-tips {
+    background-color: var(--info-bg);
+    border-radius: 6px;
+    padding: 1rem;
+
+    ul {
+      margin: 0;
+      padding-left: 1.5rem;
+
+      li {
+        margin-bottom: 0.5rem;
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+// Responsive Preview Styles
+.responsive-preview {
+  margin-top: 1rem;
+  
+  h4 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--heading-color);
+  }
+  
+  .device-selector {
+    margin-bottom: 1.5rem;
+    
+    .device-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  }
+  
+  .preview-container {
+    margin: 0 auto;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+    position: relative;
+    max-width: 100%;
+    
+    iframe {
+      border: none;
+      display: block;
+      background-color: white;
+    }
+  }
+  
+  .device-info {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    
+    p {
+      margin: 0.3rem 0;
+    }
+  }
+}
+
+// Responsive styles for theme management
+@media (max-width: 600px) {
+  .theme-management {
+    padding: 0.5rem;
+  }
+  
+  .management-section {
+    padding: 1rem;
+  }
+  
+  .saved-themes {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    
+    .btn {
+      width: 100%;
+    }
+  }
+  
+  .preview-container {
+    transform: scale(0.8);
+    transform-origin: top left;
+  }
+} 

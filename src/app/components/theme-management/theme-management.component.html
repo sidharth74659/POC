@@ -1,0 +1,132 @@
+<div class="theme-management">
+  <div class="management-section">
+    <h3>Current Theme</h3>
+    <div class="current-theme">
+      <div class="form-group">
+        <label for="themeName">Theme Name</label>
+        <input type="text" id="themeName" [(ngModel)]="themeName" placeholder="Enter theme name" class="form-control">
+      </div>
+      <div class="actions">
+        <button (click)="saveTheme()" class="btn primary">Save Theme</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="management-section">
+    <h3>Saved Themes</h3>
+    <div class="saved-themes">
+      <div *ngIf="savedThemes.length === 0" class="no-themes">
+        No saved themes yet
+      </div>
+      <div *ngFor="let theme of savedThemes" class="theme-item" (click)="loadTheme(theme.name)">
+        <div class="theme-preview">
+          <div class="color-sample" [style.background-color]="theme.colors.primary"></div>
+          <div class="color-sample" [style.background-color]="theme.colors.secondary"></div>
+          <div class="color-sample" [style.background-color]="theme.colors.backgroundColor"></div>
+        </div>
+        <div class="theme-info">
+          <span class="theme-name">{{ theme.name }}</span>
+        </div>
+        <button class="btn delete" (click)="deleteTheme(theme.name, $event)" title="Delete theme">×</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="management-section">
+    <h3>Export/Import</h3>
+    <div class="import-export">
+      <div class="actions">
+        <button (click)="exportThemeAsJson()" class="btn primary">Export as JSON</button>
+        <button (click)="exportThemeAsCss()" class="btn primary">Export as CSS</button>
+        <button (click)="triggerImportDialog()" class="btn secondary">Import Theme</button>
+        <input type="file" #importInput hidden accept=".json" (change)="handleImportFile($event)">
+      </div>
+      <div *ngIf="importError" class="error-message">{{ importError }}</div>
+      <div *ngIf="importSuccess" class="success-message">{{ importSuccess }}</div>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    </div>
+  </div>
+
+  <div class="management-section">
+    <h3>
+      <span>Accessibility Information</span>
+      <button (click)="toggleAccessibilityInfo()" class="btn small" [class.active]="showAccessibility">
+        {{ showAccessibility ? 'Hide' : 'Show' }}
+      </button>
+    </h3>
+    <div *ngIf="showAccessibility" class="accessibility-info">
+      <div class="contrast-info">
+        <h4>Color Contrast Ratios</h4>
+        <table class="contrast-table">
+          <thead>
+            <tr>
+              <th>Combination</th>
+              <th>Ratio</th>
+              <th>WCAG AA</th>
+              <th>WCAG AAA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let combo of contrastRatios">
+              <td>{{ combo.name }}</td>
+              <td>{{ combo.ratio.toFixed(2) }}</td>
+              <td [class.pass]="combo.passesAA" [class.fail]="!combo.passesAA">
+                {{ combo.passesAA ? 'Pass' : 'Fail' }}
+              </td>
+              <td [class.pass]="combo.passesAAA" [class.fail]="!combo.passesAAA">
+                {{ combo.passesAAA ? 'Pass' : 'Fail' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="accessibility-tips">
+        <h4>Accessibility Tips</h4>
+        <ul>
+          <li>WCAG AA requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text</li>
+          <li>WCAG AAA requires a contrast ratio of at least 7:1 for normal text and 4.5:1 for large text</li>
+          <li>Large text is defined as 18pt (24px) or 14pt (18.6px) bold and larger</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="management-section">
+    <h3>
+      <span>Responsive Design Preview</span>
+      <button (click)="toggleResponsivePreview()" class="btn small" [class.active]="showResponsivePreview">
+        {{ showResponsivePreview ? 'Hide' : 'Show' }}
+      </button>
+    </h3>
+    <div *ngIf="showResponsivePreview" class="responsive-preview">
+      <div class="device-selector">
+        <h4>Select Device Size</h4>
+        <div class="device-buttons">
+          <button 
+            *ngFor="let device of devices" 
+            (click)="selectDevice(device)"
+            class="btn device-btn" 
+            [class.active]="selectedDevice === device">
+            {{ device.name }}
+          </button>
+        </div>
+      </div>
+      
+      <div class="preview-container" [style.width.px]="selectedDevice.width" [style.height.px]="selectedDevice.height">
+        <iframe 
+          src="/" 
+          [style.width.px]="selectedDevice.width" 
+          [style.height.px]="selectedDevice.height"
+          [style.transform]="selectedDevice.scale < 1 ? 'scale(' + selectedDevice.scale + ')' : 'none'"
+          [style.transform-origin]="'top left'">
+        </iframe>
+      </div>
+      
+      <div class="device-info">
+        <p>Width: {{ selectedDevice.width }}px | Height: {{ selectedDevice.height }}px</p>
+        <p>Orientation: {{ selectedDevice.width > selectedDevice.height ? 'Landscape' : 'Portrait' }}</p>
+      </div>
+    </div>
+  </div>
+</div> 
