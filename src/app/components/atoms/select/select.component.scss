@@ -1,0 +1,86 @@
+@use 'src/styles/_tokens' as *;
+@use 'src/styles/_fonts' as *;
+
+.select {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  &__label {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    font-weight: $font-weight-regular;
+    color: $color-neutral-dark-font;
+    margin-bottom: 0.25rem;
+  }
+
+  &__container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    
+    &--error {
+      .select__field {
+        border-color: $color-danger;
+      }
+      
+      .select__arrow {
+        color: $color-danger;
+      }
+    }
+    
+    &--disabled {
+      .select__field {
+        background-color: $color-neutral-bg;
+        color: $color-neutral-light-font;
+        cursor: not-allowed;
+      }
+      
+      .select__arrow {
+        color: $color-neutral-light-font;
+      }
+    }
+  }
+
+  &__field {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    padding-right: 2.5rem; // Space for the arrow
+    border: 1px solid $color-neutral-textfield-border;
+    border-radius: 0.5rem;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    color: $color-neutral-dark-font;
+    background-color: $color-neutral-white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    
+    &:focus {
+      border-color: $color-primary-blue;
+      box-shadow: 0 0 0 2px rgba(48, 57, 146, 0.08);
+    }
+    
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &__arrow {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color-neutral-dark-font;
+    pointer-events: none;
+  }
+
+  &__error {
+    color: $color-danger;
+    font-size: $font-size-sm;
+    margin-top: 0.1rem;
+    font-family: $font-family-base;
+  }
+} 

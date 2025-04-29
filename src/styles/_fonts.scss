@@ -1,0 +1,25 @@
+// Kanit font import
+// @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400&display=swap');
+
+// Font family
+$font-family-base: 'Kanit', sans-serif;
+
+// Font sizes
+$font-size-xxl: 30px; // Form title
+$font-size-xl: 24px;  // Service title, toast title
+$font-size-lg: 20px;  // Field titles, CTA
+$font-size-md: 18px;  // Toast subtitle
+$font-size-base: 16px; // CTAs, Accordions
+$font-size-sm: 14px;  // Placeholders, icon labels
+
+// Font weights
+$font-weight-light: 300;
+$font-weight-regular: 400;
+
+// Utility classes
+.font-xxl { font-size: $font-size-xxl; font-weight: $font-weight-light; }
+.font-xl { font-size: $font-size-xl; font-weight: $font-weight-regular; }
+.font-lg { font-size: $font-size-lg; font-weight: $font-weight-light; }
+.font-md { font-size: $font-size-md; font-weight: $font-weight-light; }
+.font-base { font-size: $font-size-base; font-weight: $font-weight-regular; }
+.font-sm { font-size: $font-size-sm; font-weight: $font-weight-light; } 

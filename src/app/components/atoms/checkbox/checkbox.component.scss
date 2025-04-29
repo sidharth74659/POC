@@ -1,0 +1,70 @@
+@use 'src/styles/_tokens' as *;
+@use 'src/styles/_fonts' as *;
+// @use 'sass:color';
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  
+  &__input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 1px solid $color-neutral-textfield-border;
+    border-radius: 0.25rem;
+    background-color: $color-neutral-white;
+    cursor: pointer;
+    position: relative;
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(48, 57, 146, 0.08);
+      border-color: $color-primary-blue;
+    }
+    
+    &:checked {
+      background-color: $color-primary-blue;
+      border-color: $color-primary-blue;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        display: block;
+        top: 2px;
+        left: 5px;
+        width: 6px;
+        height: 10px;
+        border: solid $color-neutral-white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+    }
+  }
+  
+  &__label {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    font-weight: $font-weight-regular;
+    color: $color-neutral-dark-font;
+    cursor: pointer;
+  }
+  
+  &--disabled {
+    .checkbox__input {
+      background-color: $color-neutral-bg;
+      border-color: $color-neutral-textfield-border;
+      cursor: not-allowed;
+      
+      &:checked {
+        background-color: adjust($color-neutral-bg, 0, 0, -10%);
+      }
+    }
+    
+    .checkbox__label {
+      color: $color-neutral-light-font;
+      cursor: not-allowed;
+    }
+  }
+} 

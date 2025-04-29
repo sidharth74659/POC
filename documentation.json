@@ -2,6 +2,51 @@
     "pipes": [],
     "interfaces": [
         {
+            "name": "SelectOption",
+            "id": "interface-SelectOption-3a7f907b96f401072be49f313dcf7ccb69f7b588f9eeff5692d5eccdf53ad59d34a7ad6edc06cfae90aa827a84a9adffc9a8384ad7301c8fabd644c184ef08c4",
+            "file": "src/app/components/atoms/select/select.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { Component, Input, Output, EventEmitter } from '@angular/core';\nimport { CommonModule } from '@angular/common';\n\nexport interface SelectOption {\n  label: string;\n  value: string | number;\n  disabled?: boolean;\n}\n\n@Component({\n  selector: 'app-select',\n  standalone: true,\n  imports: [CommonModule],\n  template: `\n    <div class=\"select\">\n      <label *ngIf=\"label\" class=\"select__label\">{{ label }}</label>\n      <div class=\"select__container\" [ngClass]=\"{ 'select__container--error': error, 'select__container--disabled': disabled }\">\n        <select\n          class=\"select__field\"\n          [disabled]=\"disabled\"\n          (change)=\"onChange($event)\"\n          [attr.aria-invalid]=\"!!error\"\n          [attr.aria-describedby]=\"error ? 'select-error' : null\"\n        >\n          <option *ngIf=\"placeholder\" value=\"\" [disabled]=\"true\" [selected]=\"!value\">{{ placeholder }}</option>\n          <option \n            *ngFor=\"let option of options\" \n            [value]=\"option.value\" \n            [disabled]=\"option.disabled\"\n            [selected]=\"option.value === value\"\n          >\n            {{ option.label }}\n          </option>\n        </select>\n        <div class=\"select__arrow\">\n          <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <polyline points=\"6 9 12 15 18 9\"></polyline>\n          </svg>\n        </div>\n      </div>\n      <div *ngIf=\"error\" class=\"select__error\" id=\"select-error\">{{ error }}</div>\n    </div>\n  `,\n  styleUrls: ['./select.component.scss']\n})\nexport class SelectComponent {\n  @Input() label = '';\n  @Input() placeholder = '';\n  @Input() options: SelectOption[] = [];\n  @Input() value: string | number = '';\n  @Input() disabled = false;\n  @Input() error: string | null = null;\n  @Output() valueChange = new EventEmitter<string | number>();\n\n  onChange(event: Event) {\n    const target = event.target as HTMLSelectElement;\n    this.value = target.value;\n    this.valueChange.emit(this.value);\n  }\n} ",
+            "properties": [
+                {
+                    "name": "disabled",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": true,
+                    "description": "",
+                    "line": 7
+                },
+                {
+                    "name": "label",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 5
+                },
+                {
+                    "name": "value",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string | number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 6
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
             "name": "User",
             "id": "interface-User-d4821beac0e4a852e513391b7470981c4353fdd95a18628bb68136c8695b489ee15b926e2e5031bc26cf30e1508e0a362c3ee13a06734702b4d15af140e485d5",
             "file": "src/stories/user.ts",
@@ -89,7 +134,7 @@
         },
         {
             "name": "ButtonComponent",
-            "id": "component-ButtonComponent-d7bf0323e6da130e2609e2af0117b4a8d7cd874132206af50bf43dfc37044485fe50f2867ea76525730dd195b9b95a43802a12dadc6ad5cd7bf2faa07f19f0da",
+            "id": "component-ButtonComponent-28d56418986620104fbcaf9be32fb196622996ac259ce6c390daaec630089f230483f8a46839c397f885a59e54356a934a4352dadf380bf1dde46d84c043b43b",
             "file": "src/stories/button.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -98,7 +143,7 @@
             "providers": [],
             "selector": "storybook-button",
             "styleUrls": [
-                "./button.css"
+                "./button.scss"
             ],
             "styles": [],
             "template": " <button  type=\"button\"\n  (click)=\"onClick.emit($event)\"\n  [ngClass]=\"classes\"\n  [ngStyle]=\"{ 'background-color': backgroundColor }\"\n>\n  {{ label }}\n</button>",
@@ -123,16 +168,16 @@
                     "deprecationMessage": "",
                     "jsdoctags": [
                         {
-                            "pos": 760,
-                            "end": 773,
+                            "pos": 761,
+                            "end": 774,
                             "kind": 327,
                             "id": 0,
                             "flags": 16842752,
                             "modifierFlagsCache": 0,
                             "transformFlags": 0,
                             "tagName": {
-                                "pos": 761,
-                                "end": 769,
+                                "pos": 762,
+                                "end": 770,
                                 "kind": 80,
                                 "id": 0,
                                 "flags": 16842752,
@@ -199,12 +244,12 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { Component, Input, Output, EventEmitter } from '@angular/core';\n\n@Component({\n  selector: 'storybook-button',\n  standalone: true,\n  imports: [CommonModule],\n  template: ` <button\n  type=\"button\"\n  (click)=\"onClick.emit($event)\"\n  [ngClass]=\"classes\"\n  [ngStyle]=\"{ 'background-color': backgroundColor }\"\n>\n  {{ label }}\n</button>`,\n  styleUrls: ['./button.css'],\n})\nexport class ButtonComponent {\n  /** Is this the principal call to action on the page? */\n  @Input()\n  primary = false;\n\n  /** What background color to use */\n  @Input()\n  backgroundColor?: string;\n\n  /** How large should the button be? */\n  @Input()\n  size: 'small' | 'medium' | 'large' = 'medium';\n\n  /**\n   * Button contents\n   *\n   * @required\n   */\n  @Input()\n  label = 'Button';\n\n  /** Optional click handler */\n  @Output()\n  onClick = new EventEmitter<Event>();\n\n  public get classes(): string[] {\n    const mode = this.primary ? 'storybook-button--primary' : 'storybook-button--secondary';\n\n    return ['storybook-button', `storybook-button--${this.size}`, mode];\n  }\n}\n",
+            "sourceCode": "import { CommonModule } from '@angular/common';\nimport { Component, Input, Output, EventEmitter } from '@angular/core';\n\n@Component({\n  selector: 'storybook-button',\n  standalone: true,\n  imports: [CommonModule],\n  template: ` <button\n  type=\"button\"\n  (click)=\"onClick.emit($event)\"\n  [ngClass]=\"classes\"\n  [ngStyle]=\"{ 'background-color': backgroundColor }\"\n>\n  {{ label }}\n</button>`,\n  styleUrls: ['./button.scss'],\n})\nexport class ButtonComponent {\n  /** Is this the principal call to action on the page? */\n  @Input()\n  primary = false;\n\n  /** What background color to use */\n  @Input()\n  backgroundColor?: string;\n\n  /** How large should the button be? */\n  @Input()\n  size: 'small' | 'medium' | 'large' = 'medium';\n\n  /**\n   * Button contents\n   *\n   * @required\n   */\n  @Input()\n  label = 'Button';\n\n  /** Optional click handler */\n  @Output()\n  onClick = new EventEmitter<Event>();\n\n  public get classes(): string[] {\n    const mode = this.primary ? 'storybook-button--primary' : 'storybook-button--secondary';\n\n    return ['storybook-button', `storybook-button--${this.size}`, mode];\n  }\n}\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
                     "data": ".storybook-button {\n  display: inline-block;\n  cursor: pointer;\n  border: 0;\n  border-radius: 3em;\n  font-weight: 700;\n  line-height: 1;\n  font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;\n}\n.storybook-button--primary {\n  background-color: #555ab9;\n  color: white;\n}\n.storybook-button--secondary {\n  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;\n  background-color: transparent;\n  color: #333;\n}\n.storybook-button--small {\n  padding: 10px 16px;\n  font-size: 12px;\n}\n.storybook-button--medium {\n  padding: 11px 20px;\n  font-size: 14px;\n}\n.storybook-button--large {\n  padding: 12px 24px;\n  font-size: 16px;\n}\n",
-                    "styleUrl": "./button.css"
+                    "styleUrl": "./button.scss"
                 }
             ],
             "stylesData": "",
@@ -220,6 +265,235 @@
                     }
                 }
             }
+        },
+        {
+            "name": "ButtonComponent",
+            "id": "component-ButtonComponent-b6b55c6e7215a820388e6651e0bf9d82f814c73a94d2be02c800118abce824d22945d2d546236f653667e68115cfb7efc2afbad3c690ab4ed352f2d73ed8acc1-1",
+            "file": "src/app/components/atoms/button/button.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-button",
+            "styleUrls": [
+                "./button.component.css"
+            ],
+            "styles": [],
+            "template": "<button\n  class=\"button button--{{ variant }} button--{{ size }}\"\n  [disabled]=\"disabled\"\n  (click)=\"onClick.emit($event)\"\n  [attr.aria-disabled]=\"disabled\"\n  type=\"button\"\n>\n  <ng-content></ng-content>\n  <span *ngIf=\"!hasContent\">{{ label }}</span>\n</button>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "disabled",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 26,
+                    "type": "boolean",
+                    "decorators": []
+                },
+                {
+                    "name": "label",
+                    "defaultValue": "'Button'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 23,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "size",
+                    "defaultValue": "'md'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 25,
+                    "type": "\"sm\" | \"md\" | \"lg\"",
+                    "decorators": []
+                },
+                {
+                    "name": "variant",
+                    "defaultValue": "'primary'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 24,
+                    "type": "\"primary\" | \"secondary\" | \"orange\"",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "onClick",
+                    "defaultValue": "new EventEmitter<MouseEvent>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 27,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, Input, Output, EventEmitter } from '@angular/core';\nimport { CommonModule } from '@angular/common';\n\n@Component({\n  selector: 'app-button',\n  standalone: true,\n  imports: [CommonModule],\n  template: `\n    <button\n      class=\"button button--{{ variant }} button--{{ size }}\"\n      [disabled]=\"disabled\"\n      (click)=\"onClick.emit($event)\"\n      [attr.aria-disabled]=\"disabled\"\n      type=\"button\"\n    >\n      <ng-content></ng-content>\n      <span *ngIf=\"!hasContent\">{{ label }}</span>\n    </button>\n  `,\n  styleUrls: ['./button.component.css']\n})\nexport class ButtonComponent {\n  @Input() label = 'Button';\n  @Input() variant: 'primary' | 'secondary' | 'orange' = 'primary';\n  @Input() size: 'sm' | 'md' | 'lg' = 'md';\n  @Input() disabled = false;\n  @Output() onClick = new EventEmitter<MouseEvent>();\n\n  get hasContent(): boolean {\n    // Check if ng-content is projected\n    return false; // Placeholder, can be improved with ContentChild if needed\n  }\n} ",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": ".button {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  border: none;\n  border-radius: 0.5rem;\n  font-family: 'Your Font Family'; /* Replace with actual font family */\n  font-weight: 400; /* Replace with actual font weight */\n  cursor: pointer;\n  transition: background 0.2s, color 0.2s, box-shadow 0.2s;\n  outline: none;\n  box-shadow: 0 2px 4px rgba(48, 57, 146, 0.04);\n}\n\n.button--primary {\n  background: #3b82f6; /* Replace with actual color */\n  color: white; /* Replace with actual color */\n}\n\n.button--primary:hover:not(:disabled) {\n  background: #2563eb; /* Replace with adjusted color */\n}\n\n.button--secondary {\n  background: #e5e7eb; /* Replace with actual color */\n  color: #1f2937; /* Replace with actual color */\n  border: 1px solid #d1d5db; /* Replace with actual color */\n}\n\n.button--secondary:hover:not(:disabled) {\n  background: #d1d5db; /* Replace with actual color */\n}\n\n.button--orange {\n  background: #ff8c00; /* Replace with actual color */\n  color: white; /* Replace with actual color */\n}\n\n.button--orange:hover:not(:disabled) {\n  background: #e07b00; /* Replace with adjusted color */\n}\n\n.button--sm {\n  padding: 0.25rem 0.75rem;\n  font-size: 0.875rem; /* Replace with actual font size */\n}\n\n.button--md {\n  padding: 0.5rem 1.25rem;\n  font-size: 1rem; /* Replace with actual font size */\n}\n\n.button--lg {\n  padding: 0.75rem 1.5rem;\n  font-size: 1.25rem; /* Replace with actual font size */\n}\n\n.button:disabled,\n.button[aria-disabled='true'] {\n  opacity: 0.5;\n  cursor: not-allowed;\n  pointer-events: none;\n}",
+                    "styleUrl": "./button.component.css"
+                }
+            ],
+            "stylesData": "",
+            "extends": [],
+            "accessors": {
+                "hasContent": {
+                    "name": "hasContent",
+                    "getSignature": {
+                        "name": "hasContent",
+                        "type": "boolean",
+                        "returnType": "boolean",
+                        "line": 29
+                    }
+                }
+            },
+            "isDuplicate": true,
+            "duplicateId": 1,
+            "duplicateName": "ButtonComponent-1"
+        },
+        {
+            "name": "CheckboxComponent",
+            "id": "component-CheckboxComponent-98d650d423096f01ffe0aabdea1b80fcb4bc74be08f29b8624c492749f9d9caabcda7b2c4309969bf383e245c71fd766360ff2de7f74eb58c49d7f1663dd1a6d",
+            "file": "src/app/components/atoms/checkbox/checkbox.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-checkbox",
+            "styleUrls": [
+                "./checkbox.component.scss"
+            ],
+            "styles": [],
+            "template": "<div class=\"checkbox\" [ngClass]=\"{ 'checkbox--disabled': disabled }\">\n  <input\n    type=\"checkbox\"\n    class=\"checkbox__input\"\n    [id]=\"id\"\n    [checked]=\"checked\"\n    [disabled]=\"disabled\"\n    (change)=\"onCheckChange($event)\"\n    [attr.aria-disabled]=\"disabled\"\n  />\n  <label\n    [for]=\"id\"\n    class=\"checkbox__label\"\n  >\n    {{ label }}\n  </label>\n</div>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "checked",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 31,
+                    "type": "boolean",
+                    "decorators": []
+                },
+                {
+                    "name": "disabled",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 32,
+                    "type": "boolean",
+                    "decorators": []
+                },
+                {
+                    "name": "id",
+                    "defaultValue": "`checkbox-${Math.random().toString(36).substring(2, 9)}`",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 33,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "label",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 30,
+                    "type": "string",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "checkedChange",
+                    "defaultValue": "new EventEmitter<boolean>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 34,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [
+                {
+                    "name": "onCheckChange",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 36,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, Input, Output, EventEmitter } from '@angular/core';\nimport { CommonModule } from '@angular/common';\n\n@Component({\n  selector: 'app-checkbox',\n  standalone: true,\n  imports: [CommonModule],\n  template: `\n    <div class=\"checkbox\" [ngClass]=\"{ 'checkbox--disabled': disabled }\">\n      <input\n        type=\"checkbox\"\n        class=\"checkbox__input\"\n        [id]=\"id\"\n        [checked]=\"checked\"\n        [disabled]=\"disabled\"\n        (change)=\"onCheckChange($event)\"\n        [attr.aria-disabled]=\"disabled\"\n      />\n      <label \n        [for]=\"id\" \n        class=\"checkbox__label\"\n      >\n        {{ label }}\n      </label>\n    </div>\n  `,\n  styleUrls: ['./checkbox.component.scss']\n})\nexport class CheckboxComponent {\n  @Input() label = '';\n  @Input() checked = false;\n  @Input() disabled = false;\n  @Input() id = `checkbox-${Math.random().toString(36).substring(2, 9)}`;\n  @Output() checkedChange = new EventEmitter<boolean>();\n\n  onCheckChange(event: Event) {\n    const target = event.target as HTMLInputElement;\n    this.checked = target.checked;\n    this.checkedChange.emit(this.checked);\n  }\n} ",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": "@use 'src/styles/_tokens' as *;\n@use 'src/styles/_fonts' as *;\n// @use 'sass:color';\n\n.checkbox {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  \n  &__input {\n    appearance: none;\n    -webkit-appearance: none;\n    width: 1.25rem;\n    height: 1.25rem;\n    border: 1px solid $color-neutral-textfield-border;\n    border-radius: 0.25rem;\n    background-color: $color-neutral-white;\n    cursor: pointer;\n    position: relative;\n    \n    &:focus {\n      outline: none;\n      box-shadow: 0 0 0 2px rgba(48, 57, 146, 0.08);\n      border-color: $color-primary-blue;\n    }\n    \n    &:checked {\n      background-color: $color-primary-blue;\n      border-color: $color-primary-blue;\n      \n      &::after {\n        content: '';\n        position: absolute;\n        display: block;\n        top: 2px;\n        left: 5px;\n        width: 6px;\n        height: 10px;\n        border: solid $color-neutral-white;\n        border-width: 0 2px 2px 0;\n        transform: rotate(45deg);\n      }\n    }\n  }\n  \n  &__label {\n    font-family: $font-family-base;\n    font-size: $font-size-base;\n    font-weight: $font-weight-regular;\n    color: $color-neutral-dark-font;\n    cursor: pointer;\n  }\n  \n  &--disabled {\n    .checkbox__input {\n      background-color: $color-neutral-bg;\n      border-color: $color-neutral-textfield-border;\n      cursor: not-allowed;\n      \n      &:checked {\n        background-color: adjust($color-neutral-bg, 0, 0, -10%);\n      }\n    }\n    \n    .checkbox__label {\n      color: $color-neutral-light-font;\n      cursor: not-allowed;\n    }\n  }\n} ",
+                    "styleUrl": "./checkbox.component.scss"
+                }
+            ],
+            "stylesData": "",
+            "extends": []
         },
         {
             "name": "HeaderComponent",
@@ -302,6 +576,415 @@
                 {
                     "data": ".storybook-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n  padding: 15px 20px;\n  font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;\n}\n\n.storybook-header svg {\n  display: inline-block;\n  vertical-align: top;\n}\n\n.storybook-header h1 {\n  display: inline-block;\n  vertical-align: top;\n  margin: 6px 0 6px 10px;\n  font-weight: 700;\n  font-size: 20px;\n  line-height: 1;\n}\n\n.storybook-header button + button {\n  margin-left: 10px;\n}\n\n.storybook-header .welcome {\n  margin-right: 10px;\n  color: #333;\n  font-size: 14px;\n}\n",
                     "styleUrl": "./header.css"
+                }
+            ],
+            "stylesData": "",
+            "extends": []
+        },
+        {
+            "name": "IconComponent",
+            "id": "component-IconComponent-3b40b2144cbe3515ebfce822d430c9d265fa3026ab1b4bc3ac103e1d628961b8e73a229e829266a82e04a7788dad3037ca0cba6d0f863b565bb40554f4ba5cc6",
+            "file": "src/app/components/atoms/icon/icon.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-icon",
+            "styleUrls": [
+                "./icon.component.scss"
+            ],
+            "styles": [],
+            "template": "<span\n  class=\"icon\"\n  [ngClass]=\"['icon--' + size]\"\n  [innerHTML]=\"svgContent\"\n  [style.color]=\"color\"\n  aria-hidden=\"true\"\n></span>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "color",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 38,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "name",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 36,
+                    "type": "IconName",
+                    "decorators": []
+                },
+                {
+                    "name": "size",
+                    "defaultValue": "'md'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 37,
+                    "type": "IconSize",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "svgContent",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "SafeHtml",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 40
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "getIconSvg",
+                    "args": [
+                        {
+                            "name": "name",
+                            "type": "IconName",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "string",
+                    "typeParameters": [],
+                    "line": 55,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "name",
+                            "type": "IconName",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "ngOnChanges",
+                    "args": [
+                        {
+                            "name": "changes",
+                            "type": "SimpleChanges",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 44,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "changes",
+                            "type": "SimpleChanges",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "updateIcon",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 50,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { DomSanitizer, SafeHtml } from '@angular/platform-browser';\n\n// Define available icons in the system\nexport type IconName = \n  'arrow-down' | \n  'arrow-up' | \n  'check' | \n  'close' | \n  'info' | \n  'warning' | \n  'success' | \n  'error' | \n  'user' | \n  'settings';\n\nexport type IconSize = 'sm' | 'md' | 'lg';\n\n@Component({\n  selector: 'app-icon',\n  standalone: true,\n  imports: [CommonModule],\n  template: `\n    <span \n      class=\"icon\"\n      [ngClass]=\"['icon--' + size]\"\n      [innerHTML]=\"svgContent\"\n      [style.color]=\"color\"\n      aria-hidden=\"true\"\n    ></span>\n  `,\n  styleUrls: ['./icon.component.scss']\n})\nexport class IconComponent implements OnChanges {\n  @Input() name!: IconName;\n  @Input() size: IconSize = 'md';\n  @Input() color?: string;\n\n  svgContent: SafeHtml = '';\n\n  constructor(private sanitizer: DomSanitizer) {}\n\n  ngOnChanges(changes: SimpleChanges): void {\n    if (changes['name']) {\n      this.updateIcon();\n    }\n  }\n\n  private updateIcon(): void {\n    const icon = this.getIconSvg(this.name);\n    this.svgContent = this.sanitizer.bypassSecurityTrustHtml(icon);\n  }\n\n  private getIconSvg(name: IconName): string {\n    const icons: Record<IconName, string> = {\n      'arrow-down': '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 5v14M5 12l7 7 7-7\"/></svg>',\n      'arrow-up': '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 19V5M5 12l7-7 7 7\"/></svg>',\n      'check': '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg>',\n      'close': '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/><line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/></svg>',\n      'info': '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"16\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"/></svg>',\n      'warning': '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z\"/><line x1=\"12\" y1=\"9\" x2=\"12\" y2=\"13\"/><line x1=\"12\" y1=\"17\" x2=\"12.01\" y2=\"17\"/></svg>',\n      'success': '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M22 11.08V12a10 10 0 11-5.93-9.14\"/><polyline points=\"22 4 12 14.01 9 11.01\"/></svg>',\n      'error': '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"15\" y1=\"9\" x2=\"9\" y2=\"15\"/><line x1=\"9\" y1=\"9\" x2=\"15\" y2=\"15\"/></svg>',\n      'user': '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2\"/><circle cx=\"12\" cy=\"7\" r=\"4\"/></svg>',\n      'settings': '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z\"/></svg>'\n    };\n\n    return icons[name] || '';\n  }\n} ",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": "@use 'src/styles/_tokens' as *;\n@use 'src/styles/_fonts' as *;\n\n.icon {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  \n  // Default styling for all SVGs\n  svg {\n    display: block;\n    fill: currentColor;\n    stroke: currentColor;\n  }\n  \n  // Sizes\n  &--sm {\n    width: 16px;\n    height: 16px;\n  }\n  \n  &--md {\n    width: 24px;\n    height: 24px;\n  }\n  \n  &--lg {\n    width: 32px;\n    height: 32px;\n  }\n} ",
+                    "styleUrl": "./icon.component.scss"
+                }
+            ],
+            "stylesData": "",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [
+                    {
+                        "name": "sanitizer",
+                        "type": "DomSanitizer",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "line": 40,
+                "jsdoctags": [
+                    {
+                        "name": "sanitizer",
+                        "type": "DomSanitizer",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            },
+            "extends": [],
+            "implements": [
+                "OnChanges"
+            ]
+        },
+        {
+            "name": "InputComponent",
+            "id": "component-InputComponent-c709a4c7c7664af9ecbc0a2196ba19d76c90f600cb9780f09847e062122c5c7478e67c0722d6b92f85b5c60595af54d6197407eaed31e2256e6842080600491d",
+            "file": "src/app/components/atoms/input/input.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-input",
+            "styleUrls": [
+                "./input.component.scss"
+            ],
+            "styles": [],
+            "template": "<div class=\"input\">\n  <label *ngIf=\"label\" class=\"input__label\">{{ label }}</label>\n  <input\n    class=\"input__field\"\n    [attr.placeholder]=\"placeholder\"\n    [disabled]=\"disabled\"\n    [ngClass]=\"{ 'input__field--error': error }\"\n    [value]=\"value\"\n    (input)=\"onInput($event)\"\n    (focus)=\"focus.emit($event)\"\n    (blur)=\"blur.emit($event)\"\n    [attr.aria-invalid]=\"!!error\"\n    [attr.aria-describedby]=\"error ? 'input-error' : null\"\n  />\n  <div *ngIf=\"error\" class=\"input__error\" id=\"input-error\">{{ error }}</div>\n</div>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "disabled",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 31,
+                    "type": "boolean",
+                    "decorators": []
+                },
+                {
+                    "name": "error",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 32,
+                    "type": "string | null",
+                    "decorators": []
+                },
+                {
+                    "name": "label",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 29,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "placeholder",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 30,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "value",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 33,
+                    "type": "string",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "blur",
+                    "defaultValue": "new EventEmitter<FocusEvent>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 36,
+                    "type": "EventEmitter"
+                },
+                {
+                    "name": "focus",
+                    "defaultValue": "new EventEmitter<FocusEvent>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 35,
+                    "type": "EventEmitter"
+                },
+                {
+                    "name": "valueChange",
+                    "defaultValue": "new EventEmitter<string>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 34,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [
+                {
+                    "name": "onInput",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 38,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, Input, Output, EventEmitter } from '@angular/core';\nimport { CommonModule } from '@angular/common';\n\n@Component({\n  selector: 'app-input',\n  standalone: true,\n  imports: [CommonModule],\n  template: `\n    <div class=\"input\">\n      <label *ngIf=\"label\" class=\"input__label\">{{ label }}</label>\n      <input\n        class=\"input__field\"\n        [attr.placeholder]=\"placeholder\"\n        [disabled]=\"disabled\"\n        [ngClass]=\"{ 'input__field--error': error }\"\n        [value]=\"value\"\n        (input)=\"onInput($event)\"\n        (focus)=\"focus.emit($event)\"\n        (blur)=\"blur.emit($event)\"\n        [attr.aria-invalid]=\"!!error\"\n        [attr.aria-describedby]=\"error ? 'input-error' : null\"\n      />\n      <div *ngIf=\"error\" class=\"input__error\" id=\"input-error\">{{ error }}</div>\n    </div>\n  `,\n  styleUrls: ['./input.component.scss']\n})\nexport class InputComponent {\n  @Input() label = '';\n  @Input() placeholder = '';\n  @Input() disabled = false;\n  @Input() error: string | null = null;\n  @Input() value = '';\n  @Output() valueChange = new EventEmitter<string>();\n  @Output() focus = new EventEmitter<FocusEvent>();\n  @Output() blur = new EventEmitter<FocusEvent>();\n\n  onInput(event: Event) {\n    const value = (event.target as HTMLInputElement).value;\n    this.valueChange.emit(value);\n  }\n} ",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": "@use 'src/styles/_tokens' as *;\n@use 'src/styles/_fonts' as *;\n\n.input {\n  display: flex;\n  flex-direction: column;\n  gap: 0.25rem;\n\n  &__label {\n    font-family: $font-family-base;\n    font-size: $font-size-base;\n    font-weight: $font-weight-regular;\n    color: $color-neutral-dark-font;\n    margin-bottom: 0.25rem;\n  }\n\n  &__field {\n    padding: 0.5rem 1rem;\n    border: 1px solid $color-neutral-textfield-border;\n    border-radius: 0.5rem;\n    font-family: $font-family-base;\n    font-size: $font-size-base;\n    color: $color-neutral-dark-font;\n    background: $color-neutral-white;\n    transition: border-color 0.2s, box-shadow 0.2s;\n    outline: none;\n\n    &:focus {\n      border-color: $color-primary-blue;\n      box-shadow: 0 0 0 2px rgba(48, 57, 146, 0.08);\n    }\n\n    &--error {\n      border-color: $color-danger;\n    }\n  }\n\n  &__error {\n    color: $color-danger;\n    font-size: $font-size-sm;\n    margin-top: 0.1rem;\n    font-family: $font-family-base;\n  }\n} ",
+                    "styleUrl": "./input.component.scss"
+                }
+            ],
+            "stylesData": "",
+            "extends": []
+        },
+        {
+            "name": "LabelComponent",
+            "id": "component-LabelComponent-c3888501751d560fd645b830abdefc681d1f6b32dcb18e4a0b704c206d00b10b4283ff83e39887554d037faedb8fce42113dfda80a637c7bb7f7ba9c41a0ee2c",
+            "file": "src/app/components/atoms/label/label.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-label",
+            "styleUrls": [
+                "./label.component.scss"
+            ],
+            "styles": [],
+            "template": "<span\n  class=\"label\"\n  [ngClass]=\"[\n    'label--' + variant,\n    'label--' + size\n  ]\"\n>\n  {{ text }}\n</span>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "size",
+                    "defaultValue": "'md'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 27,
+                    "type": "LabelSize",
+                    "decorators": []
+                },
+                {
+                    "name": "text",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 25,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "variant",
+                    "defaultValue": "'default'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 26,
+                    "type": "LabelVariant",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, Input } from '@angular/core';\nimport { CommonModule } from '@angular/common';\n\nexport type LabelVariant = 'default' | 'primary' | 'success' | 'danger' | 'warning' | 'info';\nexport type LabelSize = 'sm' | 'md' | 'lg';\n\n@Component({\n  selector: 'app-label',\n  standalone: true,\n  imports: [CommonModule],\n  template: `\n    <span \n      class=\"label\"\n      [ngClass]=\"[\n        'label--' + variant,\n        'label--' + size\n      ]\"\n    >\n      {{ text }}\n    </span>\n  `,\n  styleUrls: ['./label.component.scss']\n})\nexport class LabelComponent {\n  @Input() text = '';\n  @Input() variant: LabelVariant = 'default';\n  @Input() size: LabelSize = 'md';\n} ",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": "@use 'src/styles/_tokens' as *;\n@use 'src/styles/_fonts' as *;\n\n.label {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 0.25rem;\n  font-family: $font-family-base;\n  font-weight: $font-weight-regular;\n  \n  // Sizes\n  &--sm {\n    font-size: $font-size-sm;\n    padding: 0.125rem 0.375rem;\n  }\n  \n  &--md {\n    font-size: $font-size-base;\n    padding: 0.25rem 0.5rem;\n  }\n  \n  &--lg {\n    font-size: $font-size-lg;\n    padding: 0.375rem 0.75rem;\n  }\n  \n  // Variants\n  &--default {\n    background-color: $color-neutral-bg;\n    color: $color-neutral-dark-font;\n  }\n  \n  &--primary {\n    background-color: $color-primary-blue;\n    color: $color-neutral-white;\n  }\n\n  &--success {\n    background-color: $color-success;\n    color: $color-neutral-white;\n  }\n  \n  &--danger {\n    background-color: $color-danger;\n    color: $color-neutral-white;\n  }\n  \n  &--warning {\n    background-color: $color-warning;\n    color: $color-neutral-white;\n  }\n  \n  &--info {\n    background-color: $color-info;\n    color: $color-neutral-white;\n  }\n} ",
+                    "styleUrl": "./label.component.scss"
                 }
             ],
             "stylesData": "",
@@ -400,6 +1083,433 @@
             ],
             "stylesData": "",
             "extends": []
+        },
+        {
+            "name": "RadioComponent",
+            "id": "component-RadioComponent-0e57f4b0473ab3571bf1cb1bc2a139713a4a73917e3eb9dd1bf4d998124356166a9d89ec55520584a237b9b8431dd6c7dfed5cf89a1247b63141fa79ad31ddcc",
+            "file": "src/app/components/atoms/radio/radio.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-radio",
+            "styleUrls": [
+                "./radio.component.scss"
+            ],
+            "styles": [],
+            "template": "<div class=\"radio\" [ngClass]=\"{ 'radio--disabled': disabled }\">\n  <input\n    type=\"radio\"\n    class=\"radio__input\"\n    [id]=\"id\"\n    [checked]=\"checked\"\n    [disabled]=\"disabled\"\n    [name]=\"name\"\n    [value]=\"value\"\n    (change)=\"onRadioChange($event)\"\n    [attr.aria-disabled]=\"disabled\"\n  />\n  <label\n    [for]=\"id\"\n    class=\"radio__label\"\n  >\n    {{ label }}\n  </label>\n</div>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "checked",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 33,
+                    "type": "boolean",
+                    "decorators": []
+                },
+                {
+                    "name": "disabled",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 34,
+                    "type": "boolean",
+                    "decorators": []
+                },
+                {
+                    "name": "id",
+                    "defaultValue": "`radio-${Math.random().toString(36).substring(2, 9)}`",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 37,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "label",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 32,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "name",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 35,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "value",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 36,
+                    "type": "string",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "checkedChange",
+                    "defaultValue": "new EventEmitter<{checked: boolean, value: string}>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 38,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [
+                {
+                    "name": "onRadioChange",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 40,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, Input, Output, EventEmitter } from '@angular/core';\nimport { CommonModule } from '@angular/common';\n\n@Component({\n  selector: 'app-radio',\n  standalone: true,\n  imports: [CommonModule],\n  template: `\n    <div class=\"radio\" [ngClass]=\"{ 'radio--disabled': disabled }\">\n      <input\n        type=\"radio\"\n        class=\"radio__input\"\n        [id]=\"id\"\n        [checked]=\"checked\"\n        [disabled]=\"disabled\"\n        [name]=\"name\"\n        [value]=\"value\"\n        (change)=\"onRadioChange($event)\"\n        [attr.aria-disabled]=\"disabled\"\n      />\n      <label \n        [for]=\"id\" \n        class=\"radio__label\"\n      >\n        {{ label }}\n      </label>\n    </div>\n  `,\n  styleUrls: ['./radio.component.scss']\n})\nexport class RadioComponent {\n  @Input() label = '';\n  @Input() checked = false;\n  @Input() disabled = false;\n  @Input() name = '';\n  @Input() value = '';\n  @Input() id = `radio-${Math.random().toString(36).substring(2, 9)}`;\n  @Output() checkedChange = new EventEmitter<{checked: boolean, value: string}>();\n\n  onRadioChange(event: Event) {\n    const target = event.target as HTMLInputElement;\n    this.checked = target.checked;\n    this.checkedChange.emit({\n      checked: this.checked,\n      value: this.value\n    });\n  }\n} ",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": "@use 'src/styles/_tokens' as *;\n@use 'src/styles/_fonts' as *;\n\n.radio {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  \n  &__input {\n    appearance: none;\n    -webkit-appearance: none;\n    width: 1.25rem;\n    height: 1.25rem;\n    border: 1px solid $color-neutral-textfield-border;\n    border-radius: 50%;\n    background-color: $color-neutral-white;\n    cursor: pointer;\n    position: relative;\n    \n    &:focus {\n      outline: none;\n      box-shadow: 0 0 0 2px rgba(48, 57, 146, 0.08);\n      border-color: $color-primary-blue;\n    }\n    \n    &:checked {\n      border: 2px solid $color-primary-blue;\n      background-color: $color-neutral-white;\n      \n      &::after {\n        content: '';\n        position: absolute;\n        display: block;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        width: 0.625rem;\n        height: 0.625rem;\n        border-radius: 50%;\n        background-color: $color-primary-blue;\n      }\n    }\n  }\n  \n  &__label {\n    font-family: $font-family-base;\n    font-size: $font-size-base;\n    font-weight: $font-weight-regular;\n    color: $color-neutral-dark-font;\n    cursor: pointer;\n  }\n  \n  &--disabled {\n    .radio__input {\n      background-color: $color-neutral-bg;\n      border-color: $color-neutral-textfield-border;\n      cursor: not-allowed;\n      \n      &:checked::after {\n        background-color: $color-neutral-light-font;\n      }\n    }\n    \n    .radio__label {\n      color: $color-neutral-light-font;\n      cursor: not-allowed;\n    }\n  }\n} ",
+                    "styleUrl": "./radio.component.scss"
+                }
+            ],
+            "stylesData": "",
+            "extends": []
+        },
+        {
+            "name": "SelectComponent",
+            "id": "component-SelectComponent-3a7f907b96f401072be49f313dcf7ccb69f7b588f9eeff5692d5eccdf53ad59d34a7ad6edc06cfae90aa827a84a9adffc9a8384ad7301c8fabd644c184ef08c4",
+            "file": "src/app/components/atoms/select/select.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-select",
+            "styleUrls": [
+                "./select.component.scss"
+            ],
+            "styles": [],
+            "template": "<div class=\"select\">\n  <label *ngIf=\"label\" class=\"select__label\">{{ label }}</label>\n  <div class=\"select__container\" [ngClass]=\"{ 'select__container--error': error, 'select__container--disabled': disabled }\">\n    <select\n      class=\"select__field\"\n      [disabled]=\"disabled\"\n      (change)=\"onChange($event)\"\n      [attr.aria-invalid]=\"!!error\"\n      [attr.aria-describedby]=\"error ? 'select-error' : null\"\n    >\n      <option *ngIf=\"placeholder\" value=\"\" [disabled]=\"true\" [selected]=\"!value\">{{ placeholder }}</option>\n      <option\n        *ngFor=\"let option of options\"\n        [value]=\"option.value\"\n        [disabled]=\"option.disabled\"\n        [selected]=\"option.value === value\"\n      >\n        {{ option.label }}\n      </option>\n    </select>\n    <div class=\"select__arrow\">\n      <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <polyline points=\"6 9 12 15 18 9\"></polyline>\n      </svg>\n    </div>\n  </div>\n  <div *ngIf=\"error\" class=\"select__error\" id=\"select-error\">{{ error }}</div>\n</div>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "disabled",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 51,
+                    "type": "boolean",
+                    "decorators": []
+                },
+                {
+                    "name": "error",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 52,
+                    "type": "string | null",
+                    "decorators": []
+                },
+                {
+                    "name": "label",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 47,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "options",
+                    "defaultValue": "[]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 49,
+                    "type": "SelectOption[]",
+                    "decorators": []
+                },
+                {
+                    "name": "placeholder",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 48,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "value",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 50,
+                    "type": "string | number",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "valueChange",
+                    "defaultValue": "new EventEmitter<string | number>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 53,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [
+                {
+                    "name": "onChange",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 55,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, Input, Output, EventEmitter } from '@angular/core';\nimport { CommonModule } from '@angular/common';\n\nexport interface SelectOption {\n  label: string;\n  value: string | number;\n  disabled?: boolean;\n}\n\n@Component({\n  selector: 'app-select',\n  standalone: true,\n  imports: [CommonModule],\n  template: `\n    <div class=\"select\">\n      <label *ngIf=\"label\" class=\"select__label\">{{ label }}</label>\n      <div class=\"select__container\" [ngClass]=\"{ 'select__container--error': error, 'select__container--disabled': disabled }\">\n        <select\n          class=\"select__field\"\n          [disabled]=\"disabled\"\n          (change)=\"onChange($event)\"\n          [attr.aria-invalid]=\"!!error\"\n          [attr.aria-describedby]=\"error ? 'select-error' : null\"\n        >\n          <option *ngIf=\"placeholder\" value=\"\" [disabled]=\"true\" [selected]=\"!value\">{{ placeholder }}</option>\n          <option \n            *ngFor=\"let option of options\" \n            [value]=\"option.value\" \n            [disabled]=\"option.disabled\"\n            [selected]=\"option.value === value\"\n          >\n            {{ option.label }}\n          </option>\n        </select>\n        <div class=\"select__arrow\">\n          <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <polyline points=\"6 9 12 15 18 9\"></polyline>\n          </svg>\n        </div>\n      </div>\n      <div *ngIf=\"error\" class=\"select__error\" id=\"select-error\">{{ error }}</div>\n    </div>\n  `,\n  styleUrls: ['./select.component.scss']\n})\nexport class SelectComponent {\n  @Input() label = '';\n  @Input() placeholder = '';\n  @Input() options: SelectOption[] = [];\n  @Input() value: string | number = '';\n  @Input() disabled = false;\n  @Input() error: string | null = null;\n  @Output() valueChange = new EventEmitter<string | number>();\n\n  onChange(event: Event) {\n    const target = event.target as HTMLSelectElement;\n    this.value = target.value;\n    this.valueChange.emit(this.value);\n  }\n} ",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": "@use 'src/styles/_tokens' as *;\n@use 'src/styles/_fonts' as *;\n\n.select {\n  display: flex;\n  flex-direction: column;\n  gap: 0.25rem;\n\n  &__label {\n    font-family: $font-family-base;\n    font-size: $font-size-base;\n    font-weight: $font-weight-regular;\n    color: $color-neutral-dark-font;\n    margin-bottom: 0.25rem;\n  }\n\n  &__container {\n    position: relative;\n    display: flex;\n    align-items: center;\n    \n    &--error {\n      .select__field {\n        border-color: $color-danger;\n      }\n      \n      .select__arrow {\n        color: $color-danger;\n      }\n    }\n    \n    &--disabled {\n      .select__field {\n        background-color: $color-neutral-bg;\n        color: $color-neutral-light-font;\n        cursor: not-allowed;\n      }\n      \n      .select__arrow {\n        color: $color-neutral-light-font;\n      }\n    }\n  }\n\n  &__field {\n    width: 100%;\n    padding: 0.5rem 1rem;\n    padding-right: 2.5rem; // Space for the arrow\n    border: 1px solid $color-neutral-textfield-border;\n    border-radius: 0.5rem;\n    font-family: $font-family-base;\n    font-size: $font-size-base;\n    color: $color-neutral-dark-font;\n    background-color: $color-neutral-white;\n    transition: border-color 0.2s, box-shadow 0.2s;\n    outline: none;\n    appearance: none;\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    \n    &:focus {\n      border-color: $color-primary-blue;\n      box-shadow: 0 0 0 2px rgba(48, 57, 146, 0.08);\n    }\n    \n    &:disabled {\n      cursor: not-allowed;\n    }\n  }\n\n  &__arrow {\n    position: absolute;\n    right: 0.75rem;\n    top: 50%;\n    transform: translateY(-50%);\n    color: $color-neutral-dark-font;\n    pointer-events: none;\n  }\n\n  &__error {\n    color: $color-danger;\n    font-size: $font-size-sm;\n    margin-top: 0.1rem;\n    font-family: $font-family-base;\n  }\n} ",
+                    "styleUrl": "./select.component.scss"
+                }
+            ],
+            "stylesData": "",
+            "extends": []
+        },
+        {
+            "name": "TextareaComponent",
+            "id": "component-TextareaComponent-899e7bece45a33e5e58f0a939183576ea704d7c5c8c9208aadd18c8957307193e0ec945dbf19c433361e41a3749d8007ccbd58acfb6a3cd36c5b66ac1dc65f90",
+            "file": "src/app/components/atoms/textarea/textarea.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-textarea",
+            "styleUrls": [
+                "./textarea.component.scss"
+            ],
+            "styles": [],
+            "template": "<div class=\"textarea\">\n  <label *ngIf=\"label\" class=\"textarea__label\">{{ label }}</label>\n  <textarea\n    class=\"textarea__field\"\n    [attr.placeholder]=\"placeholder\"\n    [disabled]=\"disabled\"\n    [ngClass]=\"{ 'textarea__field--error': error }\"\n    [value]=\"value\"\n    (input)=\"onInput($event)\"\n    (focus)=\"focus.emit($event)\"\n    (blur)=\"blur.emit($event)\"\n    [attr.aria-invalid]=\"!!error\"\n    [attr.aria-describedby]=\"error ? 'textarea-error' : null\"\n    rows=\"4\"\n  ></textarea>\n  <div *ngIf=\"error\" class=\"textarea__error\" id=\"textarea-error\">{{ error }}</div>\n</div>\n",
+            "templateUrl": [],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "disabled",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 32,
+                    "type": "boolean",
+                    "decorators": []
+                },
+                {
+                    "name": "error",
+                    "defaultValue": "null",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 33,
+                    "type": "string | null",
+                    "decorators": []
+                },
+                {
+                    "name": "label",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 30,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "placeholder",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 31,
+                    "type": "string",
+                    "decorators": []
+                },
+                {
+                    "name": "value",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 34,
+                    "type": "string",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "blur",
+                    "defaultValue": "new EventEmitter<FocusEvent>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 37,
+                    "type": "EventEmitter"
+                },
+                {
+                    "name": "focus",
+                    "defaultValue": "new EventEmitter<FocusEvent>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 36,
+                    "type": "EventEmitter"
+                },
+                {
+                    "name": "valueChange",
+                    "defaultValue": "new EventEmitter<string>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 35,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [
+                {
+                    "name": "onInput",
+                    "args": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 39,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "jsdoctags": [
+                        {
+                            "name": "event",
+                            "type": "Event",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "CommonModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, Input, Output, EventEmitter } from '@angular/core';\nimport { CommonModule } from '@angular/common';\n\n@Component({\n  selector: 'app-textarea',\n  standalone: true,\n  imports: [CommonModule],\n  template: `\n    <div class=\"textarea\">\n      <label *ngIf=\"label\" class=\"textarea__label\">{{ label }}</label>\n      <textarea\n        class=\"textarea__field\"\n        [attr.placeholder]=\"placeholder\"\n        [disabled]=\"disabled\"\n        [ngClass]=\"{ 'textarea__field--error': error }\"\n        [value]=\"value\"\n        (input)=\"onInput($event)\"\n        (focus)=\"focus.emit($event)\"\n        (blur)=\"blur.emit($event)\"\n        [attr.aria-invalid]=\"!!error\"\n        [attr.aria-describedby]=\"error ? 'textarea-error' : null\"\n        rows=\"4\"\n      ></textarea>\n      <div *ngIf=\"error\" class=\"textarea__error\" id=\"textarea-error\">{{ error }}</div>\n    </div>\n  `,\n  styleUrls: ['./textarea.component.scss']\n})\nexport class TextareaComponent {\n  @Input() label = '';\n  @Input() placeholder = '';\n  @Input() disabled = false;\n  @Input() error: string | null = null;\n  @Input() value = '';\n  @Output() valueChange = new EventEmitter<string>();\n  @Output() focus = new EventEmitter<FocusEvent>();\n  @Output() blur = new EventEmitter<FocusEvent>();\n\n  onInput(event: Event) {\n    const value = (event.target as HTMLTextAreaElement).value;\n    this.valueChange.emit(value);\n  }\n} ",
+            "assetsDirs": [],
+            "styleUrlsData": [
+                {
+                    "data": "@use 'src/styles/_tokens' as *;\n@use 'src/styles/_fonts' as *;\n\n.textarea {\n  display: flex;\n  flex-direction: column;\n  gap: 0.25rem;\n\n  &__label {\n    font-family: $font-family-base;\n    font-size: $font-size-base;\n    font-weight: $font-weight-regular;\n    color: $color-neutral-dark-font;\n    margin-bottom: 0.25rem;\n  }\n\n  &__field {\n    padding: 0.5rem 1rem;\n    border: 1px solid $color-neutral-textfield-border;\n    border-radius: 0.5rem;\n    font-family: $font-family-base;\n    font-size: $font-size-base;\n    color: $color-neutral-dark-font;\n    background: $color-neutral-white;\n    transition: border-color 0.2s, box-shadow 0.2s;\n    outline: none;\n    resize: vertical;\n    min-height: 3rem;\n\n    &:focus {\n      border-color: $color-primary-blue;\n      box-shadow: 0 0 0 2px rgba(48, 57, 146, 0.08);\n    }\n\n    &--error {\n      border-color: $color-danger;\n    }\n  }\n\n  &__error {\n    color: $color-danger;\n    font-size: $font-size-sm;\n    margin-top: 0.1rem;\n    font-family: $font-family-base;\n  }\n} ",
+                    "styleUrl": "./textarea.component.scss"
+                }
+            ],
+            "stylesData": "",
+            "extends": []
         }
     ],
     "modules": [],
@@ -417,7 +1527,52 @@
             }
         ],
         "functions": [],
-        "typealiases": [],
+        "typealiases": [
+            {
+                "name": "IconName",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "\"arrow-down\" | \"arrow-up\" | \"check\" | \"close\" | \"info\" | \"warning\" | \"success\" | \"error\" | \"user\" | \"settings\"",
+                "file": "src/app/components/atoms/icon/icon.component.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 192
+            },
+            {
+                "name": "IconSize",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "\"sm\" | \"md\" | \"lg\"",
+                "file": "src/app/components/atoms/icon/icon.component.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 192
+            },
+            {
+                "name": "LabelSize",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "\"sm\" | \"md\" | \"lg\"",
+                "file": "src/app/components/atoms/label/label.component.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 192
+            },
+            {
+                "name": "LabelVariant",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "\"default\" | \"primary\" | \"success\" | \"danger\" | \"warning\" | \"info\"",
+                "file": "src/app/components/atoms/label/label.component.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 192
+            }
+        ],
         "enumerations": [],
         "groupedVariables": {
             "src/app/app.config.ts": [
@@ -435,11 +1590,60 @@
         },
         "groupedFunctions": {},
         "groupedEnumerations": {},
-        "groupedTypeAliases": {}
+        "groupedTypeAliases": {
+            "src/app/components/atoms/icon/icon.component.ts": [
+                {
+                    "name": "IconName",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "\"arrow-down\" | \"arrow-up\" | \"check\" | \"close\" | \"info\" | \"warning\" | \"success\" | \"error\" | \"user\" | \"settings\"",
+                    "file": "src/app/components/atoms/icon/icon.component.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 192
+                },
+                {
+                    "name": "IconSize",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "\"sm\" | \"md\" | \"lg\"",
+                    "file": "src/app/components/atoms/icon/icon.component.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 192
+                }
+            ],
+            "src/app/components/atoms/label/label.component.ts": [
+                {
+                    "name": "LabelSize",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "\"sm\" | \"md\" | \"lg\"",
+                    "file": "src/app/components/atoms/label/label.component.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 192
+                },
+                {
+                    "name": "LabelVariant",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "\"default\" | \"primary\" | \"success\" | \"danger\" | \"warning\" | \"info\"",
+                    "file": "src/app/components/atoms/label/label.component.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 192
+                }
+            ]
+        }
     },
     "routes": [],
     "coverage": {
-        "count": 13,
+        "count": 4,
         "status": "low",
         "files": [
             {
@@ -459,6 +1663,127 @@
                 "name": "appConfig",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/button/button.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "ButtonComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/6",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/checkbox/checkbox.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "CheckboxComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/7",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/icon/icon.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "IconComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/9",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/icon/icon.component.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "IconName",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/icon/icon.component.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "IconSize",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/input/input.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "InputComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/10",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/label/label.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "LabelComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/label/label.component.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "LabelSize",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/label/label.component.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "LabelVariant",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/radio/radio.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "RadioComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/9",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/select/select.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "SelectComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/9",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/select/select.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "SelectOption",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/atoms/textarea/textarea.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TextareaComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/10",
                 "status": "low"
             },
             {

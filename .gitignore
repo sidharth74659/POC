@@ -1,5 +1,10 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
+# Storybook
+.storybook/
+storybook-static/
+documentation.json
+
 # Compiled output
 /dist
 /tmp

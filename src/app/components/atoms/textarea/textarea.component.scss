@@ -1,0 +1,46 @@
+@use 'src/styles/_tokens' as *;
+@use 'src/styles/_fonts' as *;
+
+.textarea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  &__label {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    font-weight: $font-weight-regular;
+    color: $color-neutral-dark-font;
+    margin-bottom: 0.25rem;
+  }
+
+  &__field {
+    padding: 0.5rem 1rem;
+    border: 1px solid $color-neutral-textfield-border;
+    border-radius: 0.5rem;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    color: $color-neutral-dark-font;
+    background: $color-neutral-white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    resize: vertical;
+    min-height: 3rem;
+
+    &:focus {
+      border-color: $color-primary-blue;
+      box-shadow: 0 0 0 2px rgba(48, 57, 146, 0.08);
+    }
+
+    &--error {
+      border-color: $color-danger;
+    }
+  }
+
+  &__error {
+    color: $color-danger;
+    font-size: $font-size-sm;
+    margin-top: 0.1rem;
+    font-family: $font-family-base;
+  }
+} 

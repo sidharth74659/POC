@@ -1,0 +1,58 @@
+@use 'src/styles/_tokens' as *;
+@use 'src/styles/_fonts' as *;
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  font-family: $font-family-base;
+  font-weight: $font-weight-regular;
+  
+  // Sizes
+  &--sm {
+    font-size: $font-size-sm;
+    padding: 0.125rem 0.375rem;
+  }
+  
+  &--md {
+    font-size: $font-size-base;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  &--lg {
+    font-size: $font-size-lg;
+    padding: 0.375rem 0.75rem;
+  }
+  
+  // Variants
+  &--default {
+    background-color: $color-neutral-bg;
+    color: $color-neutral-dark-font;
+  }
+  
+  &--primary {
+    background-color: $color-primary-blue;
+    color: $color-neutral-white;
+  }
+
+  &--success {
+    background-color: $color-success;
+    color: $color-neutral-white;
+  }
+  
+  &--danger {
+    background-color: $color-danger;
+    color: $color-neutral-white;
+  }
+  
+  &--warning {
+    background-color: $color-warning;
+    color: $color-neutral-white;
+  }
+  
+  &--info {
+    background-color: $color-info;
+    color: $color-neutral-white;
+  }
+} 

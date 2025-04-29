@@ -45,10 +45,10 @@ Use this `todo.md` as a living checklist for your Angular Storybook integration.
 - [x] Define parameters (actions matching `^on[A-Z].*`, expanded controls)
 
 ### Webpack Overrides (Optional)
-- [ ] In `main.js`, add a `webpackFinal` function if needed for aliases/loaders
+- [x] In `main.js`, add a `webpackFinal` function if needed for aliases/loaders
 
 ### Commit Config Changes
-- [ ] Commit `.storybook/` updated files
+- [x] Commit `.storybook/` updated files
 
 ---
 ## Phase 3: Story Authoring

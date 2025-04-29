@@ -1,20 +1,41 @@
 import type { StorybookConfig } from '@storybook/angular';
+import { mergeConfig } from 'vite';
+import viteConfig from './vite.config';
 
-const config: StorybookConfig = {
-  "stories": [
-    "../src/**/*.mdx",
-    "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
+// Define a more compatible config type with viteFinal
+interface CustomStorybookConfig extends StorybookConfig {
+  viteFinal?: (config: any) => Promise<any>;
+}
+
+const config: CustomStorybookConfig = {
+  stories: [
+    '../src/**/*.stories.mdx',
+    '../src/**/*.stories.@(js|jsx|ts|tsx)',
   ],
-  "addons": [
-    "@storybook/addon-essentials",
-    "@storybook/addon-onboarding",
-    "@storybook/addon-interactions",
-    "@storybook/addon-a11y",
-    "@storybook/addon-viewport"
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
+    '@storybook/preset-scss',
   ],
-  "framework": {
-    "name": "@storybook/angular",
-    "options": {}
-  }
+  framework: {
+    name: '@storybook/angular',
+    options: {
+      enableCli: true,
+      enableIvy: true,
+      enableNgcc: true,
+      inlineStyles: true,
+    },
+  },
+  core: {
+    builder: '@storybook/builder-vite',
+    disableTelemetry: true,
+  },
+  staticDirs: ['../src/assets'],
+  // Use async viteFinal that correctly merges configurations
+  viteFinal: async (config) => {
+    return mergeConfig(config, viteConfig);
+  },
 };
+
 export default config;
