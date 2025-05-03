@@ -1,0 +1,141 @@
+{
+  "response": {
+    "items": [
+      {
+        "operationId": "op-001",
+        "operationName": "Routine Maintenance",
+        "equipment": "Conveyor System A",
+        "workOrderNumber": "WO-2025-001",
+        "workOrderId": "wo-001",
+        "resourceId": "res-001",
+        "startDate": "2025-05-05T09:00:00Z",
+        "endDate": "2025-05-05T17:00:00Z",
+        "notes": "Regular quarterly maintenance for conveyor system A. Check belt tension and lubricate bearings."
+      },
+      {
+        "operationId": "op-002",
+        "operationName": "Electrical System Upgrade",
+        "equipment": "Control Panel B",
+        "workOrderNumber": "WO-2025-002",
+        "workOrderId": "wo-002",
+        "resourceId": "res-002",
+        "startDate": "2025-05-06T08:00:00Z",
+        "endDate": "2025-05-07T16:00:00Z",
+        "notes": "Upgrade control panel with new PLC system. Test all connections before handover."
+      },
+      {
+        "operationId": "op-003",
+        "operationName": "Software Update",
+        "equipment": "SCADA System",
+        "workOrderNumber": "WO-2025-003",
+        "workOrderId": "wo-003",
+        "resourceId": "res-003",
+        "startDate": "2025-05-05T10:00:00Z",
+        "endDate": "2025-05-05T15:00:00Z",
+        "notes": "Update SCADA software to latest version. Backup current configuration before proceeding."
+      },
+      {
+        "operationId": "op-004",
+        "operationName": "Equipment Repair",
+        "equipment": "Hydraulic Press",
+        "workOrderNumber": "WO-2025-004",
+        "workOrderId": "wo-004",
+        "resourceId": "res-004",
+        "startDate": "2025-05-07T09:00:00Z",
+        "endDate": "2025-05-08T12:00:00Z",
+        "notes": "Repair hydraulic leak on main cylinder. Replace seals and test operation."
+      },
+      {
+        "operationId": "op-005",
+        "operationName": "Sensor Calibration",
+        "equipment": "Temperature Sensors",
+        "workOrderNumber": "WO-2025-005",
+        "workOrderId": "wo-005",
+        "resourceId": "res-005",
+        "startDate": "2025-05-09T13:00:00Z",
+        "endDate": "2025-05-09T17:00:00Z",
+        "notes": "Calibrate all temperature sensors in Zone B. Document readings before and after calibration."
+      },
+      {
+        "operationId": "op-006",
+        "operationName": "Project Planning",
+        "equipment": "Assembly Line C",
+        "workOrderNumber": "WO-2025-006",
+        "workOrderId": "wo-006",
+        "resourceId": "res-006",
+        "startDate": "2025-05-10T09:00:00Z",
+        "endDate": "2025-05-12T17:00:00Z",
+        "notes": "Develop project plan for assembly line upgrade. Coordinate with all department heads."
+      },
+      {
+        "operationId": "op-007",
+        "operationName": "Hydraulic System Maintenance",
+        "equipment": "Lift System",
+        "workOrderNumber": "WO-2025-007",
+        "workOrderId": "wo-007",
+        "resourceId": "res-007",
+        "startDate": "2025-05-08T08:00:00Z",
+        "endDate": "2025-05-08T16:00:00Z",
+        "notes": "Perform maintenance on hydraulic lift system. Check fluid levels and replace filters."
+      },
+      {
+        "operationId": "op-008",
+        "operationName": "Network Troubleshooting",
+        "equipment": "Factory Network",
+        "workOrderNumber": "WO-2025-008",
+        "workOrderId": "wo-008",
+        "resourceId": "res-008",
+        "startDate": "2025-05-06T09:00:00Z",
+        "endDate": "2025-05-06T17:00:00Z",
+        "notes": "Investigate intermittent network issues in production area. Update firmware on all switches."
+      },
+      {
+        "operationId": "op-009",
+        "operationName": "Welding Repair",
+        "equipment": "Storage Tanks",
+        "workOrderNumber": "WO-2025-009",
+        "workOrderId": "wo-009",
+        "resourceId": "res-009",
+        "startDate": "2025-05-07T08:00:00Z",
+        "endDate": "2025-05-07T16:00:00Z",
+        "notes": "Repair weld seams on storage tanks 3 and 4. Conduct pressure test after repair."
+      },
+      {
+        "operationId": "op-010",
+        "operationName": "Quality Inspection",
+        "equipment": "Production Line D",
+        "workOrderNumber": "WO-2025-010",
+        "workOrderId": "wo-010",
+        "resourceId": "res-010",
+        "startDate": "2025-05-11T09:00:00Z",
+        "endDate": "2025-05-11T17:00:00Z",
+        "notes": "Conduct quality inspection on production line D. Document all findings and prepare report."
+      },
+      {
+        "operationId": "op-011",
+        "operationName": "Emergency Repair",
+        "equipment": "Conveyor System A",
+        "workOrderNumber": "WO-2025-011",
+        "workOrderId": "wo-011",
+        "resourceId": "res-001",
+        "startDate": "2025-05-12T09:00:00Z",
+        "endDate": "2025-05-12T12:00:00Z",
+        "notes": "Emergency repair of conveyor belt that has developed tears. Replace damaged section."
+      },
+      {
+        "operationId": "op-012",
+        "operationName": "Preventive Maintenance",
+        "equipment": "Electrical Generator",
+        "workOrderNumber": "WO-2025-012",
+        "workOrderId": "wo-012",
+        "resourceId": "res-002",
+        "startDate": "2025-05-13T08:00:00Z",
+        "endDate": "2025-05-13T16:00:00Z",
+        "notes": "Perform scheduled preventive maintenance on backup generator. Test under load conditions."
+      }
+    ],
+    "totalCount": 12
+  },
+  "success": true,
+  "errorMessage": null
+} 

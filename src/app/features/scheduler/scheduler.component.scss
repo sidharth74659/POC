@@ -1,0 +1,12 @@
+.scheduler-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.scheduler-table-container {
+  overflow-x: auto;
+  max-width: 100%;
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--border-radius-sm);
+} 

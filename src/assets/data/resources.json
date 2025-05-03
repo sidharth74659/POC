@@ -1,0 +1,69 @@
+{
+  "response": {
+    "items": [
+      {
+        "resourceId": "res-001",
+        "resourceName": "John Smith",
+        "skillSet": "Mechanical Engineering, Hydraulics",
+        "role": "Senior Technician"
+      },
+      {
+        "resourceId": "res-002",
+        "resourceName": "Sarah Johnson",
+        "skillSet": "Electrical Engineering, Automation",
+        "role": "Engineer"
+      },
+      {
+        "resourceId": "res-003",
+        "resourceName": "Michael Chen",
+        "skillSet": "Software, Controls",
+        "role": "Systems Engineer"
+      },
+      {
+        "resourceId": "res-004",
+        "resourceName": "Emily Wilson",
+        "skillSet": "Mechanical Engineering, Fabrication",
+        "role": "Technician"
+      },
+      {
+        "resourceId": "res-005",
+        "resourceName": "David Rodriguez",
+        "skillSet": "Electrical Engineering, Instrumentation",
+        "role": "Senior Engineer"
+      },
+      {
+        "resourceId": "res-006",
+        "resourceName": "Lisa Park",
+        "skillSet": "Project Management, Quality Control",
+        "role": "Project Manager"
+      },
+      {
+        "resourceId": "res-007",
+        "resourceName": "Robert Taylor",
+        "skillSet": "Hydraulics, Pneumatics",
+        "role": "Technician"
+      },
+      {
+        "resourceId": "res-008",
+        "resourceName": "Amanda Lee",
+        "skillSet": "Software, Networking",
+        "role": "IT Specialist"
+      },
+      {
+        "resourceId": "res-009",
+        "resourceName": "Carlos Gomez",
+        "skillSet": "Welding, Fabrication",
+        "role": "Craftsman"
+      },
+      {
+        "resourceId": "res-010",
+        "resourceName": "Jennifer White",
+        "skillSet": "Quality Assurance, Documentation",
+        "role": "Quality Specialist"
+      }
+    ],
+    "totalCount": 10
+  },
+  "success": true,
+  "errorMessage": null
+} 

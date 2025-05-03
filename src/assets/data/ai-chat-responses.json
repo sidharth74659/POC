@@ -1,0 +1,62 @@
+{
+  "responses": {
+    "general": {
+      "response": {
+        "answer": "Based on the resource context provided, John Smith is currently assigned to two operations: 'Routine Maintenance' on Conveyor System A scheduled for May 5th, 2025, and 'Emergency Repair' on the same equipment scheduled for May 12th, 2025. The maintenance operation involves checking belt tension and lubricating bearings, while the emergency repair is to replace a damaged section of the conveyor belt.",
+        "followUps": [
+          "When is John's next available time slot?",
+          "What equipment does John typically work with?",
+          "Are there any overlapping assignments for Conveyor System A?"
+        ]
+      },
+      "success": true,
+      "errorMessage": null
+    },
+    "next_week": {
+      "response": {
+        "answer": "Looking at the next week's schedule (May 10-16, 2025), there are 3 operations assigned: Lisa Park has 'Project Planning' for Assembly Line C from May 10-12, Jennifer White has 'Quality Inspection' on Production Line D on May 11, and John Smith has 'Emergency Repair' for Conveyor System A on May 12. Additionally, Sarah Johnson has 'Preventive Maintenance' on the Electrical Generator scheduled for May 13.",
+        "followUps": [
+          "Are there any scheduling conflicts next week?",
+          "Who has the most operations assigned next week?",
+          "What equipment requires maintenance next week?"
+        ]
+      },
+      "success": true,
+      "errorMessage": null
+    },
+    "available_slots": {
+      "response": {
+        "answer": "Based on the current schedule, John Smith has the following available time slots in the next two weeks: May 6-7 (full days), May 8-11 (full days), and May 13-16 (full days). He is currently scheduled for Routine Maintenance on May 5 and Emergency Repair on May 12, both for Conveyor System A.",
+        "followUps": [
+          "Can John be assigned to any new tasks next week?",
+          "Who else is available on May 10?",
+          "What is the duration of John's typical assignments?"
+        ]
+      },
+      "success": true,
+      "errorMessage": null
+    },
+    "equipment_conflicts": {
+      "response": {
+        "answer": "I've analyzed the schedule and found one potential equipment conflict: Conveyor System A has two operations scheduled - a Routine Maintenance with John Smith on May 5th and an Emergency Repair also with John Smith on May 12th. While these don't overlap in time, it's worth noting that the emergency repair might indicate that the routine maintenance didn't fully address all issues. No other equipment has overlapping operations in the current schedule.",
+        "followUps": [
+          "Should we reschedule the routine maintenance?",
+          "Are there other technicians qualified for conveyor systems?",
+          "What was found during the initial maintenance?"
+        ]
+      },
+      "success": true,
+      "errorMessage": null
+    },
+    "no_data": {
+      "response": null,
+      "success": false,
+      "errorMessage": "No operations found matching the specified criteria."
+    },
+    "ai_unavailable": {
+      "response": null,
+      "success": false,
+      "errorMessage": "AI service unavailable. Please try again later."
+    }
+  }
+} 
