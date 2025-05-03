@@ -1,64 +1,69 @@
+# Smart Scheduler with MCP Integration
 
-<!-- ng g @spartan-ng/cli:healthcheck -->
+A proof-of-concept application that demonstrates the integration of a resource scheduler with an AI-powered Mock Chat Provider (MCP).
 
----
+## Features
 
-# SmartScheduler
+- Resource management for viewing and filtering human resources
+- Operations scheduling and management
+- AI-powered chat interface for asking questions about resources
+- Real-time filtering and data visualization
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+## Project Structure
 
-## Development server
+The project consists of two main parts:
 
-To start a local development server, run:
+1. **Angular Frontend**: Located in the project root
+2. **Express Backend**: Located in `src/server`
 
-```bash
-ng serve
-```
+## Setup Instructions
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Prerequisites
 
-## Code scaffolding
+- Node.js (v14 or higher)
+- Angular CLI (v15 or higher)
+- npm or yarn
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Backend Setup
 
-```bash
-ng generate component component-name
-```
+1. Navigate to the server directory:
+   ```
+   cd src/server
+   ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-```bash
-ng generate --help
-```
+3. Start the server:
+   ```
+   node server.js
+   ```
+   
+   The server will run on http://localhost:3000
 
-## Building
+### Frontend Setup
 
-To build the project run:
+1. From the project root, install dependencies:
+   ```
+   npm install
+   ```
 
-```bash
-ng build
-```
+2. Start the Angular development server:
+   ```
+   ng serve
+   ```
+   
+   The application will be available at http://localhost:4200
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## API Endpoints
 
-## Running unit tests
+- **GET /resources** - Get all resources or filter by various criteria
+- **GET /operations** - Get all operations or filter by various criteria
+- **POST /ai/chat** - Send a question to the AI with resource context
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Development Notes
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- The sample data is located in `src/server/data` directory
+- The MCP service provides a simple mock implementation of an AI service

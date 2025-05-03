@@ -33,8 +33,8 @@
 
 ### Core Setup
 - [x] Configure Angular project with standalone components
-- [ ] Set up SCSS styling infrastructure
-- [ ] Configure routing for main views
+- [x] Set up SCSS styling infrastructure
+- [x] Configure routing for main views
 
 ### Services
 - [x] Create ResourceService for interacting with /resources API
@@ -50,47 +50,47 @@
   - [x] Create method to clear chat history
 
 ### Components - Scheduler Module
-- [ ] Create SchedulerComponent (container)
-  - [ ] Implement OnPush change detection
-  - [ ] Set up filter controls and state management
-- [ ] Create FilterComponent
-  - [ ] Implement equipment type filter
-  - [ ] Implement date range picker
-  - [ ] Implement resource name filter
-  - [ ] Create keyword search across notes
-  - [ ] Add debounce for search inputs
-- [ ] Create SchedulerTableComponent
-  - [ ] Design table with required columns (Resource, Skillset, Time Slot, Operation, Equipment, Availability, Ask AI)
-  - [ ] Implement horizontal scroll or column chooser
-  - [ ] Create row click handler for AI chat
-  - [ ] Add OnPush change detection strategy
-  - [ ] Implement empty state handling
+- [x] Create SchedulerComponent (container)
+  - [x] Implement OnPush change detection
+  - [x] Set up filter controls and state management
+- [x] Create FilterComponent
+  - [x] Implement equipment type filter
+  - [x] Implement date range picker
+  - [x] Implement resource name filter
+  - [x] Create keyword search across notes
+  - [x] Add debounce for search inputs
+- [x] Create SchedulerTableComponent
+  - [x] Design table with required columns (Resource, Skillset, Time Slot, Operation, Equipment, Availability, Ask AI)
+  - [x] Implement horizontal scroll or column chooser
+  - [x] Create row click handler for AI chat
+  - [x] Add OnPush change detection strategy
+  - [x] Implement empty state handling
 
 ### Components - Chat Module
-- [ ] Create ChatComponent
-  - [ ] Implement slide-out sidebar functionality
-  - [ ] Use OnPush change detection
-  - [ ] Add input for resourceContext
-  - [ ] Add outputs for close and error events
-  - [ ] Create question input with send functionality
-- [ ] Create ChatMessageComponent
-  - [ ] Support different message types (user, AI, error)
-  - [ ] Display response time for AI messages
-  - [ ] Apply appropriate color-coding
-- [ ] Create FollowUpComponent
-  - [ ] Render follow-up suggestion pills
-  - [ ] Handle pill click events
-  - [ ] Implement animated entry for pills
-- [ ] Create TypingIndicatorComponent
-  - [ ] Design typing animation
-  - [ ] Show/hide based on API call status
+- [x] Create ChatComponent
+  - [x] Implement slide-out sidebar functionality
+  - [x] Use OnPush change detection
+  - [x] Add input for resourceContext
+  - [x] Add outputs for close and error events
+  - [x] Create question input with send functionality
+- [x] Create ChatMessageComponent
+  - [x] Support different message types (user, AI, error)
+  - [x] Display response time for AI messages
+  - [x] Apply appropriate color-coding
+- [x] Create FollowUpComponent
+  - [x] Render follow-up suggestion pills
+  - [x] Handle pill click events
+  - [x] Implement animated entry for pills
+- [x] Create TypingIndicatorComponent
+  - [x] Design typing animation
+  - [x] Show/hide based on API call status
 
 ### Micro-interactions
-- [ ] Implement smooth open/close transitions for chat sidebar (~200ms)
-- [ ] Add typing indicator animation during AI calls
-- [ ] Create animated entry for follow-up pills
-- [ ] Set up color-coding for different message types
-- [ ] Implement response-time display
+- [x] Implement smooth open/close transitions for chat sidebar (~200ms)
+- [x] Add typing indicator animation during AI calls
+- [x] Create animated entry for follow-up pills
+- [x] Set up color-coding for different message types
+- [x] Implement response-time display
 
 ### State Management 
 - [x] Set up BehaviorSubject streams for chat messages
@@ -98,10 +98,22 @@
 - [x] Implement state for table data
 
 ### Error Handling
-- [ ] Create error display component
+- [x] Create error display component
 - [x] Implement graceful handling for API errors
 - [x] Add user-friendly messages for common error scenarios
 - [x] Handle AI service unavailability
+
+### MCP Integration - Backend Tasks
+- [ ] Set up MCP service layer according to spec
+  - [ ] Create MCP wrapper for external AI provider (OpenAI GPT-4)
+  - [ ] Implement context retrieval from operations data
+  - [ ] Create prompt templates for resource scheduling questions
+  - [ ] Add error handling specific to AI provider
+- [ ] Implement backend `/ai/chat` endpoint
+  - [ ] Process JSON requests containing `userId`, `resourceContext`, and `question`
+  - [ ] Call MCP service with proper context and formatting
+  - [ ] Structure response with standardized envelope and fields
+  - [ ] Implement proper error handling for AI timeouts or failures
 
 ### Testing
 - [ ] Create unit tests for all services
@@ -120,10 +132,10 @@
   - [ ] AI Fallback scenario
 
 ### Performance Optimization
-- [ ] Implement OnPush change detection for all appropriate components
-- [ ] Add debounce for filter inputs
-- [ ] Disable rapid-fire requests in chat
-- [ ] Optimize rendering for large data sets
+- [x] Implement OnPush change detection for all appropriate components
+- [x] Add debounce for filter inputs
+- [x] Disable rapid-fire requests in chat
+- [x] Optimize rendering for large data sets
 
 ### Accessibility
 - [ ] Ensure proper keyboard navigation
@@ -133,8 +145,8 @@
 
 ## 📋 Project Management
 - [x] Set up initial project structure
-- [ ] Configure linting and code formatting
-- [ ] Create component/service stubs
+- [x] Configure linting and code formatting
+- [x] Create component/service stubs
 - [ ] Implement CI/CD for testing (if applicable for POC)
-- [ ] Document API interactions and state management approach
+- [x] Document API interactions and state management approach
 - [ ] Create user documentation for the POC 

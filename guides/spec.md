@@ -234,3 +234,81 @@ User sees answer + pills; clicks follow‑up → repeat
 * Support for additional resource types (equipment, rooms).
 * Role‑based access control and permissions.
 * Persist conversation history for analytics.
+
+
+## High-Level Sequence Diagram for "Ask AI"
+
+```plaintext
+User clicks "Ask AI" button on a scheduler row
+    --> SchedulerComponent captures `resourceContext`
+    --> ChatService.open(resourceContext) triggers UI
+Slide-out Sidebar appears with ChatComponent
+User submits question  ──> ChatComponent.sendMessage(question)
+    --> ChatService.postChat({ userId?, resourceContext, question })
+        --> POST /ai/chat
+            --> Backend MCP Layer prepares filters, fetches data via GET /operations
+            --> MCP calls AI API (e.g. OpenAI GPT-4) with combined context
+            --> AI returns `answer` + `followUps`
+        --> ChatService receives response
+    <-- ChatComponent updates UI with answer, follow-up pills, response time, color coding
+User may click a follow-up pill ──> ChatComponent.sendMessage(followUp)
+Repeat until user closes or context expires
+```
+
+---
+
+## Sample JSON Request / Response Flows
+
+### 1. Fetch Operations
+
+**Request**: GET `/operations?resourceId=123&startDate=2025-05-05T00:00:00Z&endDate=2025-05-07T23:59:59Z`
+
+```json
+{
+  "Response": {
+    "items": [
+      {
+        "operationId": "op-456",
+        "operationName": "Inspect Pump",
+        "equipment": "Pump A",
+        "workOrderNumber": "WO-789",
+        "resourceName": "Alice Smith",
+        "startDate": "2025-05-05T08:00:00Z",
+        "endDate": "2025-05-05T12:00:00Z",
+        "notes": "Regular maintenance"
+      }
+    ],
+    "totalCount": 1
+  },
+  "Success": true,
+  "ErrorMessage": null
+}
+```
+
+### 2. Chat API Interaction
+
+**Request**: POST `/ai/chat`
+
+```json
+{
+  "userId": "user-001",
+  "resourceContext": { "operationId": "op-456", "resourceId": "123" },
+  "question": "What operations are assigned to me next week?"
+}
+```
+
+**Response**:
+
+```json
+{
+  "Response": {
+    "answer": "You have one operation next week: Inspect Pump on May 5 from 8 AM to 12 PM.",
+    "followUps": [
+      "Show me equipment maintenance history",
+      "When is my next inspection?"
+    ]
+  },
+  "Success": true,
+  "ErrorMessage": null
+}
+```

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "res-001",
+    "name": "John Smith",
+    "role": "Senior Technician",
+    "skillSet": ["electrical", "mechanical", "diagnostics"],
+    "availability": "available",
+    "location": "Building A"
+  },
+  {
+    "id": "res-002",
+    "name": "Sarah Johnson",
+    "role": "Field Engineer",
+    "skillSet": ["installation", "networking", "troubleshooting"],
+    "availability": "busy",
+    "location": "Building B"
+  },
+  {
+    "id": "res-003",
+    "name": "Michael Chen",
+    "role": "Maintenance Specialist",
+    "skillSet": ["preventive maintenance", "hydraulics", "mechanical"],
+    "availability": "available",
+    "location": "Building C"
+  },
+  {
+    "id": "res-004",
+    "name": "Emma Rodriguez",
+    "role": "Systems Engineer",
+    "skillSet": ["software", "firmware", "calibration"],
+    "availability": "unavailable",
+    "location": "Remote"
+  },
+  {
+    "id": "res-005",
+    "name": "David Kim",
+    "role": "Lead Technician",
+    "skillSet": ["electrical", "robotics", "automation"],
+    "availability": "available",
+    "location": "Building A"
+  }
+] 

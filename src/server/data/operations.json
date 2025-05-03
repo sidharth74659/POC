@@ -1,0 +1,98 @@
+[
+  {
+    "id": "op-001",
+    "resourceId": "res-001",
+    "title": "Repair Conveyor Belt",
+    "description": "Fix mechanical issue with conveyor belt in production line 3",
+    "location": "Building A, Floor 2",
+    "equipment": "Conveyor System A",
+    "startDate": "2023-07-15T09:00:00",
+    "endDate": "2023-07-15T11:30:00",
+    "priority": "high",
+    "status": "completed"
+  },
+  {
+    "id": "op-002",
+    "resourceId": "res-002",
+    "title": "Network Installation",
+    "description": "Install new network equipment in conference room",
+    "location": "Building B, Room 101",
+    "equipment": "Router System XB-200",
+    "startDate": "2023-07-15T13:00:00",
+    "endDate": "2023-07-15T17:00:00",
+    "priority": "medium",
+    "status": "in-progress"
+  },
+  {
+    "id": "op-003",
+    "resourceId": "res-001",
+    "title": "Electrical System Check",
+    "description": "Routine inspection of electrical panels",
+    "location": "Building A, Main Control Room",
+    "equipment": "Electrical Panel E-45",
+    "startDate": "2023-07-16T08:00:00",
+    "endDate": "2023-07-16T10:00:00",
+    "priority": "low",
+    "status": "scheduled"
+  },
+  {
+    "id": "op-004",
+    "resourceId": "res-003",
+    "title": "Hydraulic System Maintenance",
+    "description": "Regular maintenance of hydraulic press",
+    "location": "Building C, Production Floor",
+    "equipment": "Hydraulic Press HP-100",
+    "startDate": "2023-07-16T11:00:00",
+    "endDate": "2023-07-16T15:00:00",
+    "priority": "medium",
+    "status": "scheduled"
+  },
+  {
+    "id": "op-005",
+    "resourceId": "res-005",
+    "title": "Robot Arm Calibration",
+    "description": "Calibrate assembly line robot arm",
+    "location": "Building A, Assembly Line 2",
+    "equipment": "Robot Arm RA-7",
+    "startDate": "2023-07-15T10:00:00",
+    "endDate": "2023-07-15T12:00:00",
+    "priority": "high",
+    "status": "in-progress"
+  },
+  {
+    "id": "op-006",
+    "resourceId": "res-004",
+    "title": "Firmware Update",
+    "description": "Update firmware on control systems",
+    "location": "Remote Access",
+    "equipment": "Control System CS-2000",
+    "startDate": "2023-07-17T09:00:00",
+    "endDate": "2023-07-17T11:00:00",
+    "priority": "high",
+    "status": "scheduled"
+  },
+  {
+    "id": "op-007",
+    "resourceId": "res-002",
+    "title": "Troubleshoot Machine Error",
+    "description": "Diagnose and fix error code E-423 on packaging machine",
+    "location": "Building B, Packaging Area",
+    "equipment": "Packaging Machine PM-5",
+    "startDate": "2023-07-17T13:00:00",
+    "endDate": "2023-07-17T15:00:00",
+    "priority": "high",
+    "status": "scheduled"
+  },
+  {
+    "id": "op-008",
+    "resourceId": "res-003",
+    "title": "Preventive Maintenance Check",
+    "description": "Regular maintenance inspection of cooling systems",
+    "location": "Building C, Utility Room",
+    "equipment": "HVAC System HC-12",
+    "startDate": "2023-07-18T09:00:00",
+    "endDate": "2023-07-18T12:00:00",
+    "priority": "low",
+    "status": "scheduled"
+  }
+] 

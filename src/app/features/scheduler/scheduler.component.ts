@@ -1,60 +1,57 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ResourceService } from '../../core/services/resource.service';
-import { OperationService } from '../../core/services/operation.service';
-import { Resource, Operation } from '../../core/services/api.service';
-import { Observable } from 'rxjs';
+import { ResourceService } from '../../shared/services/resource.service';
+import { OperationService } from '../../shared/services/operation.service';
+import { Resource } from '../../shared/models/resource.model';
+import { Operation } from '../../shared/models/operation.model';
+import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
+import { FilterComponent } from './filter/filter.component';
+import { SchedulerTableComponent, ScheduleRow } from './scheduler-table/scheduler-table.component';
+import { ChatComponent } from '../chat/chat.component';
+
+export interface ResourceFilters {
+  skillSet?: string[];
+  role?: string;
+  name?: string;
+  availability?: string;
+}
+
+export interface OperationFilters {
+  resourceId?: string;
+  equipment?: string;
+  startDate?: string;
+  endDate?: string;
+  status?: string;
+  priority?: string;
+}
 
 @Component({
   selector: 'app-scheduler',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FilterComponent, SchedulerTableComponent, ChatComponent],
   template: `
-    <div class="scheduler-container">
+    <div class="scheduler-container p-4 max-w-[1200px] mx-auto">
       <h2 class="text-xl font-bold mb-4">Resource Scheduler</h2>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="resources-panel">
-          <h3 class="text-lg font-semibold mb-2">Available Resources</h3>
-          <div class="resource-list">
-            <div *ngIf="resources$ | async as resources">
-              <div *ngIf="resources.length; else noResources">
-                <div *ngFor="let resource of resources" class="resource-item p-2 border rounded mb-2">
-                  <div class="font-medium">{{ resource.resourceName }}</div>
-                  <div class="text-sm">Role: {{ resource.role }}</div>
-                  <div class="text-sm">Skills: {{ resource.skillSet }}</div>
-                </div>
-              </div>
-              <ng-template #noResources>
-                <p>No resources available</p>
-              </ng-template>
-            </div>
-          </div>
-        </div>
-        
-        <div class="operations-panel">
-          <h3 class="text-lg font-semibold mb-2">Pending Operations</h3>
-          <div class="operation-list">
-            <div *ngIf="operations$ | async as operations">
-              <div *ngIf="operations.length; else noOperations">
-                <div *ngFor="let operation of operations" class="operation-item p-2 border rounded mb-2">
-                  <div class="font-medium">{{ operation.operationName }}</div>
-                  <div class="text-sm">Equipment: {{ operation.equipment }}</div>
-                  <div class="text-sm">Period: {{ operation.startDate | date }} - {{ operation.endDate | date }}</div>
-                </div>
-              </div>
-              <ng-template #noOperations>
-                <p>No pending operations</p>
-              </ng-template>
-            </div>
-          </div>
-        </div>
+      <app-filter 
+        (resourceFiltersChanged)="onResourceFiltersChanged($event)"
+        (operationFiltersChanged)="onOperationFiltersChanged($event)"
+      ></app-filter>
+      
+      <div class="scheduler-table-wrapper">
+        <app-scheduler-table
+          [rows]="scheduleRows$ | async"
+          [isLoading]="(isLoading$ | async) ?? false"
+          (askAI)="onAskAI($event)"
+        ></app-scheduler-table>
       </div>
       
-      <div class="schedule-panel mt-4">
-        <h3 class="text-lg font-semibold mb-2">Current Schedule</h3>
-        <p class="text-sm text-gray-500">Scheduling functionality will be implemented in the next iteration.</p>
-      </div>
+      <app-chat
+        *ngIf="selectedResource"
+        [resourceContext]="selectedResource"
+        [isOpen]="isChatOpen"
+        (closed)="onChatClosed()"
+      ></app-chat>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -62,6 +59,16 @@ import { Observable } from 'rxjs';
 export class SchedulerComponent implements OnInit {
   resources$!: Observable<Resource[]>;
   operations$!: Observable<Operation[]>;
+  resourcesLoading$!: Observable<boolean>;
+  operationsLoading$!: Observable<boolean>;
+  isLoading$!: Observable<boolean>;
+  scheduleRows$!: Observable<ScheduleRow[]>;
+  
+  selectedResource: Resource | null = null;
+  isChatOpen: boolean = false;
+  
+  private resourceFiltersSubject = new BehaviorSubject<ResourceFilters>({});
+  private operationFiltersSubject = new BehaviorSubject<OperationFilters | null>(null);
 
   constructor(
     private resourceService: ResourceService,
@@ -70,11 +77,63 @@ export class SchedulerComponent implements OnInit {
 
   ngOnInit(): void {
     this.resources$ = this.resourceService.resources$;
+    this.resourcesLoading$ = this.resourceService.loading$;
     this.operations$ = this.operationService.operations$;
+    this.operationsLoading$ = this.operationService.loading$;
     
-    // Load resources with a small delay to avoid circular dependency
-    setTimeout(() => {
-      this.resourceService.loadResources();
-    }, 0);
+    // Combine loading states
+    this.isLoading$ = combineLatest([
+      this.resourcesLoading$,
+      this.operationsLoading$
+    ]).pipe(
+      map(([resourcesLoading, operationsLoading]) => Boolean(resourcesLoading || operationsLoading))
+    );
+    
+    // Create schedule rows by combining resources and operations
+    this.scheduleRows$ = combineLatest([
+      this.resources$,
+      this.operations$
+    ]).pipe(
+      map(([resources, operations]) => {
+        return resources.map(resource => {
+          const resourceOperations = operations.filter(op => 
+            op.resourceId === resource.id
+          );
+          
+          return {
+            resource,
+            operations: resourceOperations,
+            isAvailable: resource.availability === 'available'
+          };
+        });
+      })
+    );
+    
+    // Subscribe to filter changes
+    this.resourceFiltersSubject.subscribe(filters => {
+      this.resourceService.loadResources(filters);
+    });
+    
+    // Load initial resources and operations
+    this.resourceService.loadResources();
+    this.operationService.loadOperations();
+  }
+  
+  onResourceFiltersChanged(filters: ResourceFilters): void {
+    this.resourceFiltersSubject.next(filters);
+  }
+  
+  onOperationFiltersChanged(filters: OperationFilters): void {
+    this.operationFiltersSubject.next(filters);
+    this.operationService.loadOperations(filters);
+  }
+  
+  onAskAI(resource: Resource): void {
+    this.selectedResource = resource;
+    this.isChatOpen = true;
+  }
+  
+  onChatClosed(): void {
+    this.isChatOpen = false;
   }
 } 
