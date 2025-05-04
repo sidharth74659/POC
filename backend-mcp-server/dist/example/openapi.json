@@ -1,0 +1,556 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Smart Scheduler API",
+        "version": "1.0.0",
+        "description": "API for managing resources and operations in the Smart Scheduler application"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "Development server"
+        }
+    ],
+    "paths": {
+        "/api/resources": {
+            "get": {
+                "summary": "Get all resources",
+                "description": "Retrieve a list of all resources with optional filtering and field selection",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "skillSet",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filter by skill set"
+                    },
+                    {
+                        "in": "query",
+                        "name": "role",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filter by role"
+                    },
+                    {
+                        "in": "query",
+                        "name": "name",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filter by name"
+                    },
+                    {
+                        "in": "query",
+                        "name": "select",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated list of fields to include in the response"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new resource",
+                "description": "Create a new resource with the provided data",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Resource"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Resource created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/resources/{id}": {
+            "get": {
+                "summary": "Get a resource by ID",
+                "description": "Retrieve a single resource by ID with optional field selection",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Resource ID"
+                    },
+                    {
+                        "in": "query",
+                        "name": "select",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated list of fields to include in the response"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a resource",
+                "description": "Update an existing resource with the provided data",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Resource ID"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Resource"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resource updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a resource",
+                "description": "Delete a resource by ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Resource ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resource deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/ai/chat": {
+            "post": {
+                "summary": "Chat with AI",
+                "description": "Send a question to the AI with resource context",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChatRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ChatResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "502": {
+                        "description": "AI service unavailable"
+                    }
+                }
+            }
+        },
+        "/api/operations": {
+            "get": {
+                "summary": "Get all operations",
+                "description": "Retrieve a list of all operations with optional filtering and field selection",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "resourceId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filter by resource ID"
+                    },
+                    {
+                        "in": "query",
+                        "name": "equipment",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filter by equipment"
+                    },
+                    {
+                        "in": "query",
+                        "name": "startDate",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "description": "Filter by start date (operations starting after this date)"
+                    },
+                    {
+                        "in": "query",
+                        "name": "endDate",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "description": "Filter by end date (operations ending before this date)"
+                    },
+                    {
+                        "in": "query",
+                        "name": "select",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated list of fields to include in the response"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new operation",
+                "description": "Create a new operation with the provided data",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Operation"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Operation created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/operations/{id}": {
+            "get": {
+                "summary": "Get an operation by ID",
+                "description": "Retrieve a single operation by ID with optional field selection",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Operation ID"
+                    },
+                    {
+                        "in": "query",
+                        "name": "select",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated list of fields to include in the response"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Operation not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update an operation",
+                "description": "Update an existing operation with the provided data",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Operation ID"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Operation"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operation updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Operation not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete an operation",
+                "description": "Delete an operation by ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Operation ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Operation not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Resource": {
+                "type": "object",
+                "required": ["id", "name", "role", "skillSet", "availability"],
+                "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "role": { "type": "string" },
+                    "skillSet": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                    },
+                    "availability": {
+                        "type": "object",
+                        "properties": {
+                            "status": { "type": "string", "enum": ["available", "busy", "unavailable"] },
+                            "nextAvailable": { "type": "string", "format": "date-time", "nullable": true }
+                        }
+                    },
+                    "location": { "type": "string" },
+                    "contact": {
+                        "type": "object",
+                        "properties": {
+                            "email": { "type": "string", "format": "email" },
+                            "phone": { "type": "string" }
+                        }
+                    }
+                }
+            },
+            "Operation": {
+                "type": "object",
+                "required": ["id", "resourceId", "title", "startTime", "endTime"],
+                "properties": {
+                    "id": { "type": "string" },
+                    "resourceId": { "type": "string" },
+                    "title": { "type": "string" },
+                    "description": { "type": "string" },
+                    "startTime": { "type": "string", "format": "date-time" },
+                    "endTime": { "type": "string", "format": "date-time" },
+                    "equipment": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                    },
+                    "location": { "type": "string" },
+                    "status": { "type": "string", "enum": ["scheduled", "inProgress", "completed", "cancelled"] },
+                    "priority": { "type": "string", "enum": ["low", "medium", "high"] }
+                }
+            },
+            "ApiResponse": {
+                "type": "object",
+                "properties": {
+                    "success": { "type": "boolean" },
+                    "data": { "type": "object" },
+                    "message": { "type": "string" }
+                }
+            },
+            "ChatRequest": {
+                "type": "object",
+                "required": ["userId", "resourceId", "question"],
+                "properties": {
+                    "userId": { "type": "string" },
+                    "resourceId": { "type": "string" },
+                    "question": { "type": "string" }
+                }
+            },
+            "ChatResponse": {
+                "type": "object",
+                "properties": {
+                    "answer": { "type": "string" },
+                    "followUps": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                    }
+                }
+            }
+        }
+    }
+}

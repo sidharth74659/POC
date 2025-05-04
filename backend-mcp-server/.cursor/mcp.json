@@ -1,0 +1,10 @@
+{
+    "mcpServers": {
+        "APIServer": {
+            "command": "node",
+            "args": [
+                "/Users/srikanthvudharapu/Desktop/work/poc/20.ai--mcp/openapi-to-mcp-converter/dist/example/index.js"
+            ]
+        }
+    }
+}
