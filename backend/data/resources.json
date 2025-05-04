@@ -1,0 +1,32 @@
+[
+  {
+    "resourceId": "res-001",
+    "resourceName": "John Smith",
+    "skillSet": "electrical,mechanical,diagnostics",
+    "role": "Senior Technician"
+  },
+  {
+    "resourceId": "res-002",
+    "resourceName": "Sarah Johnson",
+    "skillSet": "installation,networking,troubleshooting",
+    "role": "Field Engineer"
+  },
+  {
+    "resourceId": "res-003",
+    "resourceName": "Michael Chen",
+    "skillSet": "preventive maintenance,hydraulics,mechanical",
+    "role": "Maintenance Specialist"
+  },
+  {
+    "resourceId": "res-004",
+    "resourceName": "Emma Rodriguez",
+    "skillSet": "software,firmware,calibration",
+    "role": "Systems Engineer"
+  },
+  {
+    "resourceId": "res-005",
+    "resourceName": "David Kim",
+    "skillSet": "electrical,robotics,automation",
+    "role": "Lead Technician"
+  }
+] 
