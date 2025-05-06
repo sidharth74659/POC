@@ -31,11 +31,11 @@ export interface ScheduleRow {
           <ng-container *ngIf="rows?.length; else noData">
             <tr *ngFor="let row of rows" class="border-b border-divider hover:bg-surface transition-colors">
               <td class="p-3">
-                <div class="font-medium">{{ row.resource.name }}</div>
-                <div class="text-sm text-text-secondary">{{ row.resource.id }}</div>
+                <div class="font-medium">{{ row.resource.resourceName }}</div>
+                <div class="text-sm text-text-secondary">{{ row.resource.resourceId }}</div>
               </td>
               <td class="p-3">
-                <span class="text-sm">{{ row.resource.skillSet.join(', ') }}</span>
+                <span class="text-sm">{{ row.resource.skillSet }}</span>
               </td>
               <td class="p-3">
                 <ng-container *ngIf="row.operations?.length; else noOperations">
@@ -50,7 +50,7 @@ export interface ScheduleRow {
               <td class="p-3">
                 <ng-container *ngIf="row.operations?.length; else noOperations">
                   <div *ngFor="let operation of row.operations" class="text-sm mb-1">
-                    {{ operation.title }}
+                    {{ operation.operationName }}
                   </div>
                 </ng-container>
                 <ng-template #noOperations>
@@ -68,7 +68,7 @@ export interface ScheduleRow {
                 </ng-template>
               </td>
               <td class="p-3">
-                <span [ngClass]="{
+                <!-- <span [ngClass]="{
                   'px-2 py-1 rounded-full text-xs flex items-center': true,
                   'bg-success bg-opacity-20 text-success': row.isAvailable,
                   'bg-warning bg-opacity-20 text-warning': row.resource.availability === 'busy',
@@ -82,6 +82,7 @@ export interface ScheduleRow {
                     }"></span>
                   {{ row.resource.availability.charAt(0).toUpperCase() + row.resource.availability.slice(1) }}
                 </span>
+                 -->
               </td>
               <td class="p-3">
                 <button 

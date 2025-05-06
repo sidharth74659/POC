@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
 import { Resource } from '../models/resource.model';
 import { environment } from '../../../environments/environment';
+import { ApiResponse } from '../models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class ResourceService {
   constructor(private http: HttpClient) {}
 
   loadResources(filters?: {
-    skillSet?: string[];
+    skillSet?: string;
     role?: string;
     name?: string;
     availability?: string;
@@ -30,8 +31,8 @@ export class ResourceService {
 
     let params = new HttpParams();
     
-    if (filters?.skillSet && filters.skillSet.length > 0) {
-      params = params.set('skillSet', filters.skillSet.join(','));
+    if (filters?.skillSet) {
+      params = params.set('skillSet', filters.skillSet);
     }
     
     if (filters?.role) {
@@ -46,23 +47,27 @@ export class ResourceService {
       params = params.set('availability', filters.availability);
     }
 
-    this.http.get<Resource[]>(this.apiUrl, { params })
+    this.http.get<ApiResponse<Resource>>(this.apiUrl, { params })
       .pipe(
         catchError(error => {
           console.error('Error loading resources:', error);
           this.errorSubject.next('Failed to load resources. Please try again.');
-          return of([]);
+          return of({
+            Response: { items: [], totalCount: 0 },
+            Success: false,
+            ErrorMessage: 'Failed to load resources'
+          } as ApiResponse<Resource>);
         }),
         tap(() => this.loadingSubject.next(false))
       )
-      .subscribe(resources => {
-        this.resourcesSubject.next(resources);
+      .subscribe(response => {
+        this.resourcesSubject.next(response.Response?.items || []);
       });
   }
 
-  getResourceById(id: string): Observable<Resource | undefined> {
+  getResourceById(resourceId: string): Observable<Resource | undefined> {
     return this.resources$.pipe(
-      map(resources => resources.find(resource => resource.id === id))
+      map(resources => resources.find(resource => resource.resourceId === resourceId))
     );
   }
-} 
+}

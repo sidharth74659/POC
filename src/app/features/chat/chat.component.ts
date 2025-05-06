@@ -94,7 +94,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   
   get resourceName(): string {
-    return this.resourceContext?.name || 'Resource';
+    return this.resourceContext?.resourceName || 'Resource';
   }
   
   constructor(

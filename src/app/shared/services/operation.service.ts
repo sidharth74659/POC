@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
 import { Operation } from '../models/operation.model';
 import { environment } from '../../../environments/environment';
+import { ApiResponse } from '../models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -56,23 +57,27 @@ export class OperationService {
       params = params.set('priority', filters.priority);
     }
 
-    this.http.get<Operation[]>(this.apiUrl, { params })
+    this.http.get<ApiResponse<Operation>>(this.apiUrl, { params })
       .pipe(
         catchError(error => {
           console.error('Error loading operations:', error);
           this.errorSubject.next('Failed to load operations. Please try again.');
-          return of([]);
+          return of({ 
+            Response: { items: [], totalCount: 0 }, 
+            Success: false, 
+            ErrorMessage: error.message 
+          } as ApiResponse<Operation>);
         }),
         tap(() => this.loadingSubject.next(false))
       )
-      .subscribe(operations => {
-        this.operationsSubject.next(operations);
+      .subscribe(response => {
+        this.operationsSubject.next(response.Response?.items || []);
       });
   }
 
   getOperationById(id: string): Observable<Operation | undefined> {
     return this.operations$.pipe(
-      map(operations => operations.find(operation => operation.id === id))
+      map(operations => operations.find(operation => operation.operationId === id))
     );
   }
 } 

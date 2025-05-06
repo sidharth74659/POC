@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ResourceService } from '../../core/services/resource.service';
-import { Resource } from '../../core/services/api.service';
+import { ResourceService } from '../../shared/services/resource.service';
+import { Resource } from '../../shared/models/resource.model';
 import { Observable } from 'rxjs';
 
 @Component({

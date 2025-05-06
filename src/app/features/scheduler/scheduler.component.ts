@@ -10,7 +10,7 @@ import { SchedulerTableComponent, ScheduleRow } from './scheduler-table/schedule
 import { ChatComponent } from '../chat/chat.component';
 
 export interface ResourceFilters {
-  skillSet?: string[];
+  skillSet?: string;
   role?: string;
   name?: string;
   availability?: string;
@@ -97,13 +97,13 @@ export class SchedulerComponent implements OnInit {
       map(([resources, operations]) => {
         return resources.map(resource => {
           const resourceOperations = operations.filter(op => 
-            op.resourceId === resource.id
+            op.resourceId === resource.resourceId
           );
           
           return {
             resource,
             operations: resourceOperations,
-            isAvailable: resource.availability === 'available'
+            isAvailable: true // Set default as available since our model doesn't track this
           };
         });
       })
@@ -121,6 +121,7 @@ export class SchedulerComponent implements OnInit {
   
   onResourceFiltersChanged(filters: ResourceFilters): void {
     this.resourceFiltersSubject.next(filters);
+    this.resourceService.loadResources(filters);
   }
   
   onOperationFiltersChanged(filters: OperationFilters): void {
@@ -135,5 +136,8 @@ export class SchedulerComponent implements OnInit {
   
   onChatClosed(): void {
     this.isChatOpen = false;
+    setTimeout(() => {
+      this.selectedResource = null;
+    }, 300); // small delay for animation
   }
 } 

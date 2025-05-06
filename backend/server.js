@@ -19,9 +19,9 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Register routes
-app.use('/api/resources', resourceRoutes);
-app.use('/api/operations', operationRoutes);
-app.use('/api/ai/chat', chatRoutes);
+app.use('/resources', resourceRoutes);
+app.use('/operations', operationRoutes);
+app.use('/ai/chat', chatRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

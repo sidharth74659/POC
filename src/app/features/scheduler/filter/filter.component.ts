@@ -162,13 +162,9 @@ export class FilterComponent implements OnInit {
     // Emit resource filters
     const resourceFilters: ResourceFilters = {
       name: formValues.name || undefined,
-      role: formValues.role || undefined
+      role: formValues.role || undefined,
+      skillSet: formValues.skillSet || undefined
     };
-    
-    // Handle skillSet as array
-    if (formValues.skillSet) {
-      resourceFilters.skillSet = [formValues.skillSet];
-    }
     
     this.resourceFiltersChanged.emit(resourceFilters);
     
