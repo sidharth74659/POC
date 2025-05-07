@@ -10,17 +10,21 @@ const mcpConfig = {
   // API key for authentication (would be stored in environment variables in production)
   apiKey: process.env.MCP_API_KEY || 'mock-api-key',
   
+  // API key for OpenAI
+  // openaiApiKey: process.env.OPENAI_API_KEY || 'sk-openai-mock-key-for-development',
+  openaiApiKey: process.env.OPENAI_API_KEY || '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',
+  
   // Default timeout for MCP API requests in milliseconds
-  timeout: 10000,
+  timeout: process.env.MCP_TIMEOUT || 30000,
   
   // Maximum tokens to generate in the response
-  maxTokens: 200,
+  maxTokens: process.env.MCP_MAX_TOKENS || 500,
   
   // Whether to use mock responses for local development
   useMockResponses: process.env.USE_MOCK_RESPONSES === 'true' || true,
   
   // Default model to use for chat completions
-  model: process.env.MCP_MODEL || 'mcp-20.x-scheduler',
+  model: process.env.MCP_MODEL || 'gpt-4',
   
   // Function to generate system prompt with context
   generateSystemPrompt: (resourceData, operationsData) => {
