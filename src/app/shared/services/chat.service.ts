@@ -18,7 +18,8 @@ export interface ChatResponse {
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = `${environment.apiUrl}/ai/chat`;
+  // private apiUrl = `${environment.apiUrl}/ai/chat`;
+  private apiUrl = `${environment.apiUrl}/chat-tooling`;
   private messagesSubject = new BehaviorSubject<ChatMessage[]>([]);
   private followUpsSubject = new BehaviorSubject<string[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);

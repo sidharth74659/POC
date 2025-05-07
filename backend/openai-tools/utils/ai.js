@@ -1,9 +1,11 @@
-import OpenAI from "openai";
-import tools from '../tools/index.js';
+const OpenAI = require("openai");
+const tools = require('../tools/index.js');
 
-export const openai = new OpenAI();
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
-export async function completeWithTools(args) {
+async function completeWithTools(args) {
   // console.log("\n\n"+"#".repeat(40));
   console.log(`Calling llm with: ${JSON.stringify(args.messages[args.messages.length-1]).substring(0,500)}`)
 
@@ -23,7 +25,8 @@ export async function completeWithTools(args) {
       console.log(`tool_calling: ${toolCall.function.name}(${JSON.stringify(toolArgs)})`)
       const result = await tools.functions[toolCall.function.name](toolArgs);
 
-      args.messages.push({                               // append result message
+      args.messages.push({
+        // append result message
         role: "tool",
         tool_call_id: toolCall.id,
         content: result
@@ -36,4 +39,8 @@ export async function completeWithTools(args) {
   console.log("\n\n"+"#".repeat(40));
   console.log(completion.choices[0].message.content.substring(0,500))
   return completion
+}
+
+module.exports = {
+  completeWithTools
 }

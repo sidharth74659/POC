@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
@@ -7,6 +8,8 @@ const specs = require('./swagger');
 const resourceRoutes = require('./routes/resourceRoutes');
 const operationRoutes = require('./routes/operationRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const { processUserQuery } = require('./test-gemini');
+// const { callOpenAITooling } = require('./openai-tools/openai-main');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +24,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // Register routes
 app.use('/resources', resourceRoutes);
 app.use('/operations', operationRoutes);
+app.use('/chat-tooling', processUserQuery);
 app.use('/ai/chat', chatRoutes);
 
 // Error handling middleware
@@ -37,6 +41,7 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
+  // callOpenAITooling();
 });
 
 module.exports = app; 

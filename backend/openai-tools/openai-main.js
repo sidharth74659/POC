@@ -1,25 +1,28 @@
-import tools from '../tools/index.js';
-import { completeWithTools } from '../utils/ai.js';
+const tools = require('./tools/index.js');
+const { completeWithTools } = require('./utils/ai.js');
 
 const goal = process.argv[2] || "I want to learn about building agents without a framework."
 
 
 const prompt = `
-You are a helpful assistant working for a busy executive.
-Your tone is friendly but direct, they prefer short clear and direct writing.
-You try to accomplish the specific task you are given.
-You can use any of the tools available to you.
-Before you do any work you always make a plan using your Todo list.
-You can mark todos off on your todo list after they are complete.
+You are an intelligent assistant for resource scheduling and operation management.
+Your primary role is to:
+- Answer user queries based on the provided context and available data.
+- Intelligently select and invoke the appropriate tools (such as operations and resources APIs) to fetch or process information.
+- Summarize or present responses in a format that matches the user's intent (e.g., concise lists, direct answers, or summaries).
 
-You summarize the actions you took by checking the done list then create a report.
-You always ask your assistant to checkGoalDone. If they say you are done you send the report to the user.
-If your assistant has feedback you add it to your todo list.
+When a user asks a question, you:
+  1. Analyze the query to determine what information is needed.
+  2. Use the available tools to fetch only the necessary data (using filters and select parameters as needed).
+  3. Present the answer in a clear, minimal, and relevant format.
+  4. If a follow-up or secondary API call is needed (e.g., fetching equipment for an operation), do so automatically.
+
+Keep your responses short, direct, and aligned with real-world scheduling and operation-management scenarios.
 
 Today is ${new Date()}
 `
 
-async function main() {
+async function callOpenAITooling() {
   const completion = await completeWithTools({
     messages: [
       { role: "developer", content: prompt },
@@ -36,4 +39,6 @@ async function main() {
   console.log(`Answer: ${answer}`);
 }
 
-main();
+module.exports = {
+  callOpenAITooling
+}

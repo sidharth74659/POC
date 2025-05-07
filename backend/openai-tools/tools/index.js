@@ -1,21 +1,25 @@
-import { markTodoDone, markTodoDoneToolConfig,
-        addTodos, addTodosToolConfig,
-        checkTodos, checkTodosToolConfig
-     } from "./todoList.js";
+// Import new tools for operations and resources (to be implemented)
+const { getOperations, getOperationById, getOperationsToolConfig, getOperationByIdToolConfig } = require("./operations.js");
+const { getResources, getResourceById, getResourcesToolConfig, getResourceByIdToolConfig } = require("./resources.js");
 
-export const functions = {
-    addTodos,
-    markTodoDone,
-    checkTodos,
+const functions = {
+    // New tools for operations
+    getOperations,
+    getOperationById,
+    // New tools for resources
+    getResources,
+    getResourceById,
 }
 
-export const configsArray = [
-    addTodosToolConfig,
-    markTodoDoneToolConfig,
-    checkTodosToolConfig,
+const configsArray = [
+    // Register new tool configs
+    getOperationsToolConfig,
+    getOperationByIdToolConfig,
+    getResourcesToolConfig,
+    getResourceByIdToolConfig,
 ]
 
-export default {
+module.exports = {
     functions,
     configsArray
 }

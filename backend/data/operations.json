@@ -6,8 +6,8 @@
     "workOrderNumber": "WO-1234",
     "workOrderId": "wo-1234",
     "resourceId": "res-001",
-    "startDate": "2023-07-15T09:00:00Z",
-    "endDate": "2023-07-15T11:30:00Z",
+    "startDate": "2025-05-15T09:00:00Z",
+    "endDate": "2025-05-15T11:30:00Z",
     "notes": "Fix mechanical issue with conveyor belt in production line 3"
   },
   {
@@ -17,8 +17,8 @@
     "workOrderNumber": "WO-1235",
     "workOrderId": "wo-1235",
     "resourceId": "res-002",
-    "startDate": "2023-07-15T13:00:00Z",
-    "endDate": "2023-07-15T17:00:00Z",
+    "startDate": "2025-05-15T13:00:00Z",
+    "endDate": "2025-05-15T17:00:00Z",
     "notes": "Install new network equipment in conference room"
   },
   {
@@ -28,8 +28,8 @@
     "workOrderNumber": "WO-1236",
     "workOrderId": "wo-1236",
     "resourceId": "res-001",
-    "startDate": "2023-07-16T08:00:00Z",
-    "endDate": "2023-07-16T10:00:00Z",
+    "startDate": "2025-05-16T08:00:00Z",
+    "endDate": "2025-05-16T10:00:00Z",
     "notes": "Routine inspection of electrical panels"
   },
   {
@@ -39,8 +39,8 @@
     "workOrderNumber": "WO-1237",
     "workOrderId": "wo-1237",
     "resourceId": "res-003",
-    "startDate": "2023-07-16T11:00:00Z",
-    "endDate": "2023-07-16T15:00:00Z",
+    "startDate": "2025-05-16T11:00:00Z",
+    "endDate": "2025-05-16T15:00:00Z",
     "notes": "Regular maintenance of hydraulic press"
   },
   {
@@ -50,8 +50,8 @@
     "workOrderNumber": "WO-1238",
     "workOrderId": "wo-1238",
     "resourceId": "res-005",
-    "startDate": "2023-07-15T10:00:00Z",
-    "endDate": "2023-07-15T12:00:00Z",
+    "startDate": "2025-05-15T10:00:00Z",
+    "endDate": "2025-05-15T12:00:00Z",
     "notes": "Calibrate assembly line robot arm"
   },
   {
@@ -61,8 +61,8 @@
     "workOrderNumber": "WO-1239",
     "workOrderId": "wo-1239",
     "resourceId": "res-004",
-    "startDate": "2023-07-17T09:00:00Z",
-    "endDate": "2023-07-17T11:00:00Z",
+    "startDate": "2025-05-17T09:00:00Z",
+    "endDate": "2025-05-17T11:00:00Z",
     "notes": "Update firmware on control systems"
   },
   {
@@ -72,8 +72,8 @@
     "workOrderNumber": "WO-1240",
     "workOrderId": "wo-1240",
     "resourceId": "res-002",
-    "startDate": "2023-07-17T13:00:00Z",
-    "endDate": "2023-07-17T15:00:00Z",
+    "startDate": "2025-05-17T13:00:00Z",
+    "endDate": "2025-05-17T15:00:00Z",
     "notes": "Diagnose and fix error code E-423 on packaging machine"
   },
   {
@@ -83,8 +83,8 @@
     "workOrderNumber": "WO-1241",
     "workOrderId": "wo-1241",
     "resourceId": "res-003",
-    "startDate": "2023-07-18T09:00:00Z",
-    "endDate": "2023-07-18T12:00:00Z",
+    "startDate": "2025-05-18T09:00:00Z",
+    "endDate": "2025-05-18T12:00:00Z",
     "notes": "Regular maintenance inspection of cooling systems"
   }
 ] 
