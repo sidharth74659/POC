@@ -12,7 +12,7 @@ const mcpConfig = {
   
   // API key for OpenAI
   // openaiApiKey: process.env.OPENAI_API_KEY || 'sk-openai-mock-key-for-development',
-  openaiApiKey: process.env.OPENAI_API_KEY || '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',
+  openaiApiKey: process.env.OPENAI_API_KEY,
   
   // Default timeout for MCP API requests in milliseconds
   timeout: process.env.MCP_TIMEOUT || 30000,
