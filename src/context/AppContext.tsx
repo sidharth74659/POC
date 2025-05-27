@@ -1,22 +1,22 @@
 import React, { createContext, useContext, useReducer, type ReactNode } from 'react';
-import type { Project, Tile, Issue, SubTask } from '../types';
+import type { IProject, ITile, IIssue, ISubTask } from '../interfaces';
 import { mockData } from '../mockData';
 
 // State type
 type AppState = {
-  projects: Project[];
-  tiles: Tile[];
-  issues: Issue[];
-  subtasks: SubTask[];
+  projects: IProject[];
+  tiles: ITile[];
+  issues: IIssue[];
+  subtasks: ISubTask[];
 };
 
 // Action types
 type Action =
-  | { type: 'ADD_ISSUE'; payload: Issue }
-  | { type: 'UPDATE_ISSUE'; payload: Issue }
-  | { type: 'ADD_SUBTASK'; payload: SubTask }
-  | { type: 'UPDATE_SUBTASK'; payload: SubTask }
-  | { type: 'UPDATE_TILE'; payload: Tile };
+  | { type: 'ADD_ISSUE'; payload: IIssue }
+  | { type: 'UPDATE_ISSUE'; payload: IIssue }
+  | { type: 'ADD_SUBTASK'; payload: ISubTask }
+  | { type: 'UPDATE_SUBTASK'; payload: ISubTask }
+  | { type: 'UPDATE_TILE'; payload: ITile };
 
 // Context type
 type AppContextType = {
