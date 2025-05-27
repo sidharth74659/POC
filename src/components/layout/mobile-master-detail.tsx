@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Menu } from 'lucide-react';
-import { Button } from './button';
+import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 
 interface MobileMasterDetailProps {

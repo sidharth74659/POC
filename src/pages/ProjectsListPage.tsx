@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { ProjectCardSkeleton } from '@/components/ui/loading-spinner';
-import { ResponsiveContainer, ResponsiveGrid } from '@/components/ui/responsive-container';
+import { ResponsiveContainer, ResponsiveGrid } from '@/components/layout/responsive-container';
+import { VirtualList } from '@/components/ui/virtual-list';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { useDebounce } from '../hooks/useDebounce';
 import { 
@@ -154,6 +155,34 @@ const ProjectCard = memo(({
 
 ProjectCard.displayName = 'ProjectCard';
 
+// Virtual list item renderer for large datasets
+const VirtualProjectItem = memo(({ 
+  index, 
+  style,
+  data 
+}: { 
+  index: number; 
+  style: React.CSSProperties;
+  data: IProject;
+}) => {
+  const navigate = useNavigate();
+  const handleClick = useCallback((projectId: string) => {
+    navigate(`/projects/${projectId}`);
+  }, [navigate]);
+
+  return (
+    <div style={style} className="p-2">
+      <ProjectCard 
+        project={data} 
+        onClick={handleClick}
+        viewMode="list"
+      />
+    </div>
+  );
+});
+
+VirtualProjectItem.displayName = 'VirtualProjectItem';
+
 function ProjectsListPage() {
   const { state } = useAppContext();
   const navigate = useNavigate();
@@ -162,6 +191,7 @@ function ProjectsListPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
+  const [useVirtualScrolling, setUseVirtualScrolling] = useState(false);
   
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
@@ -190,6 +220,11 @@ function ProjectsListPage() {
       return a.name.localeCompare(b.name);
     });
   }, [state.projects, debouncedSearchTerm]);
+
+  // Enable virtual scrolling for large datasets (>50 items)
+  const shouldUseVirtualScrolling = useMemo(() => {
+    return useVirtualScrolling || filteredProjects.length > 50;
+  }, [filteredProjects.length, useVirtualScrolling]);
 
   const handleCreateProject = useCallback(() => {
     info('Create Project', 'Project creation feature coming soon!');
@@ -310,6 +345,11 @@ function ProjectsListPage() {
                       onToggle={() => {}}
                       label="Recently Updated"
                     />
+                    <AnimatedToggle
+                      checked={useVirtualScrolling}
+                      onToggle={setUseVirtualScrolling}
+                      label="Virtual Scrolling"
+                    />
                   </div>
                 </div>
               </Card>
@@ -324,7 +364,18 @@ function ProjectsListPage() {
             initial="initial"
             animate="animate"
           >
-            {viewMode === 'grid' ? (
+            {shouldUseVirtualScrolling ? (
+              // Virtual scrolling for large datasets
+              <div className="h-[600px] border rounded-lg">
+                <VirtualList
+                  items={filteredProjects}
+                  height={600}
+                  itemHeight={viewMode === 'grid' ? 200 : 100}
+                  renderItem={VirtualProjectItem}
+                  className="p-2"
+                />
+              </div>
+            ) : viewMode === 'grid' ? (
               <ResponsiveGrid 
                 cols={{ mobile: 1, tablet: 2, desktop: 3 }}
                 className="gap-3 sm:gap-4"
@@ -352,6 +403,17 @@ function ProjectsListPage() {
             )}
           </motion.div>
         </ScrollAnimation>
+
+        {/* Performance Info */}
+        {shouldUseVirtualScrolling && (
+          <ScrollAnimation>
+            <Card className="p-3 bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                🚀 Virtual scrolling enabled for optimal performance with {filteredProjects.length} projects
+              </p>
+            </Card>
+          </ScrollAnimation>
+        )}
 
         {/* Empty State */}
         {filteredProjects.length === 0 && (

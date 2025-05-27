@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Home, ArrowLeft } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button } from './button';
-import { ThemeToggle } from './theme-toggle';
+import { Button } from '../ui/button';
+import { ThemeToggle } from '../ui/theme-toggle';
 
 interface MobileNavProps {
   title?: string;

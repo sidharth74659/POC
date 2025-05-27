@@ -15,8 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
-import { MobileMasterDetail, MobileTabs } from '@/components/ui/mobile-master-detail';
-import { ResponsiveContainer } from '@/components/ui/responsive-container';
+import { MobileMasterDetail, MobileTabs } from '@/components/layout/mobile-master-detail';
+import { ResponsiveContainer } from '@/components/layout/responsive-container';
 import { FileText, Code, Bug, CheckSquare, Copy, ExternalLink, Clock, User } from 'lucide-react';
 import { 
   ScrollAnimation, 
