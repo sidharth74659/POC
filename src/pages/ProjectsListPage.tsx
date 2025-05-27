@@ -192,6 +192,8 @@ function ProjectsListPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [useVirtualScrolling, setUseVirtualScrolling] = useState(false);
+  const [showActiveOnly, setShowActiveOnly] = useState(false);
+  const [showRecentlyUpdated, setShowRecentlyUpdated] = useState(false);
   
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
@@ -213,13 +215,27 @@ function ProjectsListPage() {
       );
     }
     
+    // Apply active projects filter
+    if (showActiveOnly) {
+      filtered = filtered.filter(project => project.status === 'active');
+    }
+    
+    // Apply recently updated filter (projects updated in last 7 days)
+    if (showRecentlyUpdated) {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      filtered = filtered.filter(project => 
+        project.updatedAt && new Date(project.updatedAt) > sevenDaysAgo
+      );
+    }
+    
     // Sort by status (active first), then by name
     return filtered.sort((a, b) => {
       if (a.status === 'active' && b.status !== 'active') return -1;
       if (a.status !== 'active' && b.status === 'active') return 1;
       return a.name.localeCompare(b.name);
     });
-  }, [state.projects, debouncedSearchTerm]);
+  }, [state.projects, debouncedSearchTerm, showActiveOnly, showRecentlyUpdated]);
 
   // Enable virtual scrolling for large datasets (>50 items)
   const shouldUseVirtualScrolling = useMemo(() => {
@@ -237,6 +253,34 @@ function ProjectsListPage() {
   const handleImportData = useCallback(() => {
     info('Import Data', 'Data import feature coming soon!');
   }, [info]);
+
+  // Filter toggle handlers with toast feedback
+  const handleActiveOnlyToggle = useCallback((checked: boolean) => {
+    setShowActiveOnly(checked);
+    if (checked) {
+      info('Filter Applied', 'Showing active projects only');
+    } else {
+      info('Filter Removed', 'Showing all projects');
+    }
+  }, [info]);
+
+  const handleRecentlyUpdatedToggle = useCallback((checked: boolean) => {
+    setShowRecentlyUpdated(checked);
+    if (checked) {
+      info('Filter Applied', 'Showing recently updated projects');
+    } else {
+      info('Filter Removed', 'Showing all projects');
+    }
+  }, [info]);
+
+  const handleVirtualScrollingToggle = useCallback((checked: boolean) => {
+    setUseVirtualScrolling(checked);
+    if (checked) {
+      success('Virtual Scrolling Enabled', 'Performance optimized for large datasets');
+    } else {
+      info('Virtual Scrolling Disabled', 'Using standard scrolling');
+    }
+  }, [success, info]);
 
   const floatingActions = [
     {
@@ -336,18 +380,18 @@ function ProjectsListPage() {
                   <h3 className="font-medium text-sm">Filter Options</h3>
                   <div className="flex flex-wrap gap-4">
                     <AnimatedToggle
-                      checked={false}
-                      onToggle={() => {}}
+                      checked={showActiveOnly}
+                      onToggle={handleActiveOnlyToggle}
                       label="Active Projects Only"
                     />
                     <AnimatedToggle
-                      checked={false}
-                      onToggle={() => {}}
+                      checked={showRecentlyUpdated}
+                      onToggle={handleRecentlyUpdatedToggle}
                       label="Recently Updated"
                     />
                     <AnimatedToggle
                       checked={useVirtualScrolling}
-                      onToggle={setUseVirtualScrolling}
+                      onToggle={handleVirtualScrollingToggle}
                       label="Virtual Scrolling"
                     />
                   </div>

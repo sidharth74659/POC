@@ -1,321 +1,271 @@
 # DocuTrack - Document-Centric Issue Tracking System
 
-A modern React application built with TypeScript and Shadcn UI that provides a document-centric approach to issue tracking, inspired by JIRA's workflow but focused on documentation management.
+DocuTrack is a modern, comprehensive document-centric issue tracking system built with React, TypeScript, and Vite. It features advanced UI components, responsive design, comprehensive testing with Puppeteer MCP integration, and sophisticated functionality for managing documentation projects and issues.
 
 ## 🚀 Features
 
-- **Project Management**: Organize work into projects with multiple tiles
-- **Document-Centric Workflow**: Each tile contains canonical documentation that can be forked for issues
-- **Issue Tracking**: Create issues by forking documents with visual diff markers
-- **Visual Diff Support**: Track changes with `++additions++`, `--removals--`, and `~~modifications~~`
-- **Subtask Management**: Break down issues into manageable subtasks
-- **Responsive Design**: Works seamlessly across desktop, tablet, and mobile devices
-- **Comprehensive Testing**: Automated E2E testing with Puppeteer and visual regression testing
+### Core Functionality
+- **Project Management**: Create, view, and manage documentation projects
+- **Issue Tracking**: Comprehensive issue management with status tracking
+- **Document-Centric Workflow**: Issues are tied to specific documentation tiles
+- **Visual Diff**: Side-by-side comparison of document changes
+- **Template System**: Predefined templates for consistent documentation
+- **Responsive Design**: Optimized for mobile, tablet, and desktop
 
-## 🛠️ Tech Stack
+### Advanced Features
+- **Shadcn UI Components**: Modern, accessible UI component library
+- **Framer Motion Animations**: Smooth transitions and micro-interactions
+- **Virtual Scrolling**: Performance-optimized for large datasets
+- **Search & Filtering**: Real-time search across projects and issues
+- **Dark/Light Theme**: System preference detection and manual toggle
+- **Accessibility**: WCAG compliant with keyboard navigation support
 
-- **Frontend**: React 18 + TypeScript
-- **UI Components**: Shadcn UI + Tailwind CSS
-- **Routing**: React Router DOM
-- **Markdown**: React Markdown for document rendering
-- **Testing**: Jest + Puppeteer for E2E testing
-- **Build Tool**: Vite
-- **Icons**: Lucide React
+## 🛠️ Technical Stack
+
+### Frontend
+- **React 18.2.0** with TypeScript
+- **Vite 5.1.6** for build tooling
+- **Tailwind CSS 3.4.1** for styling
+- **Shadcn UI** with Radix UI primitives
+- **React Router DOM 6.22.3** for routing
+- **Framer Motion 12.15.0** for animations
+
+### Testing & Automation
+- **Jest 29.7.0** for unit testing
+- **Puppeteer 24.9.0** for E2E testing
+- **React Testing Library 16.3.0** for component testing
+- **Puppeteer MCP Integration** for advanced browser automation
+
+### Development Tools
+- **TypeScript 5.2.2** for type safety
+- **ESLint 8.57.0** for code quality
+- **PostCSS 8.4.35** with Autoprefixer
 
 ## 📦 Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd doctrack
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser**
-   Navigate to `http://localhost:5173`
-
-## 🧪 Testing with Puppeteer MCP
-
-This project includes comprehensive automated testing using Puppeteer MCP (Model Context Protocol) for browser automation, visual regression testing, and functional validation.
-
 ### Prerequisites
+- Node.js 18+ 
+- npm or yarn
 
-1. **Install Puppeteer MCP Server globally**
-   ```bash
-   npm install -g @modelcontextprotocol/server-puppeteer
-   ```
-
-2. **Configure Claude Desktop (Optional)**
-   Add the following to your Claude Desktop configuration:
-   ```json
-   {
-     "mcpServers": {
-       "puppeteer": {
-         "command": "npx",
-         "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
-       }
-     }
-   }
-   ```
-
-### Running Tests
-
-#### 1. Manual Test Runner (Recommended)
-Run the comprehensive test suite with visual browser:
+### Setup
 ```bash
+# Clone the repository
+git clone <repository-url>
+cd doctrack
+
+# Install dependencies
+npm install
+
+# Install Puppeteer MCP Server globally (for advanced testing)
+npm install -g @modelcontextprotocol/server-puppeteer
+
+# Start development server
+npm run dev
+```
+
+## 🧪 Testing
+
+DocuTrack includes a comprehensive testing suite with multiple testing strategies:
+
+### Test Scripts
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run E2E tests only
+npm run test:e2e
+
+# Generate coverage report
+npm run test:coverage
+
+# Run comprehensive manual test runner with Puppeteer
 npm run test:manual
 ```
 
-This will:
-- Start the Vite dev server automatically
-- Launch a browser window (visible for debugging)
-- Run all test scenarios
-- Capture screenshots for visual regression
-- Generate detailed console output
+### Testing Features
 
-#### 2. Jest E2E Tests
-Run the full Jest test suite:
-```bash
-npm run test:e2e
-```
+#### 1. Unit Tests
+- Component rendering and functionality
+- Hook behavior validation
+- Utility function testing
+- Context provider testing
 
-#### 3. Watch Mode
-Run tests in watch mode for development:
-```bash
-npm run test:watch
-```
+#### 2. Integration Tests
+- Component interaction testing
+- State management validation
+- Mock data structure verification
 
-#### 4. Coverage Report
-Generate test coverage report:
-```bash
-npm run test:coverage
-```
+#### 3. End-to-End Tests (Manual Runner)
+- **Visual Regression Testing**: Automated screenshot capture across multiple viewports
+- **User Interaction Testing**: Form submission, navigation, and modal interactions
+- **Responsive Design Validation**: Testing on Mobile (375x667), Tablet (768x1024), Desktop (1280x720), and Large Desktop (1920x1080)
+- **Performance Testing**: Load time validation and DOM size monitoring
+- **Accessibility Testing**: Keyboard navigation and ARIA compliance
 
-### Test Scenarios Covered
+#### 4. Puppeteer MCP Integration
+The manual test runner (`npm run test:manual`) provides:
+- Automatic dev server startup
+- Comprehensive browser automation
+- Visual regression screenshots
+- Performance metrics collection
+- Detailed test reporting
 
-#### 🔍 **Basic Functionality Tests**
-- Projects list page loads correctly
-- Project cards are visible and clickable
-- Navigation between pages works
-
-#### 🧭 **Navigation Tests**
-- Project detail page navigation
-- Tile selection and display
-- Issue detail page navigation
-- Breadcrumb navigation
-
-#### 🎯 **Interaction Tests**
-- Create issue modal functionality
-- Form filling and validation
-- Issue creation workflow
-- Status changes and updates
-- Subtask management
-
-#### 📱 **Responsive Design Tests**
-- Mobile viewport (375x667)
-- Tablet viewport (768x1024)
-- Desktop viewport (1280x720)
-- Large desktop viewport (1920x1080)
-
-#### ⚡ **Performance Tests**
-- Page load times
-- DOM content loaded metrics
-- Basic Lighthouse score validation
-
-#### ♿ **Accessibility Tests**
-- Proper heading hierarchy
-- Alt text for images
-- Keyboard navigation support
-- Focus management
-
-### Visual Regression Testing
-
-Screenshots are automatically captured during tests and saved to `tests/screenshots/`:
-
-- `projects-list.png` - Main projects page
-- `project-detail.png` - Project detail view
-- `create-issue-modal.png` - Issue creation modal
-- `issue-detail.png` - Issue detail page
-- `responsive-*.png` - Various viewport sizes
-
-### Test Configuration
-
-The testing setup includes:
-
-- **Jest Configuration**: `jest.config.js`
-- **Test Setup**: `tests/setup.ts`
-- **E2E Tests**: `tests/e2e.test.ts`
-- **Manual Test Runner**: `test-runner.js`
+### Test Coverage
+- **Basic Functionality**: Page loading, element visibility, search functionality
+- **Navigation**: Route transitions, URL validation, back/forward navigation
+- **Interactions**: Search filtering, view mode toggles, form submissions
+- **Responsive Design**: Multi-viewport testing with screenshot capture
+- **Performance**: Load time validation (< 5 seconds), DOM size monitoring (< 2000 elements)
+- **Accessibility**: Heading hierarchy, keyboard navigation, alt text validation
 
 ## 🏗️ Project Structure
 
 ```
 src/
 ├── components/
-│   └── ui/                 # Shadcn UI components
-├── context/
-│   └── AppContext.tsx      # Global state management
-├── pages/
-│   ├── ProjectsListPage.tsx
-│   ├── ProjectDetailPage.tsx
-│   └── IssueDetailPage.tsx
-├── types.ts                # TypeScript type definitions
-├── mockData.ts             # Mock data generation
-└── App.tsx                 # Main application component
-
-tests/
-├── e2e.test.ts            # Comprehensive E2E tests
-├── setup.ts               # Test configuration
-└── screenshots/           # Visual regression screenshots
+│   ├── ui/                 # Shadcn UI components
+│   ├── layout/             # Layout components
+│   ├── navigation/         # Navigation components
+│   ├── forms/              # Form components
+│   ├── issue/              # Issue-specific components
+│   ├── project/            # Project-specific components
+│   └── tile/               # Tile components
+├── pages/                  # Page components
+├── contexts/               # React contexts
+├── hooks/                  # Custom hooks
+├── lib/                    # Utility libraries
+├── interfaces/             # TypeScript interfaces
+├── constants/              # Application constants
+├── services/               # API services
+├── themes/                 # Theme configurations
+├── utils/                  # Utility functions
+└── assets/                 # Static assets
 ```
 
 ## 🎨 UI Components
 
-The application uses Shadcn UI components for a consistent, modern interface:
+### Shadcn UI Components
+- **Button**: Multiple variants with loading states
+- **Card**: Flexible container component
+- **Input/Textarea**: Form input components
+- **Select**: Dropdown selection component
+- **Dialog**: Modal and dialog components
+- **Badge**: Status and category indicators
+- **Table**: Data display with sorting
+- **Accordion**: Collapsible content sections
+- **Scroll Area**: Custom scrollbar styling
+- **Checkbox/Label**: Form controls
 
-- **Cards**: Project and tile containers
-- **Buttons**: Actions and navigation
-- **Badges**: Status and priority indicators
-- **Tables**: Issue listings
-- **Dialogs**: Modal forms
-- **Select**: Dropdown menus
-- **Input/Textarea**: Form fields
-- **Accordion**: Collapsible sections
-- **Checkbox**: Task completion
+### Custom Components
+- **AnimatedCard**: Enhanced card with hover animations
+- **EnhancedButton**: Button with advanced interactions
+- **AnimatedToggle**: Smooth toggle switches
+- **FloatingActionMenu**: Contextual action buttons
+- **VirtualList**: Performance-optimized list rendering
+- **ResponsiveContainer**: Layout wrapper with breakpoint handling
+- **ResponsiveGrid**: Flexible grid system
 
-## 📊 Data Models
+## 📱 Responsive Design
 
-### Project
-- `id`: Unique identifier
-- `name`: Project name
-- `purpose`: Project description
-- `tileCount`: Number of tiles
+DocuTrack is built with a mobile-first approach and includes:
 
-### Tile
-- `id`: Unique identifier
-- `projectId`: Parent project
-- `name`: Tile name
-- `mainDocumentContent`: Canonical documentation (Markdown)
-- `templateData`: Structured metadata (intent, scenario, flow, APIs, etc.)
+- **Breakpoint System**: Tailwind CSS responsive utilities
+- **Touch Optimization**: Touch-friendly interactions
+- **Viewport Adaptation**: Dynamic layout adjustments
+- **Performance Optimization**: Virtual scrolling for large datasets
 
-### Issue
-- `id`: Unique identifier
-- `tileId`: Parent tile
-- `issueNumber`: Human-readable issue number
-- `title`: Issue title
-- `assignee`: Assigned person
-- `priority`: High/Medium/Low
-- `status`: Open/In Progress/Testing/Closed
-- `forkedDocumentContent`: Modified documentation with diff markers
-- `tags`: Optional tags
-- `createdAt`: Creation timestamp
+### Tested Viewports
+- **Mobile**: 375x667 (iPhone SE)
+- **Tablet**: 768x1024 (iPad)
+- **Desktop**: 1280x720 (Standard laptop)
+- **Large Desktop**: 1920x1080 (Full HD)
 
-### SubTask
-- `id`: Unique identifier
-- `issueId`: Parent issue
-- `description`: Task description
-- `status`: Open/Closed
+## ♿ Accessibility
 
-## 🔄 Workflow
+- **Keyboard Navigation**: Full keyboard accessibility
+- **Screen Reader Support**: Proper ARIA labels and descriptions
+- **Focus Management**: Logical focus order and indicators
+- **Color Contrast**: WCAG AA compliant color schemes
+- **Semantic HTML**: Proper heading hierarchy and landmarks
 
-1. **Browse Projects**: View all available projects
-2. **Select Project**: Navigate to project detail page
-3. **Choose Tile**: Select a tile to view its documentation
-4. **Create Issue**: Fork the tile's document to create an issue
-5. **Modify Content**: Edit the forked document with diff markers
-6. **Track Progress**: Manage issue status and subtasks
-7. **Merge Changes**: When complete, merge changes back to the main document
+## 🚀 Performance
 
-## 🎯 Diff Markers
+### Optimizations
+- **Virtual Scrolling**: Efficient rendering for large datasets (>50 items)
+- **Memoization**: React.memo and useMemo for performance
+- **Code Splitting**: Lazy loading of components
+- **Bundle Optimization**: Tree shaking and minification
 
-The application supports visual diff markers in Markdown content:
+### Performance Targets
+- **Initial Load**: < 3 seconds
+- **Route Transitions**: < 500ms
+- **Search Results**: < 300ms
+- **Modal Opening**: < 200ms
 
-- `++Added text++` - Highlighted in green
-- `--Removed text--` - Highlighted in red with strikethrough
-- `~~Modified text~~` - Highlighted in orange
+## 🔧 Development
 
-## 🚀 Deployment
+### Available Scripts
+```bash
+# Development
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run lint         # Run ESLint
 
-1. **Build the application**
-   ```bash
-   npm run build
-   ```
+# Testing
+npm test             # Run all tests
+npm run test:watch   # Run tests in watch mode
+npm run test:e2e     # Run E2E tests only
+npm run test:coverage # Generate coverage report
+npm run test:manual  # Run comprehensive Puppeteer tests
+```
 
-2. **Preview the build**
-   ```bash
-   npm run preview
-   ```
+### Code Quality
+- **TypeScript**: Strict type checking
+- **ESLint**: Code style enforcement
+- **Component Architecture**: Modular, reusable components
+- **Context-based State Management**: Centralized state with React Context
 
-3. **Deploy** the `dist` folder to your hosting platform
+## 📖 Documentation
+
+- **README.md**: Project overview and setup instructions
+- **TESTING.md**: Comprehensive testing guide with examples
+- **IMPLEMENTATION_SUMMARY.md**: Detailed technical implementation summary
+
+## 🔮 Future Enhancements
+
+### Planned Features
+- **Real-time Collaboration**: WebSocket integration
+- **Advanced Search**: Full-text search with filters
+- **File Attachments**: Document and image uploads
+- **Notification System**: Real-time notifications
+- **API Integration**: Backend service integration
+
+### Technical Improvements
+- **PWA Support**: Service worker and offline functionality
+- **Internationalization**: Multi-language support
+- **Advanced Analytics**: User behavior tracking
+- **Performance Monitoring**: Real-time performance metrics
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run the test suite: `npm run test:manual`
-5. Ensure all tests pass
-6. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📝 License
+## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🔧 Development
+## 🙏 Acknowledgments
 
-### Adding New Components
-
-1. Use Shadcn UI CLI to add components:
-   ```bash
-   npx shadcn@latest add [component-name]
-   ```
-
-2. Import and use in your components:
-   ```tsx
-   import { Button } from '@/components/ui/button'
-   ```
-
-### Testing New Features
-
-1. Add data-testid attributes to new elements
-2. Update the E2E test suite in `tests/e2e.test.ts`
-3. Run tests to ensure functionality works
-4. Add visual regression screenshots if needed
-
-### State Management
-
-The application uses React Context for state management. See `src/context/AppContext.tsx` for the implementation.
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **Tests failing**: Ensure the dev server is running on port 5173
-2. **Screenshots not generating**: Check that the `tests/screenshots` directory exists
-3. **Puppeteer issues**: Try running with `--no-sandbox` flag in CI environments
-4. **Component imports failing**: Verify the path alias configuration in `vite.config.ts`
-
-### Debug Mode
-
-Run tests with visible browser for debugging:
-```bash
-# Edit test-runner.js and set headless: false
-npm run test:manual
-```
-
-## 📚 Additional Resources
-
-- [Shadcn UI Documentation](https://ui.shadcn.com/)
-- [Puppeteer Documentation](https://pptr.dev/)
-- [React Router Documentation](https://reactrouter.com/)
-- [Tailwind CSS Documentation](https://tailwindcss.com/)
-- [Vite Documentation](https://vitejs.dev/)
+- **Shadcn UI** for the excellent component library
+- **Radix UI** for accessible primitives
+- **Tailwind CSS** for utility-first styling
+- **Puppeteer** for browser automation capabilities
+- **React Team** for the amazing framework
