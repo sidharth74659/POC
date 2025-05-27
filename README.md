@@ -1,114 +1,321 @@
 # DocuTrack - Document-Centric Issue Tracking System
 
-A modern issue tracking system that integrates documentation directly into the workflow, built with React, TypeScript, and Shadcn UI.
+A modern React application built with TypeScript and Shadcn UI that provides a document-centric approach to issue tracking, inspired by JIRA's workflow but focused on documentation management.
 
-## Features
+## 🚀 Features
 
-- Project-based organization with tiles (components/features)
-- Document-centric issue tracking
-- Visual diff highlighting for document changes
-- Subtask management
-- Clean and intuitive UI inspired by JIRA
+- **Project Management**: Organize work into projects with multiple tiles
+- **Document-Centric Workflow**: Each tile contains canonical documentation that can be forked for issues
+- **Issue Tracking**: Create issues by forking documents with visual diff markers
+- **Visual Diff Support**: Track changes with `++additions++`, `--removals--`, and `~~modifications~~`
+- **Subtask Management**: Break down issues into manageable subtasks
+- **Responsive Design**: Works seamlessly across desktop, tablet, and mobile devices
+- **Comprehensive Testing**: Automated E2E testing with Puppeteer and visual regression testing
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- React with TypeScript
-- Shadcn UI for components
-- Tailwind CSS for styling
-- React Router for navigation
-- React Markdown for rendering documentation
+- **Frontend**: React 18 + TypeScript
+- **UI Components**: Shadcn UI + Tailwind CSS
+- **Routing**: React Router DOM
+- **Markdown**: React Markdown for document rendering
+- **Testing**: Jest + Puppeteer for E2E testing
+- **Build Tool**: Vite
+- **Icons**: Lucide React
 
-## Getting Started
+## 📦 Installation
 
-1. Clone the repository
-2. Install dependencies:
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd doctrack
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
-3. Start the development server:
+
+3. **Start the development server**
    ```bash
    npm run dev
    ```
 
-## Project Structure
+4. **Open your browser**
+   Navigate to `http://localhost:5173`
 
-- `/src`
-  - `/components` - Reusable UI components
-  - `/context` - React Context for state management
-  - `/pages` - Main application pages
-  - `/types` - TypeScript type definitions
-  - `mockData.ts` - Sample data for development
-  - `App.tsx` - Main application component
-  - `main.tsx` - Application entry point
+## 🧪 Testing with Puppeteer MCP
 
-## Development
+This project includes comprehensive automated testing using Puppeteer MCP (Model Context Protocol) for browser automation, visual regression testing, and functional validation.
 
-The application uses mock data for development. The data structure includes:
+### Prerequisites
 
-- Projects
-- Tiles (components/features within projects)
-- Issues (with document forking)
-- Subtasks
+1. **Install Puppeteer MCP Server globally**
+   ```bash
+   npm install -g @modelcontextprotocol/server-puppeteer
+   ```
 
-## Contributing
+2. **Configure Claude Desktop (Optional)**
+   Add the following to your Claude Desktop configuration:
+   ```json
+   {
+     "mcpServers": {
+       "puppeteer": {
+         "command": "npx",
+         "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
+       }
+     }
+   }
+   ```
+
+### Running Tests
+
+#### 1. Manual Test Runner (Recommended)
+Run the comprehensive test suite with visual browser:
+```bash
+npm run test:manual
+```
+
+This will:
+- Start the Vite dev server automatically
+- Launch a browser window (visible for debugging)
+- Run all test scenarios
+- Capture screenshots for visual regression
+- Generate detailed console output
+
+#### 2. Jest E2E Tests
+Run the full Jest test suite:
+```bash
+npm run test:e2e
+```
+
+#### 3. Watch Mode
+Run tests in watch mode for development:
+```bash
+npm run test:watch
+```
+
+#### 4. Coverage Report
+Generate test coverage report:
+```bash
+npm run test:coverage
+```
+
+### Test Scenarios Covered
+
+#### 🔍 **Basic Functionality Tests**
+- Projects list page loads correctly
+- Project cards are visible and clickable
+- Navigation between pages works
+
+#### 🧭 **Navigation Tests**
+- Project detail page navigation
+- Tile selection and display
+- Issue detail page navigation
+- Breadcrumb navigation
+
+#### 🎯 **Interaction Tests**
+- Create issue modal functionality
+- Form filling and validation
+- Issue creation workflow
+- Status changes and updates
+- Subtask management
+
+#### 📱 **Responsive Design Tests**
+- Mobile viewport (375x667)
+- Tablet viewport (768x1024)
+- Desktop viewport (1280x720)
+- Large desktop viewport (1920x1080)
+
+#### ⚡ **Performance Tests**
+- Page load times
+- DOM content loaded metrics
+- Basic Lighthouse score validation
+
+#### ♿ **Accessibility Tests**
+- Proper heading hierarchy
+- Alt text for images
+- Keyboard navigation support
+- Focus management
+
+### Visual Regression Testing
+
+Screenshots are automatically captured during tests and saved to `tests/screenshots/`:
+
+- `projects-list.png` - Main projects page
+- `project-detail.png` - Project detail view
+- `create-issue-modal.png` - Issue creation modal
+- `issue-detail.png` - Issue detail page
+- `responsive-*.png` - Various viewport sizes
+
+### Test Configuration
+
+The testing setup includes:
+
+- **Jest Configuration**: `jest.config.js`
+- **Test Setup**: `tests/setup.ts`
+- **E2E Tests**: `tests/e2e.test.ts`
+- **Manual Test Runner**: `test-runner.js`
+
+## 🏗️ Project Structure
+
+```
+src/
+├── components/
+│   └── ui/                 # Shadcn UI components
+├── context/
+│   └── AppContext.tsx      # Global state management
+├── pages/
+│   ├── ProjectsListPage.tsx
+│   ├── ProjectDetailPage.tsx
+│   └── IssueDetailPage.tsx
+├── types.ts                # TypeScript type definitions
+├── mockData.ts             # Mock data generation
+└── App.tsx                 # Main application component
+
+tests/
+├── e2e.test.ts            # Comprehensive E2E tests
+├── setup.ts               # Test configuration
+└── screenshots/           # Visual regression screenshots
+```
+
+## 🎨 UI Components
+
+The application uses Shadcn UI components for a consistent, modern interface:
+
+- **Cards**: Project and tile containers
+- **Buttons**: Actions and navigation
+- **Badges**: Status and priority indicators
+- **Tables**: Issue listings
+- **Dialogs**: Modal forms
+- **Select**: Dropdown menus
+- **Input/Textarea**: Form fields
+- **Accordion**: Collapsible sections
+- **Checkbox**: Task completion
+
+## 📊 Data Models
+
+### Project
+- `id`: Unique identifier
+- `name`: Project name
+- `purpose`: Project description
+- `tileCount`: Number of tiles
+
+### Tile
+- `id`: Unique identifier
+- `projectId`: Parent project
+- `name`: Tile name
+- `mainDocumentContent`: Canonical documentation (Markdown)
+- `templateData`: Structured metadata (intent, scenario, flow, APIs, etc.)
+
+### Issue
+- `id`: Unique identifier
+- `tileId`: Parent tile
+- `issueNumber`: Human-readable issue number
+- `title`: Issue title
+- `assignee`: Assigned person
+- `priority`: High/Medium/Low
+- `status`: Open/In Progress/Testing/Closed
+- `forkedDocumentContent`: Modified documentation with diff markers
+- `tags`: Optional tags
+- `createdAt`: Creation timestamp
+
+### SubTask
+- `id`: Unique identifier
+- `issueId`: Parent issue
+- `description`: Task description
+- `status`: Open/Closed
+
+## 🔄 Workflow
+
+1. **Browse Projects**: View all available projects
+2. **Select Project**: Navigate to project detail page
+3. **Choose Tile**: Select a tile to view its documentation
+4. **Create Issue**: Fork the tile's document to create an issue
+5. **Modify Content**: Edit the forked document with diff markers
+6. **Track Progress**: Manage issue status and subtasks
+7. **Merge Changes**: When complete, merge changes back to the main document
+
+## 🎯 Diff Markers
+
+The application supports visual diff markers in Markdown content:
+
+- `++Added text++` - Highlighted in green
+- `--Removed text--` - Highlighted in red with strikethrough
+- `~~Modified text~~` - Highlighted in orange
+
+## 🚀 Deployment
+
+1. **Build the application**
+   ```bash
+   npm run build
+   ```
+
+2. **Preview the build**
+   ```bash
+   npm run preview
+   ```
+
+3. **Deploy** the `dist` folder to your hosting platform
+
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
-3. Submit a pull request 
+3. Make your changes
+4. Run the test suite: `npm run test:manual`
+5. Ensure all tests pass
+6. Submit a pull request
 
----
+## 📝 License
 
-# React + TypeScript + Vite
+This project is licensed under the MIT License.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🔧 Development
 
-Currently, two official plugins are available:
+### Adding New Components
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Use Shadcn UI CLI to add components:
+   ```bash
+   npx shadcn@latest add [component-name]
+   ```
 
-## Expanding the ESLint configuration
+2. Import and use in your components:
+   ```tsx
+   import { Button } from '@/components/ui/button'
+   ```
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Testing New Features
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. Add data-testid attributes to new elements
+2. Update the E2E test suite in `tests/e2e.test.ts`
+3. Run tests to ensure functionality works
+4. Add visual regression screenshots if needed
+
+### State Management
+
+The application uses React Context for state management. See `src/context/AppContext.tsx` for the implementation.
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Tests failing**: Ensure the dev server is running on port 5173
+2. **Screenshots not generating**: Check that the `tests/screenshots` directory exists
+3. **Puppeteer issues**: Try running with `--no-sandbox` flag in CI environments
+4. **Component imports failing**: Verify the path alias configuration in `vite.config.ts`
+
+### Debug Mode
+
+Run tests with visible browser for debugging:
+```bash
+# Edit test-runner.js and set headless: false
+npm run test:manual
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📚 Additional Resources
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- [Shadcn UI Documentation](https://ui.shadcn.com/)
+- [Puppeteer Documentation](https://pptr.dev/)
+- [React Router Documentation](https://reactrouter.com/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/)
+- [Vite Documentation](https://vitejs.dev/)

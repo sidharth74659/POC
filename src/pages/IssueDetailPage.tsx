@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import ReactMarkdown from 'react-markdown';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import type { SubTask } from '../types';
+import { mockData } from '../mockData';
 
 function IssueDetailPage() {
   const { issueId } = useParams<{ issueId: string }>();
   const { state, dispatch } = useAppContext();
+  const [newSubtaskDescription, setNewSubtaskDescription] = useState('');
 
   const issue = state.issues.find((i) => i.id === issueId);
   const tile = issue ? state.tiles.find((t) => t.id === issue.tileId) : null;
@@ -35,6 +45,20 @@ function IssueDetailPage() {
     }
   };
 
+  const handleAddSubtask = () => {
+    if (!newSubtaskDescription.trim()) return;
+
+    const newSubtask: SubTask = {
+      id: mockData.generateId(),
+      issueId: issue.id,
+      description: newSubtaskDescription,
+      status: 'Open',
+    };
+
+    dispatch({ type: 'ADD_SUBTASK', payload: newSubtask });
+    setNewSubtaskDescription('');
+  };
+
   const handleMergeToMain = () => {
     if (issue.status === 'Closed') {
       dispatch({
@@ -53,78 +77,90 @@ function IssueDetailPage() {
   return (
     <div className="space-y-6">
       {/* Issue Header */}
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-start" data-testid="issue-header">
         <div>
           <div className="flex items-center space-x-4">
-            <h1 className="text-3xl font-bold">{issue.issueNumber}</h1>
-            <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary">
+            <h1 className="text-3xl font-bold" data-testid="issue-number">{issue.issueNumber}</h1>
+            <Badge 
+              variant={issue.status === 'Closed' ? 'default' : 'secondary'}
+              data-testid="status-badge"
+            >
               {issue.status}
-            </span>
+            </Badge>
           </div>
           <h2 className="text-xl mt-2">{issue.title}</h2>
         </div>
         <div className="space-y-2">
-          <select
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            value={issue.status}
-            onChange={(e) =>
-              handleStatusChange(e.target.value as typeof issue.status)
-            }
-          >
-            <option value="Open">Open</option>
-            <option value="Development In Progress">Development In Progress</option>
-            <option value="Testing In Progress">Testing In Progress</option>
-            <option value="Closed">Closed</option>
-          </select>
+          <Select value={issue.status} onValueChange={handleStatusChange}>
+            <SelectTrigger className="w-[200px]" data-testid="status-select">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Open">Open</SelectItem>
+              <SelectItem value="Development In Progress">Development In Progress</SelectItem>
+              <SelectItem value="Testing In Progress">Testing In Progress</SelectItem>
+              <SelectItem value="Closed">Closed</SelectItem>
+            </SelectContent>
+          </Select>
           {issue.status === 'Closed' && (
-            <button
-              className="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+            <Button
+              className="w-full"
               onClick={handleMergeToMain}
+              data-testid="merge-button"
             >
               Merge to Main
-            </button>
+            </Button>
           )}
         </div>
       </div>
 
       {/* Issue Metadata */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <label className="text-sm font-medium">Assignee</label>
-          <div className="text-sm">{issue.assignee}</div>
-        </div>
-        <div className="space-y-1">
-          <label className="text-sm font-medium">Priority</label>
-          <div className="text-sm">{issue.priority}</div>
-        </div>
-        {issue.estimation && (
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Estimation</label>
-            <div className="text-sm">{issue.estimation}</div>
-          </div>
-        )}
-        {issue.tags && issue.tags.length > 0 && (
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Tags</label>
-            <div className="flex gap-2">
-              {issue.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground"
-                >
-                  {tag}
-                </span>
-              ))}
+      <Card>
+        <CardHeader>
+          <CardTitle>Issue Details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <Label className="text-sm font-medium">Assignee</Label>
+              <div className="text-sm">{issue.assignee}</div>
             </div>
+            <div className="space-y-1">
+              <Label className="text-sm font-medium">Priority</Label>
+              <Badge variant={issue.priority === 'High' ? 'destructive' : issue.priority === 'Medium' ? 'default' : 'secondary'}>
+                {issue.priority}
+              </Badge>
+            </div>
+            {issue.estimation && (
+              <div className="space-y-1">
+                <Label className="text-sm font-medium">Estimation</Label>
+                <div className="text-sm">{issue.estimation}</div>
+              </div>
+            )}
+            {issue.tags && issue.tags.length > 0 && (
+              <div className="space-y-1">
+                <Label className="text-sm font-medium">Tags</Label>
+                <div className="flex gap-2">
+                  {issue.tags.map((tag) => (
+                    <Badge key={tag} variant="outline">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Forked Document */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Forked Document</h3>
-        <div className="rounded-lg border bg-card p-6">
+      <Card data-testid="forked-content">
+        <CardHeader>
+          <CardTitle>Forked Document</CardTitle>
+        </CardHeader>
+        <CardContent>
           <ReactMarkdown
+            className="prose prose-sm max-w-none"
             components={{
               p: ({ children }) => {
                 const text = children?.toString() || '';
@@ -135,7 +171,7 @@ function IssueDetailPage() {
                         return (
                           <span
                             key={index}
-                            className="bg-green-100 dark:bg-green-900/30"
+                            className="bg-green-100 dark:bg-green-900/30 px-1 rounded"
                           >
                             {part.slice(2, -2)}
                           </span>
@@ -145,7 +181,7 @@ function IssueDetailPage() {
                         return (
                           <span
                             key={index}
-                            className="bg-red-100 line-through dark:bg-red-900/30"
+                            className="bg-red-100 line-through dark:bg-red-900/30 px-1 rounded"
                           >
                             {part.slice(2, -2)}
                           </span>
@@ -160,35 +196,59 @@ function IssueDetailPage() {
           >
             {issue.forkedDocumentContent}
           </ReactMarkdown>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Subtasks */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Subtasks</h3>
-        <div className="space-y-2">
-          {subtasks.map((subtask) => (
-            <div
-              key={subtask.id}
-              className="flex items-center space-x-2 rounded-lg border p-4"
-            >
-              <input
-                type="checkbox"
-                checked={subtask.status === 'Closed'}
-                onChange={() => handleSubtaskToggle(subtask.id)}
-                className="h-4 w-4 rounded border-primary text-primary focus:ring-primary"
-              />
-              <span
-                className={`flex-1 ${
-                  subtask.status === 'Closed' ? 'line-through opacity-50' : ''
-                }`}
-              >
-                {subtask.description}
-              </span>
+      <Card>
+        <CardHeader>
+          <CardTitle>Subtasks</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {/* Existing Subtasks */}
+            <div className="space-y-2">
+              {subtasks.map((subtask) => (
+                <div
+                  key={subtask.id}
+                  className="flex items-center space-x-2 rounded-lg border p-4"
+                >
+                  <Checkbox
+                    checked={subtask.status === 'Closed'}
+                    onCheckedChange={() => handleSubtaskToggle(subtask.id)}
+                    data-testid="subtask-checkbox"
+                  />
+                  <span
+                    className={`flex-1 ${
+                      subtask.status === 'Closed' ? 'line-through opacity-50' : ''
+                    }`}
+                  >
+                    {subtask.description}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
+
+            {/* Add New Subtask */}
+            <div className="flex space-x-2">
+              <Input
+                value={newSubtaskDescription}
+                onChange={(e) => setNewSubtaskDescription(e.target.value)}
+                placeholder="Add a new subtask..."
+                className="flex-1"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleAddSubtask();
+                  }
+                }}
+              />
+              <Button onClick={handleAddSubtask} disabled={!newSubtaskDescription.trim()}>
+                Add Subtask
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

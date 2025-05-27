@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 function ProjectsListPage() {
   const { state } = useAppContext();
@@ -11,19 +13,24 @@ function ProjectsListPage() {
       <h1 className="text-3xl font-bold">Projects</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {state.projects.map((project) => (
-          <div
+          <Card
             key={project.id}
-            className="rounded-lg border bg-card text-card-foreground shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+            data-testid="project-card"
+            className="cursor-pointer hover:shadow-md transition-shadow"
             onClick={() => navigate(`/projects/${project.id}`)}
           >
-            <div className="p-6 space-y-4">
-              <h3 className="text-2xl font-semibold">{project.name}</h3>
-              <p className="text-sm text-muted-foreground">{project.purpose}</p>
-              <div className="flex items-center text-sm text-muted-foreground">
-                <span>{project.tileCount} Tiles</span>
+            <CardHeader>
+              <CardTitle className="text-xl">{project.name}</CardTitle>
+              <CardDescription>{project.purpose}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <Badge variant="secondary">
+                  {project.tileCount} Tiles
+                </Badge>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>
