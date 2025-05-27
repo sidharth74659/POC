@@ -26,9 +26,10 @@ import {
   AnimatedCounter
 } from '@/components/ui/animations';
 import { EnhancedButton, CopyButton, StarRating, ProgressSteps } from '@/components/ui/interactive-elements';
-import { useToast } from '../contexts/ToastContext';
+import { useToast } from '@/contexts/ToastContext';
 import { mockData } from '../mockData';
 import type { IIssue } from '../interfaces';
+import { FormValidator, CommonSchemas, CSRFProtection } from '@/utils/validation';
 
 function ProjectDetailPage() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -84,43 +85,58 @@ function ProjectDetailPage() {
   }
 
   const handleCreateIssue = async () => {
-    if (!selectedTile || !newIssue.title.trim()) return;
+    if (!selectedTile) return;
+
+    // Validate form data
+    const validator = new FormValidator(CommonSchemas.issueForm);
+    const validationResult = validator.validate(newIssue);
+
+    if (!validationResult.isValid) {
+      // Show validation errors
+      Object.entries(validationResult.errors).forEach(([field, errorMsg]) => {
+        error(`Validation Error`, `${field}: ${errorMsg}`);
+      });
+      return;
+    }
 
     setIsCreatingIssue(true);
-
+    
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      const issue: IIssue = {
+      // Use sanitized data from validation
+      const sanitizedData = validationResult.sanitizedData;
+      
+      const issueData: IIssue = {
         id: mockData.generateId(),
         tileId: selectedTile.id,
-        issueNumber: `ISSUE-${Math.floor(Math.random() * 1000) + 100}`,
-        title: newIssue.title,
+        issueNumber: `ISSUE-${mockData.issues.filter(i => i.tileId === selectedTile.id).length + 1}`,
+        title: sanitizedData.title,
         description: '',
-        assignee: newIssue.assignee,
-        priority: newIssue.priority as 'Low' | 'Medium' | 'High' | 'Critical',
-        status: 'Open',
+        assignee: sanitizedData.assignee,
+        priority: sanitizedData.priority as 'Low' | 'Medium' | 'High' | 'Critical',
+        status: 'Open' as const,
         type: 'Feature',
-        forkedDocumentContent: newIssue.content || selectedTile.mainDocumentContent,
+        forkedDocumentContent: sanitizedData.content || selectedTile.mainDocumentContent,
         originalDocumentContent: selectedTile.mainDocumentContent,
         tags: [],
         createdAt: new Date(),
         updatedAt: new Date(),
         estimation: '',
-        reporter: 'User'
+        reporter: 'Current User'
       };
 
-      dispatch({ type: 'ADD_ISSUE', payload: issue });
-      success('Issue Created', `Issue ${issue.issueNumber} has been created successfully.`);
+      // Add CSRF token to the request (simulated)
+      const csrfToken = CSRFProtection.getToken();
+      console.log('Creating issue with CSRF token:', csrfToken);
+
+      // Simulate API call with delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
+      mockData.issues.push(issueData);
+      
+      success('Success', 'Issue created successfully!');
+
+      setNewIssue({ title: '', assignee: 'Unassigned', priority: 'Medium', content: '' });
       setIsCreateIssueOpen(false);
-      setNewIssue({
-        title: '',
-        assignee: 'Unassigned',
-        priority: 'Medium',
-        content: '',
-      });
     } catch (err) {
       error('Creation Failed', 'Failed to create issue. Please try again.');
     } finally {

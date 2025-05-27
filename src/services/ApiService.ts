@@ -1,7 +1,8 @@
 import type { IApiResponse, IApiError, IApiRequestConfig } from '../interfaces';
+import { CSRFProtection, globalRateLimiter } from '../utils/validation';
 
 /**
- * ApiService - Centralized HTTP client with error handling, retries, and caching
+ * ApiService - Centralized HTTP client with error handling, retries, caching, CSRF protection, and rate limiting
  */
 export class ApiService {
   private baseURL: string;
@@ -14,10 +15,13 @@ export class ApiService {
     this.defaultTimeout = timeout;
     this.defaultRetries = retries;
     this.cache = new Map();
+    
+    // Initialize CSRF protection
+    CSRFProtection.initializeCSRF();
   }
 
   /**
-   * Generic request method with retry logic and error handling
+   * Generic request method with retry logic, error handling, CSRF protection, and rate limiting
    */
   async request<T>(config: IApiRequestConfig): Promise<IApiResponse<T>> {
     const {
@@ -29,6 +33,21 @@ export class ApiService {
       timeout = this.defaultTimeout,
       retries = this.defaultRetries
     } = config;
+
+    // Rate limiting check
+    const clientId = this.getClientIdentifier();
+    if (!globalRateLimiter.isAllowed(clientId)) {
+      return {
+        success: false,
+        error: {
+          code: 'RATE_LIMIT_EXCEEDED',
+          message: 'Too many requests. Please try again later.',
+          details: `Remaining requests: ${globalRateLimiter.getRemainingRequests(clientId)}`,
+          timestamp: new Date(),
+          path: this.buildUrl(url, params)
+        }
+      };
+    }
 
     const fullUrl = this.buildUrl(url, params);
     const cacheKey = `${method}:${fullUrl}`;
@@ -50,6 +69,17 @@ export class ApiService {
       signal: AbortSignal.timeout(timeout),
     };
 
+    // Add CSRF token for state-changing requests
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+      const csrfToken = CSRFProtection.getToken();
+      if (csrfToken) {
+        requestOptions.headers = {
+          ...requestOptions.headers,
+          'X-CSRF-Token': csrfToken
+        };
+      }
+    }
+
     if (data && method !== 'GET') {
       requestOptions.body = JSON.stringify(data);
     }
@@ -61,54 +91,52 @@ export class ApiService {
         const response = await fetch(fullUrl, requestOptions);
         
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          lastError = {
-            code: response.status.toString(),
-            message: errorData.message || response.statusText,
-            details: errorData,
-            timestamp: new Date(),
-            path: fullUrl,
-          };
-
-          // Don't retry for client errors (4xx)
-          if (response.status >= 400 && response.status < 500) {
+          const errorData = await this.parseErrorResponse(response);
+          lastError = errorData;
+          
+          // Don't retry for client errors (4xx) except 429 (rate limit)
+          if (response.status >= 400 && response.status < 500 && response.status !== 429) {
             break;
           }
-
-          // Wait before retry (exponential backoff)
+          
+          // Exponential backoff for retries
           if (attempt < retries) {
             await this.delay(Math.pow(2, attempt) * 1000);
             continue;
           }
+        } else {
+          const responseData = await response.json();
+          
+          // Cache successful GET requests
+          if (method === 'GET') {
+            this.setCache(cacheKey, responseData, 300000); // 5 minutes TTL
+          }
+          
+          return { success: true, data: responseData };
         }
-
-        const result = await response.json();
-        
-        // Cache successful GET requests
-        if (method === 'GET' && result.success) {
-          this.setCache(cacheKey, result.data, 5 * 60 * 1000); // 5 minutes TTL
-        }
-
-        return result;
       } catch (error) {
         lastError = {
           code: 'NETWORK_ERROR',
           message: error instanceof Error ? error.message : 'Network request failed',
-          details: error,
+          details: `Attempt ${attempt + 1} of ${retries + 1}`,
           timestamp: new Date(),
-          path: fullUrl,
+          path: this.buildUrl(url, params)
         };
-
+        
         if (attempt < retries) {
           await this.delay(Math.pow(2, attempt) * 1000);
-          continue;
         }
       }
     }
 
     return {
       success: false,
-      error: lastError!,
+      error: lastError || {
+        code: 'UNKNOWN_ERROR',
+        message: 'Request failed after all retry attempts',
+        timestamp: new Date(),
+        path: this.buildUrl(url, params)
+      }
     };
   }
 
@@ -202,6 +230,24 @@ export class ApiService {
    */
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private getClientIdentifier(): string {
+    // Implement your logic to get a unique client identifier based on the request
+    // This is a placeholder and should be replaced with the actual implementation
+    return 'default_client_identifier';
+  }
+
+  private parseErrorResponse(response: Response): IApiError {
+    // Implement your logic to parse the error response from the API
+    // This is a placeholder and should be replaced with the actual implementation
+    return {
+      code: response.status.toString(),
+      message: response.statusText,
+      details: {},
+      timestamp: new Date(),
+      path: response.url || '',
+    };
   }
 }
 
