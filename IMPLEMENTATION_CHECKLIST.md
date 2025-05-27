@@ -70,7 +70,7 @@ This checklist outlines the systematic implementation of advanced features, perf
 - [ ] Create `StorageService` for local storage operations
 
 ### 1.4 Testing Setup for Phase 1
-- [x] Update Puppeteer tests for new folder structure
+- [x] Update Playwright/Puppeteer tests for new folder structure
 - [x] Test TypeScript compilation
 - [x] Verify all imports and exports work correctly
 - [x] Run existing functionality tests to ensure no regressions
@@ -289,7 +289,7 @@ This checklist outlines the systematic implementation of advanced features, perf
 
 ## 🧪 Testing Strategy
 
-### Puppeteer MCP Testing Phases
+### Playwright/Puppeteer MCP Testing Phases
 - [ ] **Phase 1 Testing**: Architecture and structure validation
 - [ ] **Phase 2 Testing**: Theme switching and visual regression
 - [ ] **Phase 3 Testing**: Performance and loading behavior

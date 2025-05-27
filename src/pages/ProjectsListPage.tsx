@@ -5,6 +5,7 @@ import { useAppContext } from '../context/AppContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ProjectCardSkeleton } from '@/components/ui/loading-spinner';
+import { ResponsiveContainer, ResponsiveGrid } from '@/components/ui/responsive-container';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import type { IProject } from '../interfaces';
 
@@ -41,43 +42,48 @@ const ProjectCard = memo(({
       transition={{ duration: 0.3 }}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
+      className="h-full"
     >
       <Card
         data-testid="project-card"
-        className="cursor-pointer hover:shadow-lg transition-all duration-200 h-full"
+        className="cursor-pointer hover:shadow-lg transition-all duration-200 h-full touch-manipulation"
         onClick={handleClick}
       >
-        <CardHeader>
-          <CardTitle className="text-xl line-clamp-2">{project.name}</CardTitle>
-          <CardDescription className="line-clamp-3">{project.purpose}</CardDescription>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg sm:text-xl line-clamp-2 leading-tight">
+            {project.name}
+          </CardTitle>
+          <CardDescription className="line-clamp-3 text-sm">
+            {project.purpose}
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
+        <CardContent className="pt-0">
+          <div className="flex items-center justify-between mb-3">
             <Badge 
               variant="secondary"
-              className="transition-colors duration-200"
+              className="transition-colors duration-200 text-xs"
             >
               {project.tileCount} Tiles
             </Badge>
             {project.status && (
               <Badge 
                 variant={project.status === 'active' ? 'default' : 'outline'}
-                className="capitalize"
+                className="capitalize text-xs"
               >
                 {project.status}
               </Badge>
             )}
           </div>
           {project.tags && project.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-3">
-              {project.tags.slice(0, 3).map((tag) => (
+            <div className="flex flex-wrap gap-1">
+              {project.tags.slice(0, 2).map((tag) => (
                 <Badge key={tag} variant="outline" className="text-xs">
                   {tag}
                 </Badge>
               ))}
-              {project.tags.length > 3 && (
+              {project.tags.length > 2 && (
                 <Badge variant="outline" className="text-xs">
-                  +{project.tags.length - 3}
+                  +{project.tags.length - 2}
                 </Badge>
               )}
             </div>
@@ -110,51 +116,57 @@ function ProjectsListPage() {
   }, [state.projects]);
 
   return (
-    <motion.div 
-      className="space-y-6"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Projects</h1>
-        <Badge variant="outline" className="text-sm">
-          {state.projects.length} Total
-        </Badge>
-      </div>
-      
+    <ResponsiveContainer variant="mobile-padded">
       <motion.div 
-        className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        className="space-y-4 sm:space-y-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
       >
-        {sortedProjects.map((project, index) => (
-          <motion.div
-            key={project.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.05 }}
-          >
-            <ProjectCard 
-              project={project} 
-              onClick={handleProjectClick}
-            />
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {state.projects.length === 0 && (
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl sm:text-3xl font-bold">Projects</h1>
+          <Badge variant="outline" className="text-sm">
+            {state.projects.length} Total
+          </Badge>
+        </div>
+        
         <motion.div 
-          className="text-center py-12"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <p className="text-muted-foreground">No projects found</p>
+          <ResponsiveGrid 
+            cols={{ mobile: 1, tablet: 2, desktop: 3 }}
+            className="gap-3 sm:gap-4"
+          >
+            {sortedProjects.map((project, index) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <ProjectCard 
+                  project={project} 
+                  onClick={handleProjectClick}
+                />
+              </motion.div>
+            ))}
+          </ResponsiveGrid>
         </motion.div>
-      )}
-    </motion.div>
+
+        {state.projects.length === 0 && (
+          <motion.div 
+            className="text-center py-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <p className="text-muted-foreground">No projects found</p>
+          </motion.div>
+        )}
+      </motion.div>
+    </ResponsiveContainer>
   );
 }
 
