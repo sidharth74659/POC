@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
 import ReactMarkdown from 'react-markdown';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +17,16 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Checkbox } from '@/components/ui/checkbox';
 import { MobileMasterDetail, MobileTabs } from '@/components/ui/mobile-master-detail';
 import { ResponsiveContainer } from '@/components/ui/responsive-container';
-import { FileText, Code, Bug, CheckSquare } from 'lucide-react';
+import { FileText, Code, Bug, CheckSquare, Copy, ExternalLink, Clock, User } from 'lucide-react';
+import { 
+  ScrollAnimation, 
+  AnimatedCard, 
+  animationVariants,
+  AnimatedProgress,
+  AnimatedCounter
+} from '@/components/ui/animations';
+import { EnhancedButton, CopyButton, StarRating, ProgressSteps } from '@/components/ui/interactive-elements';
+import { useToast } from '../contexts/ToastContext';
 import { mockData } from '../mockData';
 import type { IIssue } from '../interfaces';
 
@@ -24,9 +34,12 @@ function ProjectDetailPage() {
   const { projectId } = useParams<{ projectId: string }>();
   const { state, dispatch } = useAppContext();
   const navigate = useNavigate();
+  const { success, error } = useToast();
+  
   const [selectedTileId, setSelectedTileId] = useState<string | null>(null);
   const [isCreateIssueOpen, setIsCreateIssueOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('document');
+  const [isCreatingIssue, setIsCreatingIssue] = useState(false);
   const [newIssue, setNewIssue] = useState({
     title: '',
     assignee: 'Unassigned' as const,
@@ -41,46 +54,78 @@ function ProjectDetailPage() {
     ? state.issues.filter((i) => i.tileId === selectedTile.id)
     : [];
 
+  // Calculate project statistics
+  const projectStats = {
+    totalIssues: state.issues.filter(i => 
+      projectTiles.some(t => t.id === i.tileId)
+    ).length,
+    openIssues: state.issues.filter(i => 
+      projectTiles.some(t => t.id === i.tileId) && i.status === 'Open'
+    ).length,
+    completedIssues: state.issues.filter(i => 
+      projectTiles.some(t => t.id === i.tileId) && i.status === 'Closed'
+    ).length
+  };
+
+  const completionPercentage = projectStats.totalIssues > 0 
+    ? (projectStats.completedIssues / projectStats.totalIssues) * 100 
+    : 0;
+
   if (!project) {
     return (
       <ResponsiveContainer variant="mobile-padded">
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">Project not found</p>
-        </div>
+        <ScrollAnimation>
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Project not found</p>
+          </div>
+        </ScrollAnimation>
       </ResponsiveContainer>
     );
   }
 
-  const handleCreateIssue = () => {
+  const handleCreateIssue = async () => {
     if (!selectedTile || !newIssue.title.trim()) return;
 
-    const issue: IIssue = {
-      id: mockData.generateId(),
-      tileId: selectedTile.id,
-      issueNumber: `ISSUE-${Math.floor(Math.random() * 1000) + 100}`,
-      title: newIssue.title,
-      description: '',
-      assignee: newIssue.assignee,
-      priority: newIssue.priority as 'Low' | 'Medium' | 'High' | 'Critical',
-      status: 'Open',
-      type: 'Feature',
-      forkedDocumentContent: newIssue.content || selectedTile.mainDocumentContent,
-      originalDocumentContent: selectedTile.mainDocumentContent,
-      tags: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      estimation: '',
-      reporter: 'User'
-    };
+    setIsCreatingIssue(true);
 
-    dispatch({ type: 'ADD_ISSUE', payload: issue });
-    setIsCreateIssueOpen(false);
-    setNewIssue({
-      title: '',
-      assignee: 'Unassigned',
-      priority: 'Medium',
-      content: '',
-    });
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const issue: IIssue = {
+        id: mockData.generateId(),
+        tileId: selectedTile.id,
+        issueNumber: `ISSUE-${Math.floor(Math.random() * 1000) + 100}`,
+        title: newIssue.title,
+        description: '',
+        assignee: newIssue.assignee,
+        priority: newIssue.priority as 'Low' | 'Medium' | 'High' | 'Critical',
+        status: 'Open',
+        type: 'Feature',
+        forkedDocumentContent: newIssue.content || selectedTile.mainDocumentContent,
+        originalDocumentContent: selectedTile.mainDocumentContent,
+        tags: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        estimation: '',
+        reporter: 'User'
+      };
+
+      dispatch({ type: 'ADD_ISSUE', payload: issue });
+      success('Issue Created', `Issue ${issue.issueNumber} has been created successfully.`);
+      
+      setIsCreateIssueOpen(false);
+      setNewIssue({
+        title: '',
+        assignee: 'Unassigned',
+        priority: 'Medium',
+        content: '',
+      });
+    } catch (err) {
+      error('Creation Failed', 'Failed to create issue. Please try again.');
+    } finally {
+      setIsCreatingIssue(false);
+    }
   };
 
   const openCreateIssueModal = () => {
@@ -93,119 +138,191 @@ function ProjectDetailPage() {
     setIsCreateIssueOpen(true);
   };
 
-  // Master component (Tile List)
+  const handleTileSelect = (tileId: string) => {
+    setSelectedTileId(tileId);
+    success('Tile Selected', 'Tile loaded successfully');
+  };
+
+  // Master component (Tile List) with enhanced animations
   const masterComponent = (
     <div className="h-full">
       <ScrollArea className="h-full" data-testid="tile-list">
-        <div className="divide-y">
-          {projectTiles.map((tile) => (
-            <div
-              key={tile.id}
-              data-testid="tile-item"
-              className={`px-4 py-4 cursor-pointer hover:bg-accent transition-colors touch-manipulation ${
-                selectedTileId === tile.id ? 'bg-accent border-r-2 border-primary' : ''
-              }`}
-              onClick={() => setSelectedTileId(tile.id)}
-            >
-              <div className="font-medium text-sm sm:text-base">{tile.name}</div>
-              <div className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                {tile.templateData.intent}
-              </div>
-            </div>
-          ))}
-        </div>
+        <motion.div 
+          className="divide-y"
+          variants={animationVariants.staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
+          {projectTiles.map((tile, index) => {
+            const tileIssueCount = state.issues.filter(i => i.tileId === tile.id).length;
+            const tileCompletedIssues = state.issues.filter(i => 
+              i.tileId === tile.id && i.status === 'Closed'
+            ).length;
+            const tileProgress = tileIssueCount > 0 ? (tileCompletedIssues / tileIssueCount) * 100 : 0;
+
+            return (
+              <motion.div
+                key={tile.id}
+                variants={animationVariants.staggerItem}
+                data-testid="tile-item"
+                className={`px-4 py-4 cursor-pointer hover:bg-accent transition-colors touch-manipulation ${
+                  selectedTileId === tile.id ? 'bg-accent border-r-2 border-primary' : ''
+                }`}
+                onClick={() => handleTileSelect(tile.id)}
+                whileHover={{ x: 2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="font-medium text-sm sm:text-base truncate flex-1">
+                      {tile.name}
+                    </div>
+                    <Badge variant="outline" className="text-xs ml-2">
+                      <AnimatedCounter value={tileIssueCount} duration={0.3} />
+                    </Badge>
+                  </div>
+                  <div className="text-xs text-muted-foreground line-clamp-2">
+                    {tile.templateData.intent}
+                  </div>
+                  {tileIssueCount > 0 && (
+                    <AnimatedProgress 
+                      value={tileProgress} 
+                      className="h-1" 
+                    />
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
       </ScrollArea>
     </div>
   );
 
-  // Detail component (Tile Details)
+  // Detail component (Tile Details) with enhanced interactions
   const detailComponent = selectedTile ? (
     <div className="h-full overflow-auto">
-      <div className="p-4 border-b bg-background/95 backdrop-blur sticky top-0 z-10">
+      <motion.div 
+        className="p-4 border-b bg-background/95 backdrop-blur sticky top-0 z-10"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         <div className="flex justify-between items-center">
-          <h2 className="text-lg sm:text-xl font-bold truncate">{selectedTile.name}</h2>
-          <Dialog open={isCreateIssueOpen} onOpenChange={setIsCreateIssueOpen}>
-            <DialogTrigger asChild>
-              <Button 
-                data-testid="create-issue-btn" 
-                onClick={openCreateIssueModal}
-                size="sm"
-                className="ml-2"
-              >
-                <Bug className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Create Issue</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto" data-testid="create-issue-modal">
-              <DialogHeader>
-                <DialogTitle>Create New Issue</DialogTitle>
-                <DialogDescription>
-                  Create a new issue by forking the tile document. You can modify the content to reflect your changes.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="issue-title">Title</Label>
-                  <Input
-                    id="issue-title"
-                    data-testid="issue-title"
-                    value={newIssue.title}
-                    onChange={(e) => setNewIssue(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Enter issue title"
-                  />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="issue-assignee">Assignee</Label>
-                    <Select value={newIssue.assignee} onValueChange={(value: any) => setNewIssue(prev => ({ ...prev, assignee: value }))}>
-                      <SelectTrigger data-testid="issue-assignee">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Unassigned">Unassigned</SelectItem>
-                        <SelectItem value="Developer">Developer</SelectItem>
-                        <SelectItem value="Tester">Tester</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="issue-priority">Priority</Label>
-                    <Select value={newIssue.priority} onValueChange={(value: any) => setNewIssue(prev => ({ ...prev, priority: value }))}>
-                      <SelectTrigger data-testid="issue-priority">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Low">Low</SelectItem>
-                        <SelectItem value="Medium">Medium</SelectItem>
-                        <SelectItem value="High">High</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="issue-content">Document Content</Label>
-                  <Textarea
-                    id="issue-content"
-                    data-testid="issue-content"
-                    value={newIssue.content}
-                    onChange={(e) => setNewIssue(prev => ({ ...prev, content: e.target.value }))}
-                    placeholder="Modify the document content (use ++text++ for additions, --text-- for removals)"
-                    className="min-h-[200px] font-mono text-sm"
-                  />
-                </div>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-lg sm:text-xl font-bold truncate">{selectedTile.name}</h2>
+            <div className="flex items-center space-x-4 mt-1">
+              <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                <Bug className="h-3 w-3" />
+                <AnimatedCounter value={tileIssues.length} duration={0.3} />
+                <span>issues</span>
               </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsCreateIssueOpen(false)}>
-                  Cancel
-                </Button>
-                <Button data-testid="submit-issue" onClick={handleCreateIssue}>
-                  Create Issue
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+              <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                <Clock className="h-3 w-3" />
+                <span>Updated 2h ago</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <CopyButton 
+              text={selectedTile.mainDocumentContent}
+              className="hidden sm:flex"
+            >
+              Copy
+            </CopyButton>
+            <Dialog open={isCreateIssueOpen} onOpenChange={setIsCreateIssueOpen}>
+              <DialogTrigger asChild>
+                <EnhancedButton 
+                  data-testid="create-issue-btn" 
+                  onClick={openCreateIssueModal}
+                  size="sm"
+                  className="ml-2"
+                >
+                  <Bug className="h-4 w-4 mr-1" />
+                  <span className="hidden sm:inline">Create Issue</span>
+                </EnhancedButton>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto" data-testid="create-issue-modal">
+                <DialogHeader>
+                  <DialogTitle>Create New Issue</DialogTitle>
+                  <DialogDescription>
+                    Create a new issue by forking the tile document. You can modify the content to reflect your changes.
+                  </DialogDescription>
+                </DialogHeader>
+                <motion.div 
+                  className="space-y-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <div className="space-y-2">
+                    <Label htmlFor="issue-title">Title</Label>
+                    <Input
+                      id="issue-title"
+                      data-testid="issue-title"
+                      value={newIssue.title}
+                      onChange={(e) => setNewIssue(prev => ({ ...prev, title: e.target.value }))}
+                      placeholder="Enter issue title"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="issue-assignee">Assignee</Label>
+                      <Select value={newIssue.assignee} onValueChange={(value: any) => setNewIssue(prev => ({ ...prev, assignee: value }))}>
+                        <SelectTrigger data-testid="issue-assignee">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Unassigned">Unassigned</SelectItem>
+                          <SelectItem value="Developer">Developer</SelectItem>
+                          <SelectItem value="Tester">Tester</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="issue-priority">Priority</Label>
+                      <Select value={newIssue.priority} onValueChange={(value: any) => setNewIssue(prev => ({ ...prev, priority: value }))}>
+                        <SelectTrigger data-testid="issue-priority">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Low">Low</SelectItem>
+                          <SelectItem value="Medium">Medium</SelectItem>
+                          <SelectItem value="High">High</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="issue-content">Document Content</Label>
+                    <Textarea
+                      id="issue-content"
+                      data-testid="issue-content"
+                      value={newIssue.content}
+                      onChange={(e) => setNewIssue(prev => ({ ...prev, content: e.target.value }))}
+                      placeholder="Modify the document content (use ++text++ for additions, --text-- for removals)"
+                      className="min-h-[200px] font-mono text-sm"
+                    />
+                  </div>
+                </motion.div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsCreateIssueOpen(false)}>
+                    Cancel
+                  </Button>
+                  <EnhancedButton 
+                    data-testid="submit-issue" 
+                    onClick={handleCreateIssue}
+                    loading={isCreatingIssue}
+                    disabled={!newIssue.title.trim()}
+                  >
+                    Create Issue
+                  </EnhancedButton>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile Tabs for Detail Content */}
       <div className="lg:hidden">
