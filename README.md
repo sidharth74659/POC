@@ -1,5 +1,7 @@
 # Welcome to [Slidev](https://github.com/slidevjs/slidev)!
 
+Setup using: `npm init slidev@latest`
+
 To start the slide show:
 
 - `pnpm install`
