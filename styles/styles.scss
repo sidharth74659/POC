@@ -1,0 +1,15 @@
+.blink-smooth {
+    animation: blink-smooth 1.5s infinite;
+}
+
+@keyframes blink-smooth {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}

@@ -1,75 +1,57 @@
 ---
-# You can also start simply with 'default'
-theme: seriph
-# random image from a curated Unsplash collection by Anthony
-# like them? see https://unsplash.com/collections/94734566/slidev
-background: https://cover.sli.dev
-# some information about your slides (markdown enabled)
-title: Welcome to Slidev
+theme: default
+background: https://source.unsplash.com/1920x1080/?technology,ai
+title: "Leveraging AI: Beyond Simple Prompts"
 info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
+  ## AI Implementations: From Q&A to Autonomous Agents
 
-  Learn more at [Sli.dev](https://sli.dev)
-# apply unocss classes to the current slide
+  A comprehensive guide to practical AI implementations including Q&A systems, RAG, Agentic AI, and fine-tuned models.
 class: text-center
-# https://sli.dev/features/drawing
+highlighter: shiki
+lineNumbers: false
 drawings:
   persist: false
-# slide transition: https://sli.dev/guide/animations.html#slide-transitions
 transition: slide-left
-# enable MDC Syntax: https://sli.dev/features/mdc
-mdc: true
-# open graph
-# seoMeta:
-#  ogImage: https://cover.sli.dev
+css: unocss
 ---
 
-# Welcome to Slidev
+# **Leveraging AI** 
+**Beyond, By Simple Prompts**
 
-Presentation slides for colleagues
+A deep dive into **contextual AI** (*as I'd like to call it* or *a lack of better word*)
+<br> that understands <u>your data</u> and acts <u>autonomously</u>
 
-<div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
-  Press Space for next page <carbon:arrow-right />
-</div>
-
-<div class="abs-br m-6 text-xl">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="slidev-icon-btn">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" class="slidev-icon-btn">
-    <carbon:logo-github />
+<div class="absolute bottom-4 right-6 flex items-center justify-center">
+  <a href="https://github.com/slidevjs/slidev" target="_blank" alt="GitHub"
+    class="text-l slidev-icon-btn opacity-50 !border-none !hover:text-white">
+    <carbon-logo-github />
   </a>
+  <span class="italic text-sm opacity-70 ml-2">This slide is made by Slidev</span>
 </div>
 
-<!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
--->
-
 ---
-transition: fade-out
+layout: default
 ---
 
-# What is Slidev?
+# What We're Going to Explore Today?
 
-Slidev is a slides maker and presenter designed for developers, consist of the following features
+<div class="grid grid-cols-1 gap-4">
 
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - themes can be shared and re-used as npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embed Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export to PDF, PPTX, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - virtually anything that's possible on a webpage is possible in Slidev
-<br>
-<br>
+**Leveraging AI** — not by the way we typically interact with AI like ChatGPT, DALL-E, Perplexity, or Copilot(in IDEs) that simply respond to prompts.
 
-Read more about [Why Slidev?](https://sli.dev/guide/why)
+We're talking about **contextual AI**. An *extension* of AI that understands:
+- Your documents, APIs, and systems  
+- Your databases
+- and communicate with any software/system autonomously
 
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/features/slide-scope-style
--->
+We'll explore few of the amazing and fascinating, if not a bit scary capabilities of this technology.
+</div>
+
+<div class="pt-12 flex justify-center">
+  <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
+    Ready for an adventure? <carbon:arrow-right class="inline"/>
+  </span>
+</div>
 
 <style>
 h1 {
@@ -83,556 +65,1125 @@ h1 {
 }
 </style>
 
-<!--
-Here is another comment.
--->
-
----
-transition: slide-up
-level: 2
----
-
-# Navigation
-
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/ui#navigation-bar)
-
-## Keyboard Shortcuts
-
-|                                                     |                             |
-| --------------------------------------------------- | --------------------------- |
-| <kbd>right</kbd> / <kbd>space</kbd>                 | next animation or slide     |
-| <kbd>left</kbd>  / <kbd>shift</kbd><kbd>space</kbd> | previous animation or slide |
-| <kbd>up</kbd>                                       | previous slide              |
-| <kbd>down</kbd>                                     | next slide                  |
-
-<!-- https://sli.dev/guide/animations.html#click-animation -->
-<img
-  v-click
-  class="absolute -bottom-9 -left-7 w-80 opacity-50"
-  src="https://sli.dev/assets/arrow-bottom-left.svg"
-  alt=""
-/>
-<p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
-
----
-layout: two-cols
-layoutClass: gap-16
----
-
-# Table of contents
-
-You can use the `Toc` component to generate a table of contents for your slides:
-
-```html
-<Toc minDepth="1" maxDepth="1" />
-```
-
-The title will be inferred from your slide content, or you can override it with `title` and `level` in your frontmatter.
-
-::right::
-
-<Toc text-sm minDepth="1" maxDepth="2" />
-
----
-layout: image-right
-image: https://cover.sli.dev
----
-
-# Code
-
-Use code snippets and get the highlighting directly, and even types hover!
-
-```ts [filename-example.ts] {all|4|6|6-7|9|all} twoslash
-// TwoSlash enables TypeScript hover information
-// and errors in markdown code blocks
-// More at https://shiki.style/packages/twoslash
-import { computed, ref } from 'vue'
-
-const count = ref(0)
-const doubled = computed(() => count.value * 2)
-
-doubled.value = 2
-```
-
-<arrow v-click="[4, 5]" x1="350" y1="310" x2="195" y2="342" color="#953" width="2" arrowSize="1" />
-
-<!-- This allow you to embed external code blocks -->
-<<< @/snippets/external.ts#snippet
-
-<!-- Footer -->
-
-[Learn more](https://sli.dev/features/line-highlighting)
-
-<!-- Inline style -->
-<style>
-.footnotes-sep {
-  @apply mt-5 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
-
-<!--
-Notes can also sync with clicks
-
-[click] This will be highlighted after the first click
-
-[click] Highlighted with `count = ref(0)`
-
-[click:3] Last click (skip two clicks)
--->
-
----
-level: 2
----
-
-# Shiki Magic Move
-
-Powered by [shiki-magic-move](https://shiki-magic-move.netlify.app/), Slidev supports animations across multiple code snippets.
-
-Add multiple code blocks and wrap them with <code>````md magic-move</code> (four backticks) to enable the magic move. For example:
-
-````md magic-move {lines: true}
-```ts {*|2|*}
-// step 1
-const author = reactive({
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-})
-```
-
-```ts {*|1-2|3-4|3-4,8}
-// step 2
-export default {
-  data() {
-    return {
-      author: {
-        name: 'John Doe',
-        books: [
-          'Vue 2 - Advanced Guide',
-          'Vue 3 - Basic Guide',
-          'Vue 4 - The Mystery'
-        ]
-      }
-    }
-  }
-}
-```
-
-```ts
-// step 3
-export default {
-  data: () => ({
-    author: {
-      name: 'John Doe',
-      books: [
-        'Vue 2 - Advanced Guide',
-        'Vue 3 - Basic Guide',
-        'Vue 4 - The Mystery'
-      ]
-    }
-  })
-}
-```
-
-Non-code blocks are ignored.
-
-```vue
-<!-- step 4 -->
-<script setup>
-const author = {
-  name: 'John Doe',
-  books: [
-    'Vue 2 - Advanced Guide',
-    'Vue 3 - Basic Guide',
-    'Vue 4 - The Mystery'
-  ]
-}
-</script>
-```
-````
-
----
-
-# Components
-
-<div grid="~ cols-2 gap-4">
-<div>
-
-You can use Vue components directly inside your slides.
-
-We have provided a few built-in components like `<Tweet/>` and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
-
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
-
-</div>
-<div>
-
-```html
-<Tweet id="1390115482657726468" />
-```
-
-<Tweet id="1390115482657726468" scale="0.65" />
-
-</div>
-</div>
-
-<!--
-Presenter note with **bold**, *italic*, and ~~striked~~ text.
-
-Also, HTML elements are valid:
-<div class="flex w-full">
-  <span style="flex-grow: 1;">Left content</span>
-  <span>Right content</span>
-</div>
--->
-
----
-class: px-20
----
-
-# Themes
-
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
-
-<div grid="~ cols-2 gap-2" m="t-2">
-
-```yaml
----
-theme: default
----
-```
-
-```yaml
----
-theme: seriph
----
-```
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true" alt="">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true" alt="">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/guide/theme-addon#use-theme) and
-check out the [Awesome Themes Gallery](https://sli.dev/resources/theme-gallery).
-
----
-
-# Clicks Animations
-
-You can add `v-click` to elements to add a click animation.
-
-<div v-click>
-
-This shows up when you click the slide:
-
-```html
-<div v-click>This shows up when you click the slide.</div>
-```
-
-</div>
-
-<br>
-
-<v-click>
-
-The <span v-mark.red="3"><code>v-mark</code> directive</span>
-also allows you to add
-<span v-mark.circle.orange="4">inline marks</span>
-, powered by [Rough Notation](https://roughnotation.com/):
-
-```html
-<span v-mark.underline.orange>inline markers</span>
-```
-
-</v-click>
-
-<div mt-20 v-click>
-
-[Learn more](https://sli.dev/guide/animations#click-animation)
-
-</div>
-
----
-
-# Motions
-
-Motion animations are powered by [@vueuse/motion](https://motion.vueuse.org/), triggered by `v-motion` directive.
-
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }"
-  :click-3="{ x: 80 }"
-  :leave="{ x: 1000 }"
->
-  Slidev
-</div>
-```
-
-<div class="w-60 relative">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-square.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-circle.png"
-      alt=""
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute inset-0"
-      src="https://sli.dev/logo-triangle.png"
-      alt=""
-    />
-  </div>
-
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
-
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 30, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn more](https://sli.dev/guide/animations.html#motion)
-
-</div>
-
----
-
-# LaTeX
-
-LaTeX is supported out-of-box. Powered by [KaTeX](https://katex.org/).
-
-<div h-3 />
-
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-$$ {1|3|all}
-\begin{aligned}
-\nabla \cdot \vec{E} &= \frac{\rho}{\varepsilon_0} \\
-\nabla \cdot \vec{B} &= 0 \\
-\nabla \times \vec{E} &= -\frac{\partial\vec{B}}{\partial t} \\
-\nabla \times \vec{B} &= \mu_0\vec{J} + \mu_0\varepsilon_0\frac{\partial\vec{E}}{\partial t}
-\end{aligned}
-$$
-
-[Learn more](https://sli.dev/features/latex)
-
----
-
-# Diagrams
-
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
-
-<div class="grid grid-cols-4 gap-5 pt-4 -mb-6">
-
-```mermaid {scale: 0.5, alt: 'A simple sequence diagram'}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
-```
-
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
-```
-
-```mermaid
-mindmap
-  root((mindmap))
-    Origins
-      Long history
-      ::icon(fa fa-book)
-      Popularisation
-        British popular psychology author Tony Buzan
-    Research
-      On effectiveness<br/>and features
-      On Automatic creation
-        Uses
-            Creative techniques
-            Strategic planning
-            Argument mapping
-    Tools
-      Pen and paper
-      Mermaid
-```
-
-```plantuml {scale: 0.7}
-@startuml
-
-package "Some Group" {
-  HTTP - [First Component]
-  [Another Component]
-}
-
-node "Other Groups" {
-  FTP - [Second Component]
-  [First Component] --> FTP
-}
-
-cloud {
-  [Example 1]
-}
-
-database "MySql" {
-  folder "This is my folder" {
-    [Folder 3]
-  }
-  frame "Foo" {
-    [Frame 4]
-  }
-}
-
-[Another Component] --> [Example 1]
-[Example 1] --> [Folder 3]
-[Folder 3] --> [Frame 4]
-
-@enduml
-```
-
-</div>
-
-Learn more: [Mermaid Diagrams](https://sli.dev/features/mermaid) and [PlantUML Diagrams](https://sli.dev/features/plantuml)
-
----
-foo: bar
-dragPos:
-  square: 691,32,167,_,-16
----
-
-# Draggable Elements
-
-Double-click on the draggable elements to edit their positions.
-
-<br>
-
-###### Directive Usage
-
-```md
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-```
-
-<br>
-
-###### Component Usage
-
-```md
-<v-drag text-3xl>
-  <div class="i-carbon:arrow-up" />
-  Use the `v-drag` component to have a draggable container!
-</v-drag>
-```
-
-<v-drag pos="663,248,261,_,-15">
-  <div text-center text-3xl border border-main rounded>
-    Double-click me!
-  </div>
-</v-drag>
-
-<img v-drag="'square'" src="https://sli.dev/logo.png">
-
-###### Draggable Arrow
-
-```md
-<v-drag-arrow two-way />
-```
-
-<v-drag-arrow pos="67,452,253,46" two-way op70 />
-
----
-src: ./pages/imported-slides.md
-hide: false
----
-
----
-
-# Monaco Editor
-
-Slidev provides built-in Monaco Editor support.
-
-Add `{monaco}` to the code block to turn it into an editor:
-
-```ts {monaco}
-import { ref } from 'vue'
-import { emptyArray } from './external'
-
-const arr = ref(emptyArray(10))
-```
-
-Use `{monaco-run}` to create an editor that can execute the code directly in the slide:
-
-```ts {monaco-run}
-import { version } from 'vue'
-import { emptyArray, sayHello } from './external'
-
-sayHello()
-console.log(`vue ${version}`)
-console.log(emptyArray<number>(10).reduce(fib => [...fib, fib.at(-1)! + fib.at(-2)!], [1, 1]))
-```
 
 ---
 layout: center
 class: text-center
 ---
 
-# Learn More
+# So, what is AI?
 
-[Documentation](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/resources/showcases)
+---
+layout: center
+class: text-center
+---
 
-<PoweredBySlidev mt-10 />
+If that's the question, we're not going to answer it here.
+
+---
+layout: center
+---
+
+# **What else we're not going to cover?**
+- Prompt Engineering
+- AI for research, writing, etc. 
+- Developing applications using prompts with AI
+- How to effectively use AI tools
+
+<!-- - How to build AI-powered applications -->
+<!-- - Solutions to problems -->
+
+<!-- 📚  ✍️ 🛠️💡  -->
+
+<style>
+h1 {
+  background-color: #2B90B6;
+  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+</style>
+---
+layout: center
+class: text-center
+---
+
+# **So, What are we gonna cover?**
+We'll explore some of the AI implementations that are out there today. 
+<br>
+<br>
+*Implementations* that we can use to create our own <u>AI-powered solutions</u>, <u>Assistants</u>.
+<br>
+Not just flashy gimmicks, but one's that provide real-value to our/user specific needs.
+
+
+<div class="pt-12 flex justify-center">
+  <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
+    Let's Begin! <carbon:arrow-right class="inline"/>
+  </span>
+</div>
+
+---
+
+# **AI Implementation Patterns**
+
+Based on my experience/analysis, AI implementations in applications generally fall into one of these categories:
+
+<div class="grid grid-cols-2 gap-8 pt-4">
+
+<div>
+
+## 🤖 **1. Q&A Systems**
+Direct LLM Prompting <span class="text-xs" style="color: grey;">(ChatGPT, Claude, etc.)</span>  
+ 
+## 🧠 **3. Agentic AI**  <span style="color: red;">*</span>
+LLM + Model Context Protocol <span class="text-xs" style="color: grey;">(MCP)</span>
+
+</div>
+  
+<div>
+
+## 🔍 **2. RAG** 
+Retrieval Augmented Generation <span class="text-xs" style="color: grey;">(Chatbots)</span>
+
+## 🎯 **4. Fine-tuned LLMs**
+Custom Training <span class="text-xs" style="color: grey;">(Domain-specific models)</span>
+
+</div>
+
+</div>
+
+<div class="pt-6">
+
+**Plus:** Autonomous AI Agents that orchestrate complex workflows. More on this in the end.
+
+</div>
+
+<br>
+
+<span class="text-base" style="color: grey;"><span style="color: red;">*</span> More like what makes an AI *Agentic*.</span>
+
+<!-- <arrow v-click="1" x1="200" y1="420" x2="230" y2="470" color="#564" width="3" arrowSize="1" /> -->
+
+---
+layout: center
+class: text-center
+---
+
+# 1. Q&A Systems: Direct LLM Interaction
+(The Foundation of AI Applications)
+
+---
+# layout: two-cols
+---
+
+# **1.1 What exactly it means?**
+
+You provide a **system prompt** (*optional, but recommended*) attached to a payload (`images`, `JSON`, `text`, etc.) and send it to an LLM for structured responses (sometimes based on user-query).
+
+**The Flow:**
+- User provides input + system prompts <span class="text-xs" style="color: grey;">(optional)</span>
+- LLM combines both prompts  
+- Returns structured response
+
+<br>
+
+### What are System Prompts?
+This is usually how ChatGPT, Claude and other LLM providers are instructed/regulated. These are used to guide the LLM's behavior and responses.
+
+- Ever wondered how ChatGPT vibes with you? Yeah, it was [instructed](https://github.com/asgeirtj/system_prompts_leaks/blob/main/OpenAI/o4-mini.md#:~:text=Over%20the%20course%20of%20conversation%2C%20adapt%20to%20the%20user%E2%80%99s%20tone%20and%20preferences).
+- Ever wondered how it *refuse requests* get political/controversial statements? Yeah, it was [regulated](https://github.com/asgeirtj/system_prompts_leaks/blob/main/Anthropic/claude-sonnet-4.md#:~:text=do%20not%20use%20these%20harmful%20sources%20and%20refuse%20requests).
+
+You can find more of such system prompts from various leaks, like: [Source 1](https://github.com/jujumilk3/leaked-system-prompts), [Source 2](https://github.com/asgeirtj/system_prompts_leaks).
+<br>
+
+<style>
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #2B90B6;
+  }
+</style>
+
+---
+layout: default
+---
+
+<br>
+
+### **1.2 Real-World Use Case - Vision AI**
+
+```mermaid
+graph LR
+    A[Image Upload] --> B[System Prompt]
+    B --> C[User Prompt: <br> 'Describe image']
+    C --> D[LLM Processing]
+    D --> E[Structured JSON Response]
+```
+
+<div class="pt-0">
+
+**Example:**
+- **Payload:** Receipt image
+- **System Prompt:** Expected JSON format with edge-cases handled
+- **Response:** Expense data extraction
+
+</div>
+
+
+
+<div class="pt-8">
+
+### **Key Challenge:** Prompt engineering and edge case handling
+
+```yaml
+// Example system prompt structure
+Extract receipt data as JSON with fields: 
+{date, vendor, amount, category, items[]}
+Handle edge cases: logos, non-receipts, unclear text, mis-leading text that mimics receipts.
+```
+
+</div>
+
+---
+layout: default
+---
+
+## **1.2 Implementation in our Applications**
+
+<br>
+
+<div class="grid gap-10">
+
+<div>
+
+# <u>**Expense App Integration**</u>
+System prompt  + image payload = structured JSON <br>
+OpenAI/Gemini Vision API extracts structured JSON from receipt images based on *system prompts*
+
+Links: [JIRA](https://propelapps.atlassian.net/browse/MOB2024AB-118?focusedCommentId=18561), [GitHub](https://github.com/sidharth74659/test-vertex-ai)
+
+Playground/Demo: [Google AI Studio](https://aistudio.google.com/prompts/1mkNqSsRID6F3YfN1c9g2SXyYFjYbEDhr)
+
+</div>
+
+<div>
+
+# <u>**Digital Forms Generation**</u>
+User input + schema-based system prompt = schema based JSON
+<br>
+Natural language to structured form conversion
+
+Links: [Website](https://digital-forms-builder.netlify.app/), [Repo](https://bitbucket.org/mobilesupplychain24c/poc/commits/fdd1bced599642edd85d90658978d5f7e2b9fe1e)
+
+Demo: [Frontend - local](http://localhost:55056/), [Backend - local](http://localhost:3000)
+</div>
+
+<!-- Soon, We can improve this by offering 'Analyse' -->
+
+<!-- Now, Let's have a reality check -->
+
+</div>
+
+---
+layout: default
+---
+
+# **1.3 Edge Cases**
+
+<div class="grid grid-cols-1 gap-4">
+
+### **Testing and Validation:**
+- ❌ Handle mismatched inputs (logo vs. receipt expectation).
+- ❌ Posing irrelevant questions that do not align with the objective.
+- ⚠️ Validate non-image uploads mimicking receipts.
+
+### **Best thing**:
+- It boils down to your system-prompt to handle all the above like we've seen earlier in leaks, and you can have an AI suggest you to do that (<span class="text-xs blink-smooth" style="color: orange;"><u>demonstrate</u></span>).
+- The real work would be the test-cases and checks we need to do which is critical for production.
+- Thus, We need to:
+  - 🔄 Continuously refine prompts for edge cases.
+  - 🧪 Build comprehensive test scenarios. <span class="text-xs" style="color: grey;">(For production)</span>
+
+</div>
+
+---
+layout: center
+# class: text-center
+---
+
+
+<span class="text-xl">But this seems to be more of an interaction between what seems like a *backend* and a *system*.</span>
+
+<br>
+
+> **How does this benefit us? As an end-user?**
+<br>
+
+It does, that's what one does with ChatGPT and other LLM providers. User asks a question and it returns a response.
+
+<br>
+
+> **But how are we gonna tailor it?**
+
+YOU CAN, and it's there.
+<br>
+
+Each LLM provider has a different way of doing this.
+- Perplexity calls it [Personalise](https://www.perplexity.ai/account/personalize),
+- ChatGPT calls it 'Customize',
+- Gemini refers it [saved-info](https://gemini.google.com/saved-info)
+
+
+---
+layout: center
+---
+
+Now the question just doesn't stay there, right?
+
+- The laziness in the body might think, “Am I going to keep providing the same context every time I ask a question to every LLM?”
+
+- The curious mind kicks in and might ask, “What about the information that LLM doesn’t know? Not just **my** preferences, but the project I’m working on? What if I want to research or chat with information that’s not on the internet, but stored in a set of documents — like manuals, reports, etc.?”
+
+- The concerned one might wonder, “But what about my personal information or company information? I can’t put it on the internet, and I can’t share it with the LLM.”
+
+
+
+---
+layout: center
+class: text-center
+---
+
+# 2. RAG: Retrieval Augmented Generation
+(Chatbots)
+
+---
+# layout: two-cols
+---
+
+## **2.1 What is RAG?**
+
+<span class="text-md" style="color: grey;">RAG enhances LLM accuracy by retrieving relevant information from your knowledge base before generating responses.</span>
+
+**Key Difference:**
+- **LLM:** Responds from training data  
+- **RAG:** First retrieves relevant information, then generates responses <span class="text-xs" style="color: grey;">(on top of it)</span>
+
+**Think of it as:** Giving your LLM a research library.
+
+Also, you can always enable it to access the internet, to verify the information. But otherwise, it can work as an *offline* system once fed with the knowledge base.
+
+**The Process:**
+
+```mermaid
+graph LR
+    A[1.Upload Documents] --> B[1.1.Vectorize Data]
+    B --> C[1.2.Store in <br>Vector Database]
+    D[2.User Query] --> E[2.1.Query Embedding]
+    E --> F[2.2.Similarity Search <br> in Vector Database]
+    C --> F
+    F --> G[Retrieve Relevant Context]
+    G --> H[Generate Response with LLM]
+```
+
+
+---
+layout: default
+---
+
+<!-- But, didn't you said it was gonna be non-technical? -->
+
+## **2.2 Components of RAG** <span class="text-base" style="color: grey;">(For someone technical)</span>
+
+<br>
+
+<div class="grid grid-cols-2 gap-6">
+
+<div>
+
+### **Document Processing**
+1. **Chunk documents** into manageable pieces
+2. **Convert to vectors** using embedding models
+3. **Store in vector databases** (Pinecone, Weaviate, Chroma)
+
+<br>
+
+### **Query Processing**
+4. **Transform user questions** into comparable vectors
+5. **Find similar content** using cosine similarity
+6. **Retrieve top-k matches** for context
+
+</div>
+
+
+<div>
+
+<br>
+<br>
+<br>
+<br>
+
+## **Technical Stack**
+
+```yaml
+Vector Database: Pinecone/Weaviate
+Embedding Model: OpenAI/Sentence-BERT
+Chunking Strategy: Recursive text splitting
+Similarity Metric: Cosine similarity
+Response Model: GPT-4/Claude
+
+Architecture:
+- Document ingestion pipeline
+- Real-time query processing
+- Response caching for performance
+```
+
+<!-- **Status:** Ready for implementation with existing document storage infrastructure -->
+
+</div>
+
+<!-- 
+<div>
+
+### **Response Generation**
+```python
+# Simplified RAG pipeline
+def rag_response(query):
+    # 1. Embed query
+    query_vector = embed_model.encode(query)
+    
+    # 2. Search similar documents
+    similar_docs = vector_db.search(query_vector, top_k=5)
+    
+    # 3. Generate response with context
+    context = "\n".join(similar_docs)
+    response = llm.generate(f"Context: {context}\nQuery: {query}")
+    
+    return response
+```
+
+</div> -->
+
+</div>
+
+---
+layout: default
+---
+
+**Non-Technical Translation:**
+
+```mermaid
+graph LR
+    A[1.Add Your Documents] --> B[2.System Reads and Understands Them]
+    B --> C[3.System Organizes Information for Fast Search]
+    D[4.You Ask a Question] --> E[5.System Figures Out What You Mean]
+    E --> F[6.Finds the Most Relevant Info]
+    C --> F
+    F --> G[7.Picks Out Helpful Details]
+    G --> H[8.Gives You a Smart Answer]
+```
+
+<br>
+
+Going with our use-case,
+
+```yaml
+Step 1  : Upload Documents        - Add manuals, reports, personal info 👀, etc.
+Step 1.1: Read Documents          - System scans and learns.
+Step 1.2: Organize Information    - Sorts for quick access.
+Step 2  : Ask a Question          - Type your query.
+Step 3  : Understand Query        - System interprets your question.
+Step 4  : Find Relevant Info      - Searches documents for answers.
+Step 5  : Extract Details         - Gathers useful information.
+Step 6  : Provide Answer          - Delivers a clear, helpful response.
+```
+
+<!-- 
+**Non-Technical Translation:**
+Turn documents into searchable formats → Find relevant matches → Generate informed answers
+ -->
+
+---
+layout: default
+---
+
+## **2.3 RAG in our Applications** *
+
+<br>
+<br>
+
+<div class="grid grid-cols-2 gap-6">
+
+<div>
+
+#### **Asset/Contractor Management** (Maintenance)
+- Query inventory/security based on stored manuals and specs
+- Troubleshooting guidance 
+- Inquire about attached images (e.g., equipment photos)
+
+</div>
+<div>
+
+#### **Knowledge Base Systems** (Inventory)
+- Internal documentation search and response
+- How-to procedure inquiries
+- Training material Q&A
+
+</div>
+
+Demo: [Datastax - GUI](https://astra.datastax.com/langflow/6ad91a31-de2e-4fd6-bbe9-d1817b9771c3/flow/83904f2a-d0a2-4f66-a3ab-fefd3ceda44c), [By Jatin/Rajeev - Code](https://propelappscom.sharepoint.com/sites/Product/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FProduct%2FShared%20Documents%2FGeneral%2FProduct%20Documentation%2F6%2E%20Project%20Management%2F1%2E%20Project%20Plan%2FGen%20AI%2F25B&viewid=124ba412%2Da235%2D413c%2D8bbf%2Dbd21b3a4e61d&p=true&ga=1)
+
+</div>
+
+<br><br>
+
+<span style="color: grey;">
+*Yet to be implemented — planned for Q3 2025. This will enable document-based chatbots and contextual search in our internal applications.
+</span>
+
+---
+layout: intro
+---
+
+<span class="text-xl">But wait, this seems to be more of an interaction between a *user* and a *system*.</span>
+
+<br>
+
+> **How does this benefit us?**
+<br>
+<span class="text-base" style="color: grey;">As a developer, designer, business analyst, marketer(sorry 😬) and Manager?</span>
+
+<br>
+
+YOU CAN, but free version is kind of limited. <span class="text-xs" style="color: grey;">(Ofcourse, based on provider)</span>
+
+Few platforms are:
+- Google's [NotebookLM](https://notebooklm.google.com/)
+- Perplexity's [Spaces](https://www.perplexity.ai/spaces/templates) <span class="text-xs" style="color: grey;">(Perplexity Pro)</span>
+- Microsoft Copilot <span class="text-xs" style="color: grey;">(with Copilot Pro or Copilot for Microsoft 365)</span>
+
+---
+layout: center
+---
+
+Like always, the question just doesn’t stay there, does it?
+
+- Someone that's up-to-date/impatient might question, “We already know this. While this is enough for the *amazing* part of what AI can do, where does the so-called *fascinating, if not scary* part come in?”
+
+- The lazy one might think, “So now I’m supposed to keep updating the knowledge base about myself/company/project as the information updates?”
+
+- The curious might ask, “What if I want it to not only know information, but also interact with the tools I use — or even get some of my automated tasks done? I mean, clearly, if needed, it seems like it can search what it needs from the internet, if not from the knowledge base.”
+
+- The concerned one might say, hmmm.. anything, but unfortunately, they’ll have to stay concerned for now, as the next point we’re going to cover isn’t production-ready yet—but there are workarounds.
+
+
+---
+layout: center
+class: text-center
+---
+
+# **3. Agentic AI**
+(kinda)
+
+---
+layout: full
+---
+
+## **3.1 What is Agentic AI?**
+
+<span class="text-md" style="color: grey;">**Agentic AI** makes autonomous(*technically, partially guided*) decisions and takes actions based on available information(resources) and context(tools).</span>
+
+Basically, you provide a 
+- **Prompt** (like 'Build this component')
+- It uses **Tools** (like Terminal, IDE)
+- **Resources** (like commands, code)
+
+Before someone's gonna say: *"I know this! That's what [claude-artifacts](https://madewithclaude.com/), [Bolt](https://bolt.new/), [Lovable](https://lovable.dev/), Copilot, Cursor and many more are doing"*. Remember? we're not gonna cover that here.
+
+<br>
+
+**While they are there, till how far can we reach? Like:**
+- What happens when the codebase gets too large? or more than one developer needs to chip in?
+- What do we do when it's a production issue? or the code starts spiraling beyond one's understanding?
+- And who’s responsible for making sure that fixing one thing doesn’t break something else?
+
+
+---
+layout: default
+---
+
+Someone must have thought, "Well, We aren't there ***yet!***". Yeah, I know, but my point <span class="text-base" style="color: grey;">(or opinion)</span> is that LLM's are always better off as assistants, than as some autonomous developers.
+
+I mean, I’d trust my [instinct over intellect](https://www.youtube.com/watch?v=qjPCjn8iVWs). - `Cillian Murphy`. Anyway, more on this at the end.
+
+<br>
+
+<hr>
+
+<br>
+
+**So, where was I? Uh... Assistant!** <span class="text-xs" style="color: grey;">(also, little history)</span>
+
+For any assistant(LLM), it needs to know the task(prompt), the tools, and how to use them(resources).
+
+OpenAI and Gemini offer what’s called **Function Calling**, while Anthropic refers to it as **Tool Use** or **Tool Calling** to achieve this. Different Names, Different Implementations, Same Concept. <span class="text-xs blink-smooth" style="color: orange;">[Samples](https://github.com/jujumilk3/leaked-system-prompts/blob/main/github-copilot-chat_20240930.md#functions) in [system-prompt](https://github.com/asgeirtj/system_prompts_leaks/blob/main/OpenAI/chatgpt-4.1-mini.md) [leaks](https://github.com/jujumilk3/leaked-system-prompts/blob/main/cursor-ide-agent-claude-sonnet-3.7_20250309.md)</span>
+
+But none of these were standardized. Anthropic later proposed [**Model Context Protocol (MCP)**](https://modelcontextprotocol.io/introduction), and Google took this further with [**Agent-to-Agent (A2A)**](https://google-a2a.github.io/A2A/#a2a-and-mcp-complementary-protocols) Protocol.
+
+These open standards are designed to unify how applications and systems provide context and tool access to LLMs, making the process more seamless and interoperable.
+
+**Think of it as**: AI with decision-making abilities and standardized access to your tools.
+
+---
+layout: default
+---
+
+### **3.2 Understanding MCP and Function Calling** 
+
+Going with our previous example: For any assistant(LLM), it needs to know what to do(prompt), tools it can use, and how to use(resources).
+
+**MCP Components**:
+- **Prompts:** What you ask or tell the assistant to do.
+- **Tools:** Things the assistant can use, like calculators, search engines, or apps.
+- **Resources:** Where the assistant can look for information, like databases or websites.
+- **Context:** What’s already happened in the conversation, so it doesn’t forget.
+
+<br>
+
+**What does this make possible?**
+- The assistant can do things directly, like look up info or run a search.
+- It can handle tasks that take several steps, not just one.
+- It can make smarter choices by knowing what tools and info it has.
+- Multiple assistants or AIs can work together if needed.
+
+<!-- 
+### **Different Names, Same Concept:**
+
+<div class="grid grid-cols-3 gap-4">
+
+<div class="p-2 mb-2 border rounded">
+
+### **Anthropic**
+Model Context Protocol (MCP)
+- Standardized context sharing
+- Resource-aware interactions
+
+</div>
+
+<div class="p-2 mb-2 border rounded">
+
+### **OpenAI/Google**
+Function Calling
+- Direct API integration
+- Tool usage capabilities
+
+</div>
+
+<div class="p-2 mb-2 border rounded">
+
+### **Google A2A**
+Agent-to-agent interaction
+- Multi-agent coordination
+- Complex workflow orchestration
+
+</div>
+
+</div> 
+-->
+
+---
+layout: default
+---
+
+### **3.3 Implementation in our Applications**
+
+<br>
+
+#### **Smart Scheduling System (Planned):**
+
+**Capabilities:**
+- 🗣️ Natural language resource queries
+- 📅 Automated task scheduling based on availability  
+- 💡 Context-aware responses
+<!-- - 🔄 Multi-system coordination -->
+
+Links: - [JIRA - with much detailed explanation](https://propelapps.atlassian.net/browse/MSC24C-157?focusedCommentId=23137)
+
+Demo: [Scheduler - Frontend](http://localhost:55267/scheduler), [Scheduler - Backend](http://localhost:3333/)
+
+<br>
+
+#### **Example Interaction:**
+```yaml
+User: "Schedule a team meeting for next week, avoid conflicts with John's vacation"
+Agent: Checks calendar → Identifies available slots → Considers team preferences → Books meeting → 
+       Sends invitations
+```
+
+---
+
+
+<div>
+
+### **Web Automation/Testing**
+- **Puppeteer/Playwright** for web interactions
+- **Selenium** for complex browser automation
+
+Demo: [UI/UX Review Report](https://bitbucket.org/mobilesupplychain24c/digital-forms/src/demo--ai-testing/guides/ui-ux-evaluation-report.md)
+
+Branch: `testing-with-puppeteer`, `ai-testing` (for reports), `json-viewer` (for developming through testing)
+
+<br>
+
+### **Design Integration**
+- **Figma API** for design workflows
+
+<br>
+
+### **Open Source Ecosystem** (No Demos)
+- **Database connectors** (SQL, NoSQL)
+- **Communication tools** (email, Slack, Teams)
+- **File processing** (PDF, Excel, etc.)
+
+</div>
+
+---
+layout: center
+class: text-center
+---
+
+# Fine-tuned LLMs: Custom Training
+## **4. Tailored AI for Specific Use Cases**
+
+---
+layout: two-cols
+---
+
+# **4.1 What is Fine-tuning?**
+
+Train models with your specific dataset — documents, images, conversation patterns.
+
+**Similar to Machine Learning** but using LLM as the foundation instead of building from scratch.
+
+**When to Use:** Highly specialized tasks requiring domain-specific expertise
+
+::right::
+
+# **Examples**
+
+<div class="grid grid-cols-1 gap-4">
+
+### **🔧 Damage Detection**
+Analyze maintenance images for specific issues
+- Custom image recognition
+- Maintenance-specific terminology
+- Historical repair patterns
+
+### **👤 Personality Cloning**
+Replicate communication patterns from chat history
+- Writing style adaptation
+- Response pattern matching
+- Context-aware persona
+
+### **📋 Response Standardization** 
+Ensure consistent answer formats
+- Brand voice consistency
+- Technical accuracy
+- Compliance requirements
+
+</div>
+
+---
+layout: default
+---
+
+# **4.2 Fine-tuning Implementation**
+
+<div class="grid grid-cols-2 gap-6">
+
+<div>
+
+## **Training Process**
+
+```python
+# Fine-tuning pipeline example
+def fine_tune_model():
+    # 1. Prepare dataset
+    training_data = load_domain_specific_data()
+    
+    # 2. Preprocess and format
+    formatted_data = format_for_training(training_data)
+    
+    # 3. Fine-tune base model
+    model = fine_tune(
+        base_model="gpt-3.5-turbo",
+        training_data=formatted_data,
+        epochs=3,
+        learning_rate=0.0001
+    )
+    
+    # 4. Evaluate performance
+    evaluate_model(model, test_data)
+    
+    return model
+```
+
+</div>
+
+<div>
+
+## **Use Cases in Our Apps**
+
+### **Maintenance System**
+- Equipment-specific damage recognition
+- Predictive maintenance recommendations
+- Work order classification
+
+### **Customer Service**
+- Domain-specific response generation
+- Escalation pattern recognition
+- Sentiment analysis tuned for our users
+
+### **Data Processing**
+- Custom extraction patterns
+- Business logic implementation
+- Quality assurance automation
+
+**ROI:** Higher accuracy for specialized tasks vs. general-purpose models
+
+</div>
+
+</div>
+
+---
+layout: center
+class: text-center
+---
+
+# Autonomous AI Agents
+## **5. Orchestrated Workflows**
+
+---
+layout: default
+---
+
+# **5.1 Workflow Automation Platforms**
+
+<div class="grid grid-cols-3 gap-6">
+
+<div class="p-4 border rounded">
+
+## **N8N**
+### Visual Workflow Automation
+- Drag-and-drop interface
+- 400+ integrations
+- Self-hosted or cloud
+- Custom node development
+
+```javascript
+// N8N workflow example
+{
+  "trigger": "webhook",
+  "actions": [
+    "process_data",
+    "ai_analysis", 
+    "send_results"
+  ]
+}
+```
+
+</div>
+
+<div class="p-4 border rounded">
+
+## **LangChain**
+### AI Application Framework
+- Chain complex AI operations
+- Memory management
+- Tool integration
+- Python/JavaScript support
+
+```python
+# LangChain agent
+from langchain.agents import create_agent
+agent = create_agent(
+    tools=[database_tool, email_tool],
+    llm=ChatOpenAI(),
+    memory=ConversationBufferMemory()
+)
+```
+
+</div>
+
+<div class="p-4 border rounded">
+
+## **Flowise**
+### Low-code AI Workflows
+- Visual flow builder
+- LangChain integration
+- Chat interface
+- Custom components
+
+**Perfect for:** Non-technical team members to build AI workflows
+
+</div>
+
+</div>
+
+## **Capabilities:**
+- 🔄 **Continuous task execution** - 24/7 automation
+- 🔗 **Multi-system integration** - Connect disparate tools
+- 🌳 **Complex decision trees** - Conditional logic flows
+- 📊 **Automated reporting** - Insights and analytics
+
+---
+layout: default
+---
+
+# **5.2 Autonomous Agent Examples**
+
+<div class="grid grid-cols-2 gap-6">
+
+<div>
+
+## **Customer Support Agent**
+
+```mermaid
+graph TD
+    A[Customer Query] --> B{Classify Intent}
+    B -->|Simple| C[Auto-resolve]
+    B -->|Complex| D[Research Knowledge Base]
+    B -->|Escalation| E[Route to Human]
+    C --> F[Send Response]
+    D --> G[Generate Solution]
+    G --> F
+    E --> H[Create Ticket]
+```
+
+**Capabilities:**
+- Intent classification
+- Knowledge base search
+- Escalation logic
+- Response generation
+
+</div>
+
+<div>
+
+## **Maintenance Scheduler**
+
+### **End-to-end Process:**
+1. **Monitor** equipment sensors
+2. **Predict** maintenance needs
+3. **Check** technician availability  
+4. **Schedule** optimal time slots
+5. **Order** required parts
+6. **Send** notifications
+7. **Update** tracking systems
+
+### **Benefits:**
+- Reduced downtime
+- Optimized resource allocation
+- Proactive maintenance
+- Automated documentation
+
+</div>
+
+</div>
+
+---
+layout: two-cols
+---
+
+# **Key Takeaways**
+
+We've explored four powerful AI implementation patterns:
+
+<div class="grid grid-cols-1 gap-4">
+
+### **🤖 Q&A Systems**
+Direct, structured interactions for specific tasks
+
+### **🔍 RAG** 
+Knowledge-enhanced responses from your data
+
+### **🧠 Agentic AI**
+Autonomous decision-making with system access
+
+### **🎯 Fine-tuning**
+Domain-specific expertise and accuracy
+
+</div>
+
+**Remember:** Choose the right pattern for your specific use case and requirements.
+
+::right::
+
+# **Implementation Strategy**
+
+```mermaid
+graph TD
+    A[Start Simple] --> B[Q&A Systems]
+    B --> C[Add Knowledge]
+    C --> D[RAG Implementation]
+    D --> E[Enable Actions]
+    E --> F[Agentic AI]
+    F --> G[Optimize Performance]
+    G --> H[Fine-tuning]
+    H --> I[Full Automation]
+    I --> J[Autonomous Agents]
+```
+
+<div class="pt-4">
+
+**Progressive Enhancement:**
+- Start with basic Q&A
+- Add knowledge bases (RAG)
+- Enable system actions (Agentic)
+- Optimize with custom training
+- Scale to full automation
+
+</div>
+
+---
+layout: center
+class: text-center
+---
+
+# ⚠️ What Could Go Wrong?
+
+---
+layout: default
+---
+
+# **The Reality of AI Implementation**
+
+<div class="grid grid-cols-2 gap-6">
+
+<div>
+
+## **Common Risks**
+
+### **🤖 Hallucination Risk**
+AI can generate plausible-sounding but incorrect information
+
+### **🔍 Misinterpretation**
+- Instructions taken too literally
+- Context misunderstood
+- Edge cases not handled
+
+### **🛡️ Security Concerns**
+- Prompt injection attacks
+- Data leakage risks
+- Unauthorized access attempts
+
+</div>
+
+<div>
+
+## **Mitigation Strategies**
+
+### **🧪 Comprehensive Testing**
+```python
+def validate_ai_response(response, context):
+    checks = [
+        verify_factual_accuracy(response),
+        check_context_relevance(response, context),
+        validate_safety_constraints(response),
+        test_edge_cases(response)
+    ]
+    return all(checks)
+```
+
+### **🔒 Security Measures**
+- Input validation and sanitization
+- Output content filtering
+- Access control and monitoring
+- Regular security audits
+
+### **👥 Human Oversight**
+- Review critical decisions
+- Escalation protocols
+- Performance monitoring
+- Continuous improvement loops
+
+</div>
+
+</div>
+
+<div class="pt-6 text-center">
+
+**Stay smart, stay aware of what you're building**
+
+</div>
+
+---
+layout: center
+class: text-center
+---
+
+# Thank You!
+
+## Questions and Discussion Time
+
+<div class="pt-12">
+  <span class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
+    Let's explore your AI implementation questions! 🚀
+  </span>
+</div>
+
+<div class="abs-br m-6 flex gap-2">
+  <button @click="$slidev.nav.go(1)" class="text-xl slidev-icon-btn opacity-50 !border-none !hover:text-white">
+    <carbon:arrow-left />
+  </button>
+</div>
+
+
+layout: end
+---
+
+# Resources & Next Steps
+
+<div class="grid grid-cols-2 gap-6">
+
+<div>
+
+## **Getting Started**
+- **OpenAI API** - Q&A and Vision AI
+- **Anthropic Claude** - Advanced reasoning
+- **LangChain** - AI application framework
+- **Pinecone** - Vector database for RAG
+
+## **Open Source Tools**
+- **Ollama** - Local LLM deployment
+- **ChromaDB** - Open source vector DB
+- **Flowise** - Visual AI workflow builder
+- **N8N** - Workflow automation
+
+</div>
+
+<div>
+
+## **Implementation Roadmap**
+1. Start with simple Q&A systems
+2. Build knowledge base (RAG)
+3. Add system integrations (Agentic)
+4. Scale with fine-tuning
+5. Deploy autonomous workflows
+
+## **Best Practices**
+- Always validate AI outputs
+- Implement proper error handling  
+- Plan for edge cases
+- Monitor performance continuously
+- Keep humans in the loop for critical decisions
+
+</div>
+
+</div>
+
+
