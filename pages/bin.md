@@ -4,6 +4,7 @@ Before:
 - Better word instead of *marketer* and update
 - Review and use better markdown elements as per slidev(do not over-engineer though)
 - When possible(and if remembered), ask questions to make it more engaging. Like, Any users for * here?
+
 ---
 
 Background:
@@ -55,7 +56,8 @@ Bigger things like: Security, Accessibility, UI/UX, Bugs, SEO, Content, etc.
 TODO:
 - [ ] propel theme: colors
 - [ ] consistent headings
-- cover insights/notes for MCP use-case
+- [ ] Placement of "check system-prompt leaks"
+- [ ] cover insights/notes for MCP use-case
 
 ---
 
