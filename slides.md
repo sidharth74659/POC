@@ -555,7 +555,7 @@ layout: intro
 
 > **How does this benefit us?**
 <br>
-<span class="text-base" style="color: grey;">As a developer, designer, business analyst, marketer(sorry 😬) and Manager?</span>
+<span class="text-base" style="color: grey;">As a developer, designer, business analyst, marketers and managers?</span>
 
 <br>
 
@@ -740,13 +740,13 @@ Branch: `testing-with-puppeteer`, `ai-testing` (for reports), `json-viewer` (for
 <br>
 
 ### **Design Integration**
-- **Figma API** for design workflows
+- **Figma MCP** for design workflows
 
 <br>
 
 ### **Open Source Ecosystem** (No Demos)
-- **Database connectors** (SQL, NoSQL)
-- **Communication tools** (email, Slack, Teams)
+- **Database connectors** (Supabase, SQL, NoSQL, ERP Systems, etc.)
+- **Communication tools** (email, Slack, Teams, etc.)
 - **File processing** (PDF, Excel, etc.)
 
 </div>
@@ -756,8 +756,8 @@ layout: center
 class: text-center
 ---
 
-# Fine-tuned LLMs: Custom Training
-## **4. Tailored AI for Specific Use Cases**
+# **4. Fine-tuned LLMs: Custom Training**
+(Tailored AI for Specific Use Cases)
 
 ---
 layout: two-cols
@@ -864,26 +864,48 @@ layout: center
 class: text-center
 ---
 
-# Autonomous AI Agents
-## **5. Orchestrated Workflows**
+# **5. Orchestrated Workflows**
+(Autonomous AI Agents)
 
 ---
 layout: default
 ---
 
-# **5.1 Workflow Automation Platforms**
+### **5.1 Workflow Automation Platforms:**
 
-<div class="grid grid-cols-3 gap-6">
+<div class="grid grid-cols-3 gap-2">
 
-<div class="p-4 border rounded">
+<div class="p-2 border rounded">
 
-## **N8N**
-### Visual Workflow Automation
+<u>**LangChain**</u>
+#### AI Application Framework
+- Chain complex AI operations
+- Memory management
+- Tool integration
+- Python/JavaScript support
+<!-- 
+```python
+# LangChain agent
+from langchain.agents import create_agent
+agent = create_agent(
+    tools=[database_tool, email_tool],
+    llm=ChatOpenAI(),
+    memory=ConversationBufferMemory()
+)
+```
+-->
+
+</div>
+
+<div class="p-2 border rounded">
+
+<u>**N8N**</u>
+#### Visual Workflow Automation
 - Drag-and-drop interface
 - 400+ integrations
 - Self-hosted or cloud
 - Custom node development
-
+<!-- 
 ```javascript
 // N8N workflow example
 {
@@ -895,34 +917,15 @@ layout: default
   ]
 }
 ```
+ -->
+**Perfect for:** Non-technical team members to build AI workflows
 
 </div>
 
-<div class="p-4 border rounded">
+<div class="p-2 border rounded">
 
-## **LangChain**
-### AI Application Framework
-- Chain complex AI operations
-- Memory management
-- Tool integration
-- Python/JavaScript support
-
-```python
-# LangChain agent
-from langchain.agents import create_agent
-agent = create_agent(
-    tools=[database_tool, email_tool],
-    llm=ChatOpenAI(),
-    memory=ConversationBufferMemory()
-)
-```
-
-</div>
-
-<div class="p-4 border rounded">
-
-## **Flowise**
-### Low-code AI Workflows
+<u>**Flowise**</u>
+#### Low-code AI Workflows
 - Visual flow builder
 - LangChain integration
 - Chat interface
@@ -996,60 +999,6 @@ graph TD
 </div>
 
 ---
-layout: two-cols
----
-
-# **Key Takeaways**
-
-We've explored four powerful AI implementation patterns:
-
-<div class="grid grid-cols-1 gap-4">
-
-### **🤖 Q&A Systems**
-Direct, structured interactions for specific tasks
-
-### **🔍 RAG** 
-Knowledge-enhanced responses from your data
-
-### **🧠 Agentic AI**
-Autonomous decision-making with system access
-
-### **🎯 Fine-tuning**
-Domain-specific expertise and accuracy
-
-</div>
-
-**Remember:** Choose the right pattern for your specific use case and requirements.
-
-::right::
-
-# **Implementation Strategy**
-
-```mermaid
-graph TD
-    A[Start Simple] --> B[Q&A Systems]
-    B --> C[Add Knowledge]
-    C --> D[RAG Implementation]
-    D --> E[Enable Actions]
-    E --> F[Agentic AI]
-    F --> G[Optimize Performance]
-    G --> H[Fine-tuning]
-    H --> I[Full Automation]
-    I --> J[Autonomous Agents]
-```
-
-<div class="pt-4">
-
-**Progressive Enhancement:**
-- Start with basic Q&A
-- Add knowledge bases (RAG)
-- Enable system actions (Agentic)
-- Optimize with custom training
-- Scale to full automation
-
-</div>
-
----
 layout: center
 class: text-center
 ---
@@ -1066,17 +1015,17 @@ layout: default
 
 <div>
 
-## **Common Risks**
+### **Common Risks**
 
-### **🤖 Hallucination Risk**
-AI can generate plausible-sounding but incorrect information
+#### **🤖 Hallucination Risk**
+- AI can generate plausible-sounding but incorrect information
 
-### **🔍 Misinterpretation**
+#### **🔍 Misinterpretation**
 - Instructions taken too literally
 - Context misunderstood
 - Edge cases not handled
 
-### **🛡️ Security Concerns**
+#### **🛡️ Security Concerns**
 - Prompt injection attacks
 - Data leakage risks
 - Unauthorized access attempts
@@ -1085,9 +1034,10 @@ AI can generate plausible-sounding but incorrect information
 
 <div>
 
-## **Mitigation Strategies**
+### **Mitigation Strategies**
 
-### **🧪 Comprehensive Testing**
+#### **🧪 Comprehensive Testing**
+<!-- 
 ```python
 def validate_ai_response(response, context):
     checks = [
@@ -1098,14 +1048,15 @@ def validate_ai_response(response, context):
     ]
     return all(checks)
 ```
+ -->
 
-### **🔒 Security Measures**
+#### **🔒 Security Measures**
 - Input validation and sanitization
 - Output content filtering
 - Access control and monitoring
 - Regular security audits
 
-### **👥 Human Oversight**
+#### **👥 Human Oversight**
 - Review critical decisions
 - Escalation protocols
 - Performance monitoring
@@ -1114,12 +1065,12 @@ def validate_ai_response(response, context):
 </div>
 
 </div>
-
+<!-- 
 <div class="pt-6 text-center">
 
 **Stay smart, stay aware of what you're building**
 
-</div>
+</div> -->
 
 ---
 layout: center
@@ -1142,8 +1093,8 @@ class: text-center
   </button>
 </div>
 
-
-layout: end
+---
+# layout: end
 ---
 
 # Resources & Next Steps

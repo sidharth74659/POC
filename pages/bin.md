@@ -1,7 +1,7 @@
 Before:
 
 - Check all ports/demo/playgrounds are up and running
-- Better word instead of *marketer* and update
+- ~Better word instead of *marketer* and update~
 - Review and use better markdown elements as per slidev(do not over-engineer though)
 - When possible(and if remembered), ask questions to make it more engaging. Like, Any users for * here?
 
@@ -18,9 +18,8 @@ Glossary:
 ---
 
 <!-- Invite: -->
-
 I attempted to cover all topics of AI, and as non-technical as it gets, and mostly focusing on leveraging it.
-
+Aspects as *
 
 ---
 
@@ -58,6 +57,8 @@ TODO:
 - [ ] consistent headings
 - [ ] Placement of "check system-prompt leaks"
 - [ ] cover insights/notes for MCP use-case
+- [ ] Links to MCP Servers
+- [ ] Limitations of MCP Servers
 
 ---
 
@@ -101,13 +102,16 @@ For the most awaited question, which also might backfire to me is, Why?
 
 <!-- new slide -->
 - and the only answer I could think of is, Why Not?
-- I mean, the future is already the present, and before it's gonna be the past, let's explore on the *Which*.
-Which platforms, tools we can cover to have the AI implemented and thus
+- I mean, the future we always speak of is already the present, and before it's gonna be the past, let's explore on the *Which*.
+- Which part of the functionality/process we can improve with AI.
+- Which platforms, tools we can cover to have the AI implemented and thus
 
 <!-- new slide -->
  **Leverage AI**.
+By Simple Prompts
 
-
+<!-- new slide -->
+Like I've been mentioning to @Madhu & @Raj Sir earlier, it's probably the first time, where we're not lacking by the technology, but the use-case.
 
 
 ----
@@ -127,4 +131,62 @@ const mcpConfig = {
   context: "user_preferences"
 }
 ```
+</div>
+
+---
+---
+
+
+---
+layout: two-cols
+---
+
+# **Key Takeaways**
+
+We've explored four powerful AI implementation patterns:
+
+<div class="grid grid-cols-1 gap-4">
+
+### **🤖 Q&A Systems**
+Direct, structured interactions for specific tasks
+
+### **🔍 RAG** 
+Knowledge-enhanced responses from your data
+
+### **🧠 Agentic AI**
+Autonomous decision-making with system access
+
+### **🎯 Fine-tuning**
+Domain-specific expertise and accuracy
+
+</div>
+
+**Remember:** Choose the right pattern for your specific use case and requirements.
+
+::right::
+
+# **Implementation Strategy**
+
+```mermaid
+graph TD
+    A[Start Simple] --> B[Q&A Systems]
+    B --> C[Add Knowledge]
+    C --> D[RAG Implementation]
+    D --> E[Enable Actions]
+    E --> F[Agentic AI]
+    F --> G[Optimize Performance]
+    G --> H[Fine-tuning]
+    H --> I[Full Automation]
+    I --> J[Autonomous Agents]
+```
+
+<div class="pt-4">
+
+**Progressive Enhancement:**
+- Start with basic Q&A
+- Add knowledge bases (RAG)
+- Enable system actions (Agentic)
+- Optimize with custom training
+- Scale to full automation
+
 </div>
