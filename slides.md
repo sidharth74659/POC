@@ -15,11 +15,88 @@ transition: slide-left
 css: unocss
 ---
 
-# **Leveraging AI** 
-**Beyond, By Simple Prompts**
 
-A deep dive into **contextual AI** (*as I'd like to call it* or *a lack of better word*)
-<br> that understands <u>your data</u> and acts <u>autonomously</u>
+
+
+---
+layout: default
+---
+
+## **Disclaimer**
+
+I've tailored this session to be of as non-technical as possible, making a point that it's for anyone. *
+
+<br>
+
+This session is entirely based on my analysis & opinions and is subjective.
+
+For this session(considering it's for everyone), I've focused on the point about building/using the AI systems, where the usage could/should be boiled down to a simple natural-language query and have some task done.
+
+Also, any content that is purely AI generated, is labeled as *AI-generated*.
+
+<br>
+
+*Note*: Since this session is made by me, expect some remarks, lame-jokes, and at times, maybe some *complexity*(or *confusing*). In which case, feel free to <span class="tooltip" data-tooltip="in the end!"><u>ask questions</u></span>.
+
+<br>
+<br>
+
+<span class="text-sm" style="color: grey;">* Also, attempts of Dramatization will be made to make it more engaging. Apologies in Advance. 🙂‍↕️</span>
+
+
+<style scoped>
+.tooltip {
+  position: relative;
+  cursor: pointer;
+}
+.tooltip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: black;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+</style>
+
+---
+layout: center
+---
+
+While ignorance is bliss, so is useful information. and thus my belief is: `to question on everything, is how you can answer/understand anything.`
+
+And on that note, I'm gonna cover this session with answering the standard questions. We're gonna cover:
+- the **When**, Now.
+- the **What**, When explaining the topics
+- the **Where**, By covering use-cases
+- the **How**, By showing the implementations
+- and the **Why** and the **Which**, in the end.
+
+
+<br>
+
+For someone wondering the question, **Who**? It's me, <a href="https://github.com/sidharth74659/">Srikanth V.</a>
+- And for the Whom, It's whoever is interested 🫣.
+
+
+---
+layout: center
+class: text-center
+---
+
+# **Leveraging AI** 
+**Beyond & By Simple Prompts**
+
+<br>
+
+A deep dive into **contextual AI*** that understands <u>your data</u> and acts <u>autonomously</u>
+
+<div class="absolute bottom-4 left-6 text-sm" style="color: grey;">*as I’d like to call it, for lack of a better word</div>
+
 
 <div class="absolute bottom-4 right-6 flex items-center justify-center">
   <a href="https://github.com/slidevjs/slidev" target="_blank" alt="GitHub"
@@ -42,7 +119,7 @@ layout: default
 We're talking about **contextual AI**. An *extension* of AI that understands:
 - Your documents, APIs, and systems  
 - Your databases
-- and communicate with any software/system autonomously
+- and **communicate** with any software/system autonomously.
 
 We'll explore few of the amazing and fascinating, if not a bit scary capabilities of this technology.
 </div>
@@ -78,17 +155,17 @@ layout: center
 class: text-center
 ---
 
-If that's the question, we're not going to answer it here.
+If that's the question, we're not going to cover it here.
 
 ---
 layout: center
 ---
 
-# **What else we're not going to cover?**
+# **We're also not going to cover:**
 - Prompt Engineering
 - AI for research, writing, etc. 
-- Developing applications using prompts with AI
-- How to effectively use AI tools
+- What and how to effectively use AI tools
+- Developing applications using prompts with AI <span class="text-xs" style="color: grey;">(Like *bolt*, *lovable*, etc)</span>
 
 <!-- - How to build AI-powered applications -->
 <!-- - Solutions to problems -->
@@ -136,8 +213,8 @@ Based on my experience/analysis, AI implementations in applications generally fa
 
 <div>
 
-## 🤖 **1. Q&A Systems**
-Direct LLM Prompting <span class="text-xs" style="color: grey;">(ChatGPT, Claude, etc.)</span>  
+## 💬 **1. Q&A Systems**
+Direct LLM Prompting <span class="text-xs" style="color: grey;">(!ChatGPT, !Claude, etc.)</span>  
  
 ## 🧠 **3. Agentic AI**  <span style="color: red;">*</span>
 LLM + Model Context Protocol <span class="text-xs" style="color: grey;">(MCP)</span>
@@ -149,8 +226,9 @@ LLM + Model Context Protocol <span class="text-xs" style="color: grey;">(MCP)</s
 ## 🔍 **2. RAG** 
 Retrieval Augmented Generation <span class="text-xs" style="color: grey;">(Chatbots)</span>
 
-## 🎯 **4. Fine-tuned LLMs**
-Custom Training <span class="text-xs" style="color: grey;">(Domain-specific models)</span>
+
+## 🤖 **4. Autonomous AI Agents**
+Orchestrate complex workflows <span class="text-xs" style="color: grey;">(MCP)</span>
 
 </div>
 
@@ -158,13 +236,13 @@ Custom Training <span class="text-xs" style="color: grey;">(Domain-specific mode
 
 <div class="pt-6">
 
-**Plus:** Autonomous AI Agents that orchestrate complex workflows. More on this in the end.
+**Plus:** Fine-tuned LLMs for domain-specific tasks. More on this in the end.
 
 </div>
 
 <br>
 
-<span class="text-base" style="color: grey;"><span style="color: red;">*</span> More like what makes an AI *Agentic*.</span>
+<span class="text-base" style="color: grey;"><span style="color: red;">*</span> More like what makes an AI *Agentic*. Also, the reason for this presentation.</span>
 
 <!-- <arrow v-click="1" x1="200" y1="420" x2="230" y2="470" color="#564" width="3" arrowSize="1" /> -->
 
@@ -197,7 +275,7 @@ This is usually how ChatGPT, Claude and other LLM providers are instructed/regul
 - Ever wondered how ChatGPT vibes with you? Yeah, it was [instructed](https://github.com/asgeirtj/system_prompts_leaks/blob/main/OpenAI/o4-mini.md#:~:text=Over%20the%20course%20of%20conversation%2C%20adapt%20to%20the%20user%E2%80%99s%20tone%20and%20preferences).
 - Ever wondered how it *refuse requests* get political/controversial statements? Yeah, it was [regulated](https://github.com/asgeirtj/system_prompts_leaks/blob/main/Anthropic/claude-sonnet-4.md#:~:text=do%20not%20use%20these%20harmful%20sources%20and%20refuse%20requests).
 
-You can find more of such system prompts from various leaks, like: [Source 1](https://github.com/jujumilk3/leaked-system-prompts), [Source 2](https://github.com/asgeirtj/system_prompts_leaks).
+You can find more of such system prompts from various leaks by [jujumilk3](https://github.com/jujumilk3/leaked-system-prompts), [asgeirtj](https://github.com/asgeirtj/system_prompts_leaks) among others.
 <br>
 
 <style>
@@ -215,7 +293,7 @@ layout: default
 
 <br>
 
-### **1.2 Real-World Use Case - Vision AI**
+### **1.2 Sample Use Case - Vision AI**
 
 ```mermaid
 graph LR
@@ -293,23 +371,21 @@ Demo: [Frontend - local](http://localhost:55056/), [Backend - local](http://loca
 layout: default
 ---
 
-# **1.3 Edge Cases**
+### **1.3 Edge Cases**
 
-<div class="grid grid-cols-1 gap-4">
-
-### **Testing and Validation:**
-- ❌ Handle mismatched inputs (logo vs. receipt expectation).
-- ❌ Posing irrelevant questions that do not align with the objective.
+**Testing and Validation:**
+- ❌ Handle mismatched inputs <span class="text-base" style="color: grey;">(logo vs. receipt expectation)</span>.
+- ❓ Posing irrelevant questions that do not align with the objective.
 - ⚠️ Validate non-image uploads mimicking receipts.
+- 🔓 Jailbreak
+- 🛡️ GDPR hacks <span class="text-base" style="color: grey;">(sensitive data leakage)</span>
 
-### **Best thing**:
-- It boils down to your system-prompt to handle all the above like we've seen earlier in leaks, and you can have an AI suggest you to do that (<span class="text-xs blink-smooth" style="color: orange;"><u>demonstrate</u></span>).
-- The real work would be the test-cases and checks we need to do which is critical for production.
+**Best thing**:
+- It boils down to your system-prompt to handle all the above <span class="text-base" style="color: grey;">(like we've seen earlier in leaks)</span>, and you can have an AI suggest you to do that (<span class="text-xs blink-smooth" style="color: orange;">demonstrate</span>).
+- The real work would be the *test-cases* and *checks* we need to do which is critical for production.
 - Thus, We need to:
   - 🔄 Continuously refine prompts for edge cases.
   - 🧪 Build comprehensive test scenarios. <span class="text-xs" style="color: grey;">(For production)</span>
-
-</div>
 
 ---
 layout: center
@@ -328,7 +404,7 @@ It does, that's what one does with ChatGPT and other LLM providers. User asks a 
 
 <br>
 
-> **But how are we gonna tailor it?**
+> **But how can we tailor it?**
 
 YOU CAN, and it's there.
 <br>
@@ -336,14 +412,14 @@ YOU CAN, and it's there.
 Each LLM provider has a different way of doing this.
 - Perplexity calls it [Personalise](https://www.perplexity.ai/account/personalize),
 - ChatGPT calls it 'Customize',
-- Gemini refers it [saved-info](https://gemini.google.com/saved-info)
+- Gemini refers it [saved-info](https://gemini.google.com/saved-info).
 
 
 ---
 layout: center
 ---
 
-Now the question just doesn't stay there, right?
+Now the question just doesn't stay there, does it?
 
 - The laziness in the body might think, “Am I going to keep providing the same context every time I ask a question to every LLM?”
 
@@ -511,7 +587,7 @@ Turn documents into searchable formats → Find relevant matches → Generate in
 layout: default
 ---
 
-## **2.3 RAG in our Applications** *
+### **2.3 Implementation in our Applications** *
 
 <br>
 <br>
@@ -572,9 +648,9 @@ layout: center
 
 Like always, the question just doesn’t stay there, does it?
 
-- Someone that's up-to-date/impatient might question, “We already know this. While this is enough for the *amazing* part of what AI can do, where does the so-called *fascinating, if not scary* part come in?”
+- Someone that's up-to-date/impatient might question, “We already know this. While this is enough for the *amazing* part of what AI can do, where does the so-called *fascinating, if not scary* part come in? ”
 
-- The lazy one might think, “So now I’m supposed to keep updating the knowledge base about myself/company/project as the information updates?”
+- The lazy one might think, “So now I’m supposed to keep updating the knowledge base about myself/company/project as the information updates? Isn't there much we can do to have this automated too..?”
 
 - The curious might ask, “What if I want it to not only know information, but also interact with the tools I use — or even get some of my automated tasks done? I mean, clearly, if needed, it seems like it can search what it needs from the internet, if not from the knowledge base.”
 
@@ -586,8 +662,8 @@ layout: center
 class: text-center
 ---
 
-# **3. Agentic AI**
-(kinda)
+# **3. Agentic AI***
+*kinda
 
 ---
 layout: full
@@ -595,7 +671,7 @@ layout: full
 
 ## **3.1 What is Agentic AI?**
 
-<span class="text-md" style="color: grey;">**Agentic AI** makes autonomous(*technically, partially guided*) decisions and takes actions based on available information(resources) and context(tools).</span>
+<span class="text-md" style="color: grey;">**Agentic AI** makes autonomous(more like, *partially guided*) decisions and takes actions based on available information(resources) and context(tools).</span>
 
 Basically, you provide a 
 - **Prompt** (like 'Build this component')
@@ -606,7 +682,7 @@ Before someone's gonna say: *"I know this! That's what [claude-artifacts](https:
 
 <br>
 
-**While they are there, till how far can we reach? Like:**
+**While we're at it, Let's disccuss it, till how far can we reach? Like:**
 - What happens when the codebase gets too large? or more than one developer needs to chip in?
 - What do we do when it's a production issue? or the code starts spiraling beyond one's understanding?
 - And who’s responsible for making sure that fixing one thing doesn’t break something else?
@@ -616,9 +692,9 @@ Before someone's gonna say: *"I know this! That's what [claude-artifacts](https:
 layout: default
 ---
 
-Someone must have thought, "Well, We aren't there ***yet!***". Yeah, I know, but my point <span class="text-base" style="color: grey;">(or opinion)</span> is that LLM's are always better off as assistants, than as some autonomous developers.
+Someone must have thought, "Well, We aren't there ***yet!***". Yeah, I know, but my point <span class="text-base" style="color: grey;">(or opinion)</span> is that LLM's are always better off as assistants, than as some autonomous developerment systems.
 
-I mean, I’d trust my [instinct over intellect](https://www.youtube.com/watch?v=qjPCjn8iVWs). - `Cillian Murphy`. Anyway, more on this at the end.
+I mean, I’d trust my <span class="tooltip" data-tooltip="by Cillian Murphy"><u>[instinct over intellect](https://www.youtube.com/watch?v=qjPCjn8iVWs)</u></span>. Anyway, more on this at the end.
 
 <br>
 
@@ -626,7 +702,7 @@ I mean, I’d trust my [instinct over intellect](https://www.youtube.com/watch?v
 
 <br>
 
-**So, where was I? Uh... Assistant!** <span class="text-xs" style="color: grey;">(also, little history)</span>
+**So, where was I? Uh... Assistant!** <span class="text-xs" style="color: grey;">(also, a little history here for technical-people)</span>
 
 For any assistant(LLM), it needs to know the task(prompt), the tools, and how to use them(resources).
 
@@ -634,9 +710,29 @@ OpenAI and Gemini offer what’s called **Function Calling**, while Anthropic re
 
 But none of these were standardized. Anthropic later proposed [**Model Context Protocol (MCP)**](https://modelcontextprotocol.io/introduction), and Google took this further with [**Agent-to-Agent (A2A)**](https://google-a2a.github.io/A2A/#a2a-and-mcp-complementary-protocols) Protocol.
 
-These open standards are designed to unify how applications and systems provide context and tool access to LLMs, making the process more seamless and interoperable.
+These open standards are designed to unify how applications and systems provide *context* and *tool* access to LLMs, making the process more seamless and interoperable.
 
 **Think of it as**: AI with decision-making abilities and standardized access to your tools.
+
+
+<style scoped>
+.tooltip {
+  position: relative;
+  cursor: pointer;
+}
+.tooltip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: black;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+</style>
 
 ---
 layout: default
@@ -711,7 +807,7 @@ layout: default
 - 💡 Context-aware responses
 <!-- - 🔄 Multi-system coordination -->
 
-Links: - [JIRA - with much detailed explanation](https://propelapps.atlassian.net/browse/MSC24C-157?focusedCommentId=23137)
+Links: [JIRA - with much detailed explanation](https://propelapps.atlassian.net/browse/MSC24C-157?focusedCommentId=23137)
 
 Demo: [Scheduler - Frontend](http://localhost:55267/scheduler), [Scheduler - Backend](http://localhost:3333/)
 
@@ -725,45 +821,144 @@ Agent: Checks calendar → Identifies available slots → Considers team prefere
 ```
 
 ---
+layout: default
+---
 
+<!-- <b class="text-2xl text-center">For the team:</b> -->
+
+<div class="grid grid-cols-2 gap-8">
 
 <div>
 
-### **Web Automation/Testing**
+<u>**Web Automation/Testing**</u>
+
 - **Puppeteer/Playwright** for web interactions
 - **Selenium** for complex browser automation
 
 Demo: [UI/UX Review Report](https://bitbucket.org/mobilesupplychain24c/digital-forms/src/demo--ai-testing/guides/ui-ux-evaluation-report.md)
 
-Branch: `testing-with-puppeteer`, `ai-testing` (for reports), `json-viewer` (for developming through testing)
+Branch: `testing-with-puppeteer`, `ai-testing` (for reports), `json-viewer` (for developing through testing)
+</div>
 
-<br>
+<div>
 
-### **Design Integration**
-- **Figma MCP** for design workflows
-
-<br>
-
-### **Open Source Ecosystem** (No Demos)
-- **Database connectors** (Supabase, SQL, NoSQL, ERP Systems, etc.)
-- **Communication tools** (email, Slack, Teams, etc.)
-- **File processing** (PDF, Excel, etc.)
+<u>**Design Integration**</u>
+- **Figma MCP** for design workflows <span class="text-xs" style="color: orange;">([demonstrate](https://www.figma.com/design/rnNJAZnwWNGtU0hQGdJ2kX/Cursor-Talk-To-Figma-MCP-Plugin--Community-?node-id=0-1&t=D99LZJjVWtCCITJg-0))</span>
+</div>
 
 </div>
+
+<div>
+
+<br>
+<br>
+
+<u>**Open Source Ecosystem**</u> <span class="text-xs" style="color: grey;">(No Demos)</span>
+- **Database connectors** (Supabase, SQL, NoSQL, ERP Systems, etc.)
+- **Communication tools** (email, Slack, Teams, etc.)
+<!-- - **Marketers**: [Sample](https://mcp.so/server/puppeteer-plus-martech-mcp/moonbirdai), You can filter more from below: -->
+<!-- - **File processing** (PDF, Excel, etc.) -->
+</div>
+
+---
+layout: center
+---
+
+
+> **Still not impressed?**
+
+You can have it to scan from:
+- Little things like: Typos, Grammar, Case-Sensitive, etc. to
+- Bigger things like: Security, Accessibility, UI/UX, Bugs, Analyse SEO, Recommend Content, etc.
+
+All by just adding some instructions in prompt.
+
+<br>
+
+> But wait, how can we start using this for our workflows, or have these as assistance based on my role?
+
+YOU CAN, But you need a paid version of softwares that support this.
+After that, It's as easy as pasting a `json` in softwares like *Cursor*, *Claude Desktop*, *WindSurf*, *Github Copilot*, etc. that support this.
+
+- You can check and filter available **MCP Servers** based on your needs from Marketplaces (like [mcp.so](https://mcp.so/server/puppeteer-plus-martech-mcp/moonbirdai), [Dexter](https://www.dextermcp.net/marketplace/), [Composio](https://mcp.composio.dev/), [Playwright](https://github.com/modelcontextprotocol/servers), etc.) and copy `json` from there.
+
+For example. for Marketers, check [this](https://mcp.so/server/puppeteer-plus-martech-mcp/moonbirdai). Similarly, you can find more if you can search.
+
+
+---
+layout: center
+---
+
+**Addressing the concerns:**
+- As for the concerned part, Yeah, this is not production-ready yet. Not only due to lack of a standardised protocol
+  - But also lacks layers like Memory management, authentication, and other key security implementations. 
+  - There are workarounds for this, and anyways, they are as ready as they can be for us to make them part of our SDLC today.
+
+- Oh, and you can develop your own MCP server using open-source tools like [rowboat](https://www.rowboatlabs.com/) and connect it to your own profile/dashboard and configure it to automatically update your dashboard and knowledge base as you work.
+
+
+---
+layout: center
+---
+
+Remember those lazy, curious, and concerned one's? They all might now ask in unison:
+ 
+<br>
+
+"What happens when human judgment or intervention is needed? If AI seems capable of handling everything, Don't we need a way to oversee or regulate what it can and cannot do in the middle of a process?" <span class="text-base" style="color: grey;">(or simply, **human-in-loop**)</span>
 
 ---
 layout: center
 class: text-center
 ---
 
-# **4. Fine-tuned LLMs: Custom Training**
-(Tailored AI for Specific Use Cases)
+# **4. Autonomous AI Agents**
+
+(Orchestrate complex workflows)
 
 ---
-layout: two-cols
+layout: center
+# class: text-center
 ---
 
-# **4.1 What is Fine-tuning?**
+We can build our own autonomous agents by grouping different tools and resources together, and then if needed, setup **human-in-loop**.
+
+All with a simple drag-and-drop interface, with ready to use integrations. And, if ever needed, can be self-hosted or on cloud, can be integrated within other applications, build custom nodes, etc.
+
+<br>
+
+Applications that offer such are:
+- [LangChain](https://www.langchain.com/), [N8N](https://n8n.io/), [Flowise](https://flowiseai.com/)
+
+<br>
+
+**Capabilities:**
+- 🔄 **Continuous task execution** - 24/7 automation
+- 🔗 **Multi-system integration** - Connect disparate(*different*) tools
+- 🌳 **Complex decision trees** - Conditional logic flows
+- 📊 **Automated reporting** - Insights and analytics
+
+---
+layout: center
+class: text-center
+---
+
+<!-- # **Optional: Fine-tuned LLMs: Custom Training** -->
+
+# Fine-tuned LLMs: Custom Training
+(Tailor AI for specific use-cases)
+
+<span class="text-base" style="color: grey;">(Optional)</span> 
+
+
+---
+# layout: two-cols
+layout: default
+---
+
+<div class="absolute top-4 right-6 text-sm" style="color: grey;"><span class="text-xs" style="color: grey;"><u>*AI Generated</u></span></div>
+
+### **What is Fine-tuning?** 
 
 Train models with your specific dataset — documents, images, conversation patterns.
 
@@ -771,25 +966,40 @@ Train models with your specific dataset — documents, images, conversation patt
 
 **When to Use:** Highly specialized tasks requiring domain-specific expertise
 
-::right::
+<!-- ::right:: -->
 
-# **Examples**
+<br>
 
-<div class="grid grid-cols-1 gap-4">
+**Examples**:
 
-### **🔧 Damage Detection**
+<div class="grid grid-cols-3 gap-4">
+
+<div>
+
+**🔧 Damage Detection**
+
 Analyze maintenance images for specific issues
 - Custom image recognition
 - Maintenance-specific terminology
 - Historical repair patterns
 
-### **👤 Personality Cloning**
+</div>
+
+<div>
+
+**👤 Personality Cloning**
+
 Replicate communication patterns from chat history
 - Writing style adaptation
 - Response pattern matching
 - Context-aware persona
 
-### **📋 Response Standardization** 
+</div>
+
+<div>
+
+**📋 Response Standardization** 
+
 Ensure consistent answer formats
 - Brand voice consistency
 - Technical accuracy
@@ -797,206 +1007,57 @@ Ensure consistent answer formats
 
 </div>
 
+</div>
+
 ---
 layout: default
 ---
 
-# **4.2 Fine-tuning Implementation**
+<div class="absolute top-4 right-6 text-sm" style="color: grey;"><span class="text-xs" style="color: grey;"><u>*AI Generated</u></span></div>
 
-<div class="grid grid-cols-2 gap-6">
+### **Use Cases in Our Apps**
 
-<div>
-
-## **Training Process**
-
-```python
-# Fine-tuning pipeline example
-def fine_tune_model():
-    # 1. Prepare dataset
-    training_data = load_domain_specific_data()
-    
-    # 2. Preprocess and format
-    formatted_data = format_for_training(training_data)
-    
-    # 3. Fine-tune base model
-    model = fine_tune(
-        base_model="gpt-3.5-turbo",
-        training_data=formatted_data,
-        epochs=3,
-        learning_rate=0.0001
-    )
-    
-    # 4. Evaluate performance
-    evaluate_model(model, test_data)
-    
-    return model
-```
-
-</div>
+<div class="grid grid-cols-3 gap-6">
 
 <div>
 
-## **Use Cases in Our Apps**
-
-### **Maintenance System**
+**Maintenance System**
 - Equipment-specific damage recognition
 - Predictive maintenance recommendations
 - Work order classification
 
-### **Customer Service**
+</div>
+
+<div>
+
+**Customer Service**
 - Domain-specific response generation
 - Escalation pattern recognition
 - Sentiment analysis tuned for our users
 
-### **Data Processing**
+</div>
+
+<div>
+
+**🔍 Data Processing**
 - Custom extraction patterns
 - Business logic implementation
 - Quality assurance automation
 
+</div>
+
+</div>
+
 **ROI:** Higher accuracy for specialized tasks vs. general-purpose models
 
-</div>
+<hr>
 
-</div>
+<br>
 
----
-layout: center
-class: text-center
----
+**Thoughts:**
+- This is both time-consuming, and expensive. There are very few specific use-cases where this is actually needed. Which, we can also achieve by other work-arounds (like RAG, good prompt engineering, etc.)
+- And also, it goes beyond the scope of this presentation.
 
-# **5. Orchestrated Workflows**
-(Autonomous AI Agents)
-
----
-layout: default
----
-
-### **5.1 Workflow Automation Platforms:**
-
-<div class="grid grid-cols-3 gap-2">
-
-<div class="p-2 border rounded">
-
-<u>**LangChain**</u>
-#### AI Application Framework
-- Chain complex AI operations
-- Memory management
-- Tool integration
-- Python/JavaScript support
-<!-- 
-```python
-# LangChain agent
-from langchain.agents import create_agent
-agent = create_agent(
-    tools=[database_tool, email_tool],
-    llm=ChatOpenAI(),
-    memory=ConversationBufferMemory()
-)
-```
--->
-
-</div>
-
-<div class="p-2 border rounded">
-
-<u>**N8N**</u>
-#### Visual Workflow Automation
-- Drag-and-drop interface
-- 400+ integrations
-- Self-hosted or cloud
-- Custom node development
-<!-- 
-```javascript
-// N8N workflow example
-{
-  "trigger": "webhook",
-  "actions": [
-    "process_data",
-    "ai_analysis", 
-    "send_results"
-  ]
-}
-```
- -->
-**Perfect for:** Non-technical team members to build AI workflows
-
-</div>
-
-<div class="p-2 border rounded">
-
-<u>**Flowise**</u>
-#### Low-code AI Workflows
-- Visual flow builder
-- LangChain integration
-- Chat interface
-- Custom components
-
-**Perfect for:** Non-technical team members to build AI workflows
-
-</div>
-
-</div>
-
-## **Capabilities:**
-- 🔄 **Continuous task execution** - 24/7 automation
-- 🔗 **Multi-system integration** - Connect disparate tools
-- 🌳 **Complex decision trees** - Conditional logic flows
-- 📊 **Automated reporting** - Insights and analytics
-
----
-layout: default
----
-
-# **5.2 Autonomous Agent Examples**
-
-<div class="grid grid-cols-2 gap-6">
-
-<div>
-
-## **Customer Support Agent**
-
-```mermaid
-graph TD
-    A[Customer Query] --> B{Classify Intent}
-    B -->|Simple| C[Auto-resolve]
-    B -->|Complex| D[Research Knowledge Base]
-    B -->|Escalation| E[Route to Human]
-    C --> F[Send Response]
-    D --> G[Generate Solution]
-    G --> F
-    E --> H[Create Ticket]
-```
-
-**Capabilities:**
-- Intent classification
-- Knowledge base search
-- Escalation logic
-- Response generation
-
-</div>
-
-<div>
-
-## **Maintenance Scheduler**
-
-### **End-to-end Process:**
-1. **Monitor** equipment sensors
-2. **Predict** maintenance needs
-3. **Check** technician availability  
-4. **Schedule** optimal time slots
-5. **Order** required parts
-6. **Send** notifications
-7. **Update** tracking systems
-
-### **Benefits:**
-- Reduced downtime
-- Optimized resource allocation
-- Proactive maintenance
-- Automated documentation
-
-</div>
-
-</div>
 
 ---
 layout: center
@@ -1009,68 +1070,77 @@ class: text-center
 layout: default
 ---
 
-# **The Reality of AI Implementation**
+In other words, *Limitaions and Clarity*:
+- LLM is only as good as the one who uses it. In other words... 🤷🏽
+- An AI is a service that works by an instruction, and sometimes its taken too literally, thus context often gets misunderstood or assumed, if not provided.
+  - Similarly, one can also misuse it, like prompt injection attacks, data leakage risks, unauthorized access attempts, etc.
+- As one's understanding is not what's the requirement is, like developers, an AI also needs context, test-cases, documentation, etc. for it to perform better. 👀
 
-<div class="grid grid-cols-2 gap-6">
+<br>
 
-<div>
+**Others:**
+- Hallucination Risk: AI can generate plausible-sounding but incorrect information.
+- Only future to tell.
+<!-- - Human Oversight: Review critical decisions, Escalation protocols, Performance monitoring, Continuous improvement loops -->
 
-### **Common Risks**
+---
+layout: default
+---
 
-#### **🤖 Hallucination Risk**
-- AI can generate plausible-sounding but incorrect information
+### **Final Thoughts:** <span class="text-base" style="color: grey;">(of mine)</span>
 
-#### **🔍 Misinterpretation**
-- Instructions taken too literally
-- Context misunderstood
-- Edge cases not handled
+I'm more of a backend person, I like to deal with complexity, performance, scalability, security, etc. And it's always been overlooked what a backend person does.
+<!-- <br> -->
 
-#### **🛡️ Security Concerns**
-- Prompt injection attacks
-- Data leakage risks
-- Unauthorized access attempts
+Like the joke goes,
+> A backend engineer, a networking guy, and a janitor.
+> If you don’t know their name, it means they’re doing their job perfectly.
 
-</div>
+<br>
 
-<div>
+But the shift in AI, is allowing us to change this. As, it's more on the backend now, and not in the sense of code. But in the sense of architecture and scaling, improving latency, controlling unpredictability, handling edge-cases, foreseeing security issues. 
+<!-- <br> -->
+Things, that allow us to earn the term 'engineer' instead of a 'developer'. <span class="text-base" style="color: grey;">(Also, a better term than to say I work on *node-end*. I'm sorry 😬.)</span>
 
-### **Mitigation Strategies**
 
-#### **🧪 Comprehensive Testing**
-<!-- 
-```python
-def validate_ai_response(response, context):
-    checks = [
-        verify_factual_accuracy(response),
-        check_context_relevance(response, context),
-        validate_safety_constraints(response),
-        test_edge_cases(response)
-    ]
-    return all(checks)
-```
- -->
+Not that the frontend developers doesn't get to do much, we need someone to build chatbots. Wait a min, that is something now designers/non-technical people can do. Thanks to AI!
 
-#### **🔒 Security Measures**
-- Input validation and sanitization
-- Output content filtering
-- Access control and monitoring
-- Regular security audits
+Just kidding, We need someone to develop applications to be LLM friendly, and also for writing **DOC'S**.
 
-#### **👥 Human Oversight**
-- Review critical decisions
-- Escalation protocols
-- Performance monitoring
-- Continuous improvement loops
+---
+layout: center
+---
 
-</div>
+Now, for the most awaited answer to the question, **Why?**  <span class="text-base" style="color: grey;">(which also might backfire to me)</span>
 
-</div>
-<!-- 
-<div class="pt-6 text-center">
+<br>
 
-**Stay smart, stay aware of what you're building**
+The only answer I could think of is, *Why Not?*
 
-</div> -->
+I mean, the future we always speak of is already the present, and it would be a mistake to not act before it's gonna be the past.
+
+Like I've been mentioning to @Madhu & @Raj Sir earlier, it's probably the first time, where we're not lacking by the technology, but the use-case.
+
+<br>
+
+That leads us to the **Which**? and for you to explore,
+- Which part of the functionality/process can we improve with AI?
+- Which platforms, tools can we cover to have the AI implemented?
+
+<br>
+
+Till then and in the meantime, Let's
+
+---
+layout: center
+class: text-center
+---
+
+# **Leverage AI** 
+**By Simple Prompts**
+
+<br>
+
 
 ---
 layout: center
@@ -1083,7 +1153,7 @@ class: text-center
 
 <div class="pt-12">
   <span class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
-    Let's explore your AI implementation questions! 🚀
+    Let's explore your questions! 🚀
   </span>
 </div>
 
@@ -1097,19 +1167,21 @@ class: text-center
 # layout: end
 ---
 
+<div class="absolute top-4 right-6 text-sm" style="color: grey;"><span class="text-xs" style="color: grey;"><u>*AI Generated</u></span></div>
+
 # Resources & Next Steps
 
 <div class="grid grid-cols-2 gap-6">
 
 <div>
 
-## **Getting Started**
+**Getting Started**
 - **OpenAI API** - Q&A and Vision AI
 - **Anthropic Claude** - Advanced reasoning
 - **LangChain** - AI application framework
 - **Pinecone** - Vector database for RAG
 
-## **Open Source Tools**
+**Open Source Tools**
 - **Ollama** - Local LLM deployment
 - **ChromaDB** - Open source vector DB
 - **Flowise** - Visual AI workflow builder
@@ -1119,14 +1191,14 @@ class: text-center
 
 <div>
 
-## **Implementation Roadmap**
+**Implementation Roadmap**
 1. Start with simple Q&A systems
 2. Build knowledge base (RAG)
 3. Add system integrations (Agentic)
 4. Scale with fine-tuning
 5. Deploy autonomous workflows
 
-## **Best Practices**
+**Best Practices**
 - Always validate AI outputs
 - Implement proper error handling  
 - Plan for edge cases
