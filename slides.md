@@ -854,7 +854,7 @@ Branch: `testing-with-puppeteer`, `ai-testing` (for reports), `json-viewer` (for
 <br>
 
 <u>**Open Source Ecosystem**</u> <span class="text-xs" style="color: grey;">(No Demos)</span>
-- **Database connectors** (Supabase, SQL, NoSQL, ERP Systems, etc.)
+- **Database connectors** (Supabase, [SQL](https://docs.flowiseai.com/use-cases/sql-qna), NoSQL, ERP Systems, etc.)
 - **Communication tools** (email, Slack, Teams, etc.)
 <!-- - **Marketers**: [Sample](https://mcp.so/server/puppeteer-plus-martech-mcp/moonbirdai), You can filter more from below: -->
 <!-- - **File processing** (PDF, Excel, etc.) -->
@@ -868,7 +868,7 @@ layout: center
 > **Still not impressed?**
 
 You can have it to scan from:
-- Little things like: Typos, Grammar, Case-Sensitive, etc. to
+- Little things like: Typos, Grammar, Case-Sensitivity, Sentiment Analysis, etc. to
 - Bigger things like: Security, Accessibility, UI/UX, Bugs, Analyse SEO, Recommend Content, etc.
 
 All by just adding some instructions in prompt.
@@ -925,6 +925,7 @@ We can build our own autonomous agents by grouping different tools and resources
 
 All with a simple drag-and-drop interface, with ready to use integrations. And, if ever needed, can be self-hosted or on cloud, can be integrated within other applications, build custom nodes, etc.
 
+You can pretty much build everything we covered so far, through this. Be it, [RAG](https://n8n.io/workflows/4400-build-a-pdf-document-rag-system-with-mistral-ocr-qdrant-and-gemini-ai/), Vision AI, MCPs, etc.
 <br>
 
 Applications that offer such are:
@@ -937,6 +938,26 @@ Applications that offer such are:
 - 🔗 **Multi-system integration** - Connect disparate(*different*) tools
 - 🌳 **Complex decision trees** - Conditional logic flows
 - 📊 **Automated reporting** - Insights and analytics
+
+---
+layout: default
+---
+
+<span class="text-2xl">Sample workflows I could think of:</span> <span class="text-base" style="color: grey;">(that can improve/automate redundant tasks)</span>
+
+1. Designers: 
+  - Requirement -> Design Wireframes -> Review -> Iterate
+  - Maybe add in-between steps like: try wireframe with different variations/styles, get suggestions, etc.
+2. Marketers: Content Creation, [Social Media Management](https://n8n.io/workflows/3066-automate-multi-platform-social-media-content-creation-with-ai/), Email Marketing, SEO, etc.
+3. BRD:  Research -> Summarize -> Categorize Critical Info -> Add citations, recommendations etc.
+4. Business Analysts: 
+  - Client Requirement (in documents) -> Research -> MVP -> Develop PRD -> Iterate
+  - Maybe add in-between steps like: prioritizing, generate test-cases, simplify in layman's terms, find alternate approaches/solutions, outline a plan, etc.
+
+<br>
+
+Also, if not often, it's not as easy as it looks. One would only know once they step-in. But, it can only be as solid as your idea of the workflow.
+
 
 ---
 layout: center
@@ -1098,9 +1119,9 @@ Like the joke goes,
 
 <br>
 
-But the shift in AI, is allowing us to change this. As, it's more on the backend now, and not in the sense of code. But in the sense of architecture and scaling, improving latency, controlling unpredictability, handling edge-cases, foreseeing security issues. 
+But the shift in AI, is allowing us to change this. As, it's more on the backend now, and not in the sense of code. But in the sense of architecture and scaling, improving latency, controlling unpredictability, handling edge-cases, foreseeing security issues. Also, the need for setting up monitoring, tracing, analytics to trace and improve responses.
 <!-- <br> -->
-Things, that allow us to earn the term 'engineer' instead of a 'developer'. <span class="text-base" style="color: grey;">(Also, a better term than to say I work on *node-end*. I'm sorry 😬.)</span>
+Things, that allow us to earn the term 'engineer' instead of a 'developer'. <span class="text-base" style="color: grey;">(Also, a better term than to say I work on *node-side*. I'm sorry 😬.)</span>
 
 
 Not that the frontend developers doesn't get to do much, we need someone to build chatbots. Wait a min, that is something now designers/non-technical people can do. Thanks to AI!
@@ -1108,7 +1129,7 @@ Not that the frontend developers doesn't get to do much, we need someone to buil
 Just kidding, We need someone to develop applications to be LLM friendly, and also for writing **DOC'S**.
 
 ---
-layout: center
+layout: default
 ---
 
 Now, for the most awaited answer to the question, **Why?**  <span class="text-base" style="color: grey;">(which also might backfire to me)</span>
