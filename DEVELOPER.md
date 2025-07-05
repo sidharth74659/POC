@@ -14,3 +14,20 @@
 5. Supporting voice input with local Whisper or similar STT.
 6. Covering responsive UI/UX with dark mode, proper accessibility, and a clean, tested modal or form layout.
 7. Explaining all feasible parts, technical limits, realistic device constraints, and giving practical steps, not hallucinated guesses — clear, cost-effective, and actionable.
+
+
+---
+
+# Error Handling:
+
+#### Error 1:
+```
+npx cap sync android       
+
+[error] Could not find the web assets directory: ./www.
+        Please create it and make sure it has an index.html file. You can change
+        the path of this directory in capacitor.config.json (webDir option). You
+        may need to compile the web assets for your app (typically npm run
+        build). More info:
+        https://capacitorjs.com/docs/basics/workflow#sync-your-project
+```

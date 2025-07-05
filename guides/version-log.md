@@ -7,3 +7,5 @@
 - [x] added-version-log
 - [x] added-added-mediapipe-text-bridge-plugin-and-guides
 - [x] sync-plugin-with-android-project-and-setup-plugin-in-app(and-updated-guide-with-strict-type-safety)
+- [x] fix-all-issues-in-plugin-and-app-and-build-and-run-on-android
+- [x] added-next-steps-guide

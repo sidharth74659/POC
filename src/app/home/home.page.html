@@ -7,6 +7,9 @@
 <ion-content [fullscreen]="true">
   <ion-input [(ngModel)]="inputText" placeholder="Enter text"></ion-input>
   <ion-button (click)="onClassify()">Classify</ion-button>
+  <ion-text>
+    {{ result | json }}
+  </ion-text>
   @if (result) {
   <div>
     <p>Label: {{ result.label }}</p>

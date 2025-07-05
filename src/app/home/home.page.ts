@@ -8,11 +8,13 @@ import {
   IonInput,
   IonTitle,
   IonToolbar,
+  IonText,
 } from '@ionic/angular/standalone';
 import {
   MediapipeTextBridgePlugin,
   TextClassificationResult,
 } from './home.interface';
+import { JsonPipe } from '@angular/common';
 
 const MediapipeTextBridge = registerPlugin<MediapipeTextBridgePlugin>(
   'MediapipeTextBridge',
@@ -34,6 +36,8 @@ async function classifyText(text: string): Promise<TextClassificationResult> {
     IonInput,
     IonButton,
     FormsModule,
+    JsonPipe,
+    IonText,
   ],
 })
 export class HomePage {
@@ -44,6 +48,11 @@ export class HomePage {
 
   async onClassify() {
     if (!this.inputText) return;
-    this.result = await classifyText(this.inputText);
+    try {
+      this.result = await classifyText(this.inputText);
+      console.warn(this.result);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

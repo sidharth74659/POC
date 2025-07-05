@@ -62,3 +62,17 @@ If you want to proceed, please confirm or specify if you want to:
 - Explore **vision tasks** integration next.
 - Get a **step-by-step tutorial** for plugin development, Gradle setup, and Ionic integration.
 - Review or improve the MediaPipe JS approach for quick prototyping.
+
+
+---
+---
+
+```
+Clarify why I’m only getting labels or scores from MediaPipe when my actual requirement is to get text answers (like a language model would produce). Confirm whether the MediaPipe Android SDK at https://ai.google.dev/edge/mediapipe/solutions/setup_android can be used for offline text generation inside an Ionic-Angular app, or if it’s limited to tasks like vision and classification only. If it cannot produce free-form text answers, explain what additional local LLM setup is needed to get proper natural language responses, and how to bridge that with Ionic using Capacitor or native plugins — keep it practical and exact.
+
+If needed, refer other links like:
+https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/
+https://ai.google.dev/edge/mediapipe/solutions/genai/llm_inference
+https://ai.google.dev/edge/mediapipe/solutions/genai/llm_inference/android
+https://ai.google.dev/edge/mediapipe/solutions/setup_android#example_code
+```
