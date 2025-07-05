@@ -1,8 +1,17 @@
+
+
 # Developer Guide
 
 ## References:
 - Text classification guide for Android: https://ai.google.dev/edge/mediapipe/solutions/text/text_classifier/android
     - Models(contains the `.tflite` file): https://ai.google.dev/edge/mediapipe/solutions/text/text_classifier/android#models
+    - [Text classification with TensorFlow Lite Model Maker](https://ai.google.dev/edge/litert/libraries/modify/text_classification)
+- [Writing a native Ionic plugin for Capacitor in less than 30 minutes](https://blog.theodo.com/2021/07/writing-a-native-ionic-plugin-for-capacitor/)
+
+
+- Playing Simon Says with Gemma-2b and MediaPipe
+- Running Gemma 3n Full Version with 2GB RAM: World's First Sub
+- Google Gemma 3n AI model launched | Croma Unboxed
 
 
 ## Agenda:
@@ -31,3 +40,29 @@ npx cap sync android
         build). More info:
         https://capacitorjs.com/docs/basics/workflow#sync-your-project
 ```
+
+**Solution:**
+
+- Run: `npx cap sync android`
+- Check value of `webDir` in `capacitor.config.ts`
+- Also, check which folder you're in and run the command from there.
+
+
+---
+
+<!-- 
+-Xmx1536m means a maximum of 1536 megabytes, while -Xmx2048m increases it to 2048 megabytes
+
+in  `gradle.properties` file, add:
+```
+org.gradle.jvmargs=-Xmx2048m
+```
+ -->
+
+
+
+
+
+
+
+

@@ -1,0 +1,51 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Gemma 3n Chat</ion-title>
+    <ion-chip slot="end" [color]="isModelReady ? 'success' : 'danger'">
+      <ion-icon [name]="isModelReady ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+      <ion-label>{{ isModelReady ? 'Ready' : 'Not Ready' }}</ion-label>
+    </ion-chip>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="chat-container">
+    <div *ngFor="let message of messages" 
+         [class]="'message ' + (message.isUser ? 'user-message' : 'bot-message')">
+      <div class="message-bubble">
+        <p>{{ message.text }}</p>
+        <small class="timestamp">{{ message.timestamp | date:'short' }}</small>
+      </div>
+    </div>
+    
+    <div *ngIf="isGenerating" class="message bot-message">
+      <div class="message-bubble">
+        <ion-spinner name="dots"></ion-spinner>
+        <p>Generating response...</p>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-item>
+      <ion-textarea 
+        [(ngModel)]="currentMessage"
+        placeholder="Type your message..."
+        rows="1"
+        auto-grow="true"
+        maxlength="500"
+        (keydown)="onKeyPress($event)"
+        [disabled]="!isModelReady || isGenerating">
+      </ion-textarea>
+      <ion-button 
+        slot="end" 
+        fill="clear" 
+        (click)="sendMessage()"
+        [disabled]="!isModelReady || isGenerating || !currentMessage.trim()">
+        <ion-icon name="send"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>

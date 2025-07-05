@@ -10,4 +10,9 @@ export const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full',
   },
+  {
+    path: 'llm-chat',
+    loadComponent: () =>
+      import('./pages/llm-chat/llm-chat.page').then((m) => m.LlmChatPage),
+  },
 ];

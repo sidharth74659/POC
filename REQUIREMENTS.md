@@ -1,3 +1,48 @@
+
+Confirm whether I can build and run a workflow that **processes text, images, audio, and video inputs** and generates **text outputs** using the **Gemma 3n** model on my **Android device or emulator**, using **GenAI/MediaPipe**, and whether this fully supports **offline text generation** inside an **Ionic-Angular app** — or if it’s limited to tasks like vision and classification only.
+
+If it can’t produce true **free-form text answers**, explain exactly what extra **local LLM setup** is needed to get real **natural language responses**, and how to connect that to an **Ionic-Angular project** using Capacitor or native plugins, step by step.
+
+If needed, check these links for specifics:
+
+* [Gemma 3n Developer Guide](https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/)
+* [GenAI LLM Inference](https://ai.google.dev/edge/mediapipe/solutions/genai/llm_inference)
+* [LLM Inference for Android](https://ai.google.dev/edge/mediapipe/solutions/genai/llm_inference/android)
+* [MediaPipe Android Setup](https://ai.google.dev/edge/mediapipe/solutions/setup_android)
+* [MediaPipe Example Code](https://ai.google.dev/edge/mediapipe/solutions/setup_android#example_code)
+
+In the end, I want to build a working **Ionic/Angular interface** to demo:
+
+* **Offline text processing** (e.g., *“User types: What’s my daily summary?” → LLM generates answer*).
+* **Processing an uploaded image** (e.g., a receipt → extract total amount).
+* **Understanding audio** (e.g., user voice → transcribe command).
+* **On-device function calling** (e.g., *“Add milk to my shopping list” → LLM generates SQLite insert*).
+
+### Laying out the outline
+Lay out a clear outline for this Ionic-Angular + Gemma 3n LLM integration.
+
+To clarify: the **Ionic-Angular app** will handle capturing user input (text, image, audio) and pass it to the **Gemma 3n LLM** for processing. The local LLM will run through a **Capacitor plugin** (Java/NDK) on Android.
+We’ll first build and test a working **text-to-text generation** flow, then expand step by step:
+1. Text input → text output
+2. Vision input → text output
+3. Audio input → text output
+4. Local function-calling (e.g., generate SQLite queries)
+
+Each step should include a clear **test case/flow** to prove it works end-to-end.
+
+Specifying **exact paths, filenames, and commands** for each step. Make sure it’s clear **where** to put each piece of code, **how** to build and sync the Capacitor plugin (Java/NDK), and **which commands** to run to link the native plugin with the Ionic app. Cover for each stage — text-to-text, vision, audio, and function calling — with concrete examples like:
+* *Path for Capacitor plugin Java files (e.g., `android/src/main/java/...`)*
+* *Where to add model files (`android/app/src/main/assets`)*
+* *How to link the native module in `capacitor.config.ts`*
+* *The build commands (`npx cap sync android`, `npx cap open android`, `npx cap build`)*
+* *How to call the plugin from Angular services (`src/app/services/llm.service.ts`)*
+* *Where to handle input/output in your Ionic page (`src/app/pages/llm-chat/llm-chat.page.ts`)*
+
+Keep it practical, exact, and step-by-step — no generic placeholders, no guesses, only realistic paths and tasks.
+
+
+---
+
 ## Requirements for Integrating MediaPipe Android SDK with Ionic (Capacitor) App
 
 ### Context

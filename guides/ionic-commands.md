@@ -1,3 +1,19 @@
+**References:**
+
+- https://capacitorjs.com/docs/basics/workflow#sync-your-project
+
+**TL;DR:**
+
+| Step         | Command Example                                                            |
+| ------------ | -------------------------------------------------------------------------- |
+| Create app   | `ionic start myApp blank`                                                  |
+| Add platform | `ionic capacitor add android`                                              |
+| List devices | `ionic capacitor run android --list`                                       |
+| Run live     | `ionic capacitor run android --livereload --external --target=<device_id>` |
+| Open IDE     | `ionic capacitor run android --open`                                        |
+
+---
+
 To **generate a new Ionic project** and **run it live on a physical device** (with the ability to choose the device), follow these steps:
 
 ### 1. Generate a New Ionic Project
@@ -61,12 +77,3 @@ ionic capacitor run android --livereload --external
 - **Live reload** means changes in your code will instantly reflect on the device, but you must keep the device and computer on the same network.
 - If you have only one device connected, you can omit the `--target` option.
 - If you want to open the native IDE (Android Studio or Xcode), use `--open` instead of running directly[1][9].
-
-#### Summary Table
-
-| Step         | Command Example                                                 |
-| ------------ | --------------------------------------------------------------- |
-| Create app   | `ionic start myApp blank`                                       |
-| Add platform | `ionic capacitor add android`                                   |
-| List devices | `ionic capacitor run android --list`                            |
-| Run live     | `ionic capacitor run android --livereload --external --target=` |
