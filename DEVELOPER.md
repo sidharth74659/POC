@@ -1,0 +1,2 @@
+- Text classification guide for Android: https://ai.google.dev/edge/mediapipe/solutions/text/text_classifier/android
+    - Models(contains the `.tflite` file): https://ai.google.dev/edge/mediapipe/solutions/text/text_classifier/android#models
