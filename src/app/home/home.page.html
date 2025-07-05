@@ -1,20 +1,16 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title> Blank </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <ion-input [(ngModel)]="inputText" placeholder="Enter text"></ion-input>
+  <ion-button (click)="onClassify()">Classify</ion-button>
+  @if (result) {
+  <div>
+    <p>Label: {{ result.label }}</p>
+    <p>Score: {{ result.score }}</p>
   </div>
+  }
 </ion-content>

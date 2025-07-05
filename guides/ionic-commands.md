@@ -12,6 +12,11 @@ ionic start myApp blank
 ### 2. Add a Platform (Android/iOS)
 
 ```bash
+# * Build the project
+npm run build
+```
+
+```bash
 ionic capacitor add android
 # or
 ionic capacitor add ios
