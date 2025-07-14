@@ -12,27 +12,20 @@ import {
   Calendar,
   ClipboardList,
   Cpu,
-  // Well Control Equipment icons
   Crosshair,
   Database,
-  // Manufacturing Equipment icons
   Factory,
   FileCheck,
-  // Oil & Gas Pre-Operational icons
   Flame,
-  // Chemical Storage icons
   FlaskConical,
-  // Process Safety icons
   Gauge,
   Hammer,
   HardHat,
   LifeBuoy,
-  // Mining Equipment icons
-  Axe as Pickaxe,
+  Mountain,
   Play,
   Power,
   Radio,
-  // Utility Asset Management icons
   Server,
   Settings,
   TestTube,
@@ -61,17 +54,11 @@ interface IconSelections {
   [key: number]: number;
 }
 
-interface ShowIconPicker {
-  [key: number]: boolean;
-}
-
 const TemplateSelectionModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [description, setDescription] = useState("");
-  const [showTemplates, setShowTemplates] = useState(false);
   const [iconSelections, setIconSelections] = useState<IconSelections>({});
-  const [showIconPicker, setShowIconPicker] = useState<ShowIconPicker>({});
 
   const templates: Template[] = [
     {
@@ -80,10 +67,10 @@ const TemplateSelectionModal = () => {
       description:
         "Detailed inspection of mining equipment such as hoists, conveyors, and pressure vessels, including maintenance records and safety features.",
       icons: [
-        { component: Pickaxe, name: "pickaxe" },
+        { component: Hammer, name: "hammer" },
         { component: HardHat, name: "hard-hat" },
         { component: Wrench, name: "wrench" },
-        { component: Hammer, name: "hammer" },
+        { component: Mountain, name: "mountain" },
       ],
       category: "Mining",
     },
@@ -183,26 +170,12 @@ const TemplateSelectionModal = () => {
   const handleTemplateSelect = (template: Template) => {
     setSelectedTemplate(template);
     setDescription(template.description);
-    setShowTemplates(false);
-    // Reset icon picker states
-    setShowIconPicker({});
   };
 
   const handleIconSelect = (templateId: number, iconIndex: number) => {
     setIconSelections((prev) => ({
       ...prev,
       [templateId]: iconIndex,
-    }));
-    setShowIconPicker((prev) => ({
-      ...prev,
-      [templateId]: false,
-    }));
-  };
-
-  const toggleIconPicker = (templateId: number) => {
-    setShowIconPicker((prev) => ({
-      ...prev,
-      [templateId]: !prev[templateId],
     }));
   };
 
@@ -222,9 +195,7 @@ const TemplateSelectionModal = () => {
       setIsOpen(false);
       setSelectedTemplate(null);
       setDescription("");
-      setShowTemplates(false);
       setIconSelections({});
-      setShowIconPicker({});
     }
   };
 
@@ -232,14 +203,7 @@ const TemplateSelectionModal = () => {
     setIsOpen(false);
     setSelectedTemplate(null);
     setDescription("");
-    setShowTemplates(false);
     setIconSelections({});
-    setShowIconPicker({});
-  };
-
-  const clearTemplate = () => {
-    setSelectedTemplate(null);
-    setDescription("");
   };
 
   return (
@@ -437,8 +401,7 @@ const TemplateSelectionModal = () => {
             </div>
           </div>
         )}
-        </div>
-      {/* </div> */}
+      </div>
     </TooltipProvider>
   );
 };
