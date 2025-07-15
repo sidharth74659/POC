@@ -1,0 +1,47 @@
+<!-- 
+Create a sample component that clearly demonstrates Subject vs BehaviorSubject in a two-column layout. It should highlight different edge cases and include simple guides or comments to explain each scenario — like a Minimal Working Example (MWE) that shows how they behave differently in real use. 
+-->
+<div class="demo-container">
+  <div class="column">
+    <h2>Subject</h2>
+    <p class="guide">A <b>Subject</b> does <u>not</u> replay old values to new subscribers.</p>
+    <button (click)="subscribeToSubject()">Subscribe</button>
+    <button (click)="unsubscribeFromSubject()">Unsubscribe</button>
+    <input #subjectInput type="text" placeholder="Emit value" />
+    <button (click)="emitSubject(subjectInput.value); subjectInput.value=''">Emit</button>
+    <ul>
+      <li *ngFor="let log of subjectEmissions">{{ log }}</li>
+    </ul>
+    <ul>
+      <li *ngFor="let log of subjectSubscriptions">{{ log }}</li>
+    </ul>
+    <div class="edge-case">
+      <b>Edge Case:</b> New subscribers <u>do not</u> receive previous values.
+    </div>
+  </div>
+  <div class="column">
+    <h2>BehaviorSubject</h2>
+    <p class="guide">A <b>BehaviorSubject</b> <u>always</u> replays the latest value to new subscribers.</p>
+    <button (click)="subscribeToBehaviorSubject()">Subscribe</button>
+    <button (click)="unsubscribeFromBehaviorSubject()">Unsubscribe</button>
+    <input #behaviorInput type="text" placeholder="Emit value" />
+    <button (click)="emitBehaviorSubject(behaviorInput.value); behaviorInput.value=''">Emit</button>
+    <ul>
+      <li *ngFor="let log of behaviorSubjectEmissions">{{ log }}</li>
+    </ul>
+    <ul>
+      <li *ngFor="let log of behaviorSubjectSubscriptions">{{ log }}</li>
+    </ul>
+    <div class="edge-case">
+      <b>Edge Case:</b> New subscribers <u>immediately</u> receive the latest value (even if they missed previous emissions).
+    </div>
+  </div>
+</div>
+<div class="mwe-guide">
+  <h3>Minimal Working Example (MWE)</h3>
+  <ul>
+    <li>Subscribe before emitting: Both receive values as expected.</li>
+    <li>Subscribe after emitting: <b>Subject</b> subscribers get nothing; <b>BehaviorSubject</b> subscribers get the latest value.</li>
+    <li>Unsubscribe: No further values are received.</li>
+  </ul>
+</div> 

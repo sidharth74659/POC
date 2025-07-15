@@ -1,3 +1,18 @@
+Resources:
+
+- Change Detection: https://claude.ai/public/artifacts/da81598c-3098-417f-90f8-7a270a4a5112
+- Subject vs BehaviorSubject: 
+```
+Create a sample component that clearly demonstrates Subject vs BehaviorSubject in a two-column layout. It should highlight different edge cases and include simple guides or comments to explain each scenario — like a Minimal Working Example (MWE) that shows how they behave differently in real use.
+```
+
+
+
+
+
+- https://claude.ai/public/artifacts/da81598c-3098-417f-90f8-7a270a4a5112
+---
+
 # AngularConceptsV1
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.0.
