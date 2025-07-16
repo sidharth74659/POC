@@ -3,12 +3,12 @@
     <div class="col-md-6">
       <h1>Angular Concepts</h1>
     </div>
-    <div class="col-md-6" style="display: flex; align-items: center; gap: 8px;">
+    <div class="col-md-6" style="display: flex; align-items: center; gap: 8px">
       <ng-container *ngFor="let concept of concepts; let i = index">
-        <button 
-          (click)="selectConcept(i)" 
+        <button
+          (click)="selectConcept(i)"
           [class.active]="selectedConceptIndex === i"
-          style="margin-right: 8px;"
+          style="margin-right: 8px"
         >
           {{ concept.name }}
         </button>
@@ -16,15 +16,26 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6" *ngIf="selectedConceptIndex === 0">
+    <div class="col-md-6" *ngIf="selectedConceptIndex === 2">
       <h2>Change Detection</h2>
-      <p>Change Detection is a mechanism that Angular uses to detect changes in the data and update the UI accordingly.</p>
+      <p>
+        Change Detection is a mechanism that Angular uses to detect changes in
+        the data and update the UI accordingly.
+      </p>
       <change-detection></change-detection>
     </div>
     <div class="col-md-6" *ngIf="selectedConceptIndex === 1">
       <h2>Subject vs BehaviourSubject</h2>
-      <p>Subject is a simple observable that can be used to emit values. BehaviourSubject is a subject that can be used to emit values and store the last value.</p>
+      <p>
+        Subject is a simple observable that can be used to emit values.
+        BehaviourSubject is a subject that can be used to emit values and store
+        the last value.
+      </p>
       <app-subject-vs-behaviorsubject-demo></app-subject-vs-behaviorsubject-demo>
+    </div>
+    <div class="col-md-6" *ngIf="selectedConceptIndex === 0">
+      <h2>Todo Demo</h2>
+      <todo-demo></todo-demo>
     </div>
   </div>
 </div>
