@@ -34,8 +34,18 @@
       <app-subject-vs-behaviorsubject-demo></app-subject-vs-behaviorsubject-demo>
     </div>
     <div class="col-md-6" *ngIf="selectedConceptIndex === 0">
+      <!-- 
       <h2>Todo Demo</h2>
       <todo-demo></todo-demo>
+      -->
+      <div style="display: flex; border: 1px solid black;">
+        <div style="flex: 1; border-right: 1px solid black; padding: 10px;">
+          <app-todo-one />
+        </div>
+        <div style="flex: 1; padding: 10px;">
+          <app-todo-two />
+        </div>
+      </div>
     </div>
   </div>
 </div>
