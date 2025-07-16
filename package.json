@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "copy-interfaces": "cp -r src/app/interfaces projects/form-components-lib/src/lib/interfaces"
+    "update-lib": "npm run build form-components-lib && cd dist/form-components-lib && npm pack && cd ../.. && npm install ./dist/form-components-lib/form-components-lib-0.0.1.tgz && npm run start"
   },
   "prettier": {
     "overrides": [

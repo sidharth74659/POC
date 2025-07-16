@@ -24,7 +24,6 @@ export class App {
   formConfig: IFormFieldConfig[] = [
     { type: 'input', label: 'Username', name: 'username' },
     { type: 'input', label: 'Email', name: 'email' },
-    { type: 'input', label: 'Password', name: 'password' },
     { type: 'select', label: 'User Role', name: 'role', options: ['Admin', 'User', 'Guest'] }
   ];
 

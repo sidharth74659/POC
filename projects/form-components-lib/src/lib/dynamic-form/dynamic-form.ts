@@ -20,6 +20,7 @@ import { IFormFieldConfig, IFormOutputData } from '../interfaces/form-interfaces
 })
 export class DynamicFormComponent {
   @Input() config: IFormFieldConfig[] = [];
+  @Input() submitLabel: string = 'Submit';
   @Output() formSubmit = new EventEmitter<IFormOutputData>();
 
   formData: IFormOutputData = {};
@@ -28,7 +29,7 @@ export class DynamicFormComponent {
     this.formData[name] = value;
   }
 
-  onSubmit() {
+  onSubmitClick() {
     this.formSubmit.emit(this.formData);
   }
 }

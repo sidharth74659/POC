@@ -10,7 +10,8 @@ export class FormSubmitComponent {
   @Input() label: string = 'Submit';
   @Output() submitClick = new EventEmitter<void>();
 
-  onClick() {
+  onClick(event: Event) {
+    event.preventDefault();
     this.submitClick.emit();
   }
 }

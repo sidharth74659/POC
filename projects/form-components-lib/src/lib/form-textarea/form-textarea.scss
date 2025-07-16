@@ -1,7 +1,9 @@
 @use '../_form-control.scss' as *;
+
 :host {
   display: block;
 }
+
 textarea {
   @extend .form-control;
   min-height: 80px;

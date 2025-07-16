@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit()">
+<form>
   <ng-container *ngFor="let field of config">
     <div [ngSwitch]="field.type">
       <fc-form-input *ngSwitchCase="'input'"
@@ -17,5 +17,6 @@
         (valueChange)="onInputChange(field.name, $event)"></fc-form-select>
     </div>
   </ng-container>
-  <fc-form-submit></fc-form-submit>
+
+  <fc-form-submit [label]="submitLabel" (submitClick)="onSubmitClick()"></fc-form-submit>
 </form>

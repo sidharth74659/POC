@@ -1,8 +1,9 @@
+import { NgFor } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'fc-form-select',
-  imports: [],
+  imports: [NgFor],
   templateUrl: './form-select.html',
   styleUrl: './form-select.scss'
 })
