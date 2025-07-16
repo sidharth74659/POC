@@ -1,20 +1,10 @@
 :root {
-    --form-container-bg: #f9f9f9;
-    --form-input-bg: #f9f9f9;
-    --form-textarea-bg: #f9f9f9;
-    --form-select-bg: #f9f9f9;
-    --form-submit-bg: #007bff;
-    --form-submit-color: #fff;
-    --form-input-color: #333;
-    --form-submit-bg-hover: #0056b3;
+    --form-container-bg: #2c2c2c; /* Dark background for better contrast */
+    --form-input-bg: #3a3a3a; /* Slightly lighter for input fields */
+    --form-textarea-bg: #3a3a3a; /* Consistent with input fields */
+    --form-select-bg: #3a3a3a; /* Consistent with input fields */
+    --form-submit-bg: #007bff; /* Bright blue for submit button */
+    --form-submit-color: #fff; /* White text for contrast */
+    --form-input-color: #e0e0e0; /* Light gray text for better readability */
+    --form-submit-bg-hover: #0056b3; /* Darker blue for hover effect */
 }
-
-/* 
-:root {
-    --form-input-bg: #222;
-    --form-textarea-bg: #222;
-    --form-select-bg: #222;
-    --form-submit-bg: #0af;
-    --form-input-color: #fff;
-}
-*/

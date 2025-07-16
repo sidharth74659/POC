@@ -49,18 +49,17 @@ ng generate component form-input --project=form-components-lib
 
 ```ts
 // form-interfaces.interface.ts
-export interface FormFieldConfig { ... }
-export interface FormData { ... }
-```
-
-## Copy Interfaces (if needed)
-```bash
-cp src/app/form-interfaces.interface.ts projects/form-components-lib/src/lib/interfaces/
+export interface IFormFieldConfig { ... }
+export interface IFormOutputData { ... }
 ```
 
 ---
 
 # 4️⃣ Build, Pack, and Install
+
+Note:
+- You can setup the following as a script in your `package.json` to build the library, pack it, and install it in the app.
+- This step is to test locally before publishing to npm.
 
 ## Build the Library
 ```bash
@@ -75,9 +74,35 @@ npm pack
 cd ../..
 ```
 
-## Install in App
+## Install in App (Local)
 ```bash
 npm install ./dist/form-components-lib/form-components-lib-0.0.1.tgz
+```
+
+---
+
+# 4️⃣➕ Publish & Install from npm Registry
+
+If you want to publish your library to npm, you can do the following:
+
+## Prepare for npm Publish
+- Update `name` in `projects/form-components-lib/package.json` to a unique value (e.g. `@your-scope/form-components-lib` or `form-components-lib-demo`)
+- Bump the `version` field for each publish
+- Ensure you have a meaningful `README.md` in the package root
+- (Optional) Add keywords, author, repository fields
+
+## Login & Publish
+```bash
+cd dist/form-components-lib
+npm login   # Only needed once per user
+npm publish --access public
+```
+
+## Install from npm
+```bash
+npm install <your-package-name>@<version>
+# Example:
+npm install form-components-lib-demo@0.0.2
 ```
 
 ---
@@ -105,8 +130,8 @@ import { DynamicFormComponent } from 'form-components-lib';
 ## Override Example
 ```scss
 // src/styles.scss
-@import 'projects/form-components-lib/src/lib/_variables.scss';
-@import './dark-theme.scss';
+@use 'projects/form-components-lib/src/lib/_variables.scss' as *;
+@use './dark-theme.scss' as *;
 ```
 
 ---
@@ -121,9 +146,13 @@ npx verdaccio
 npm set registry http://localhost:4873
 ```
 
-## ⚙️ Copying Interfaces
-- Keep interfaces in the library for type safety
-- Use a script or manual copy if needed
+## ⚙️ Copying assets(like icons) or styles
+- assets(like icons) or styles that are not part of the library but needed can be copied to the library before building and publishing to npm
+- Use a script or manual copy if needed (like in `package.json` for a set of icons, stylesheets, etc.)
+- Example:
+```bash
+cp src/assets/icons projects/form-components-lib/src/lib/assets/icons
+```
 
 ## 🎨 Style Organization
 - Use shared SCSS for consistency
