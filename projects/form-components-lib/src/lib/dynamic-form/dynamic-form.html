@@ -1,0 +1,21 @@
+<form (ngSubmit)="onSubmit()">
+  <ng-container *ngFor="let field of config">
+    <div [ngSwitch]="field.type">
+      <fc-form-input *ngSwitchCase="'input'"
+        [value]="formData[field.name] || ''"
+        [placeholder]="field.label"
+        (valueChange)="onInputChange(field.name, $event)"></fc-form-input>
+
+      <fc-form-textarea *ngSwitchCase="'textarea'"
+        [value]="formData[field.name] || ''"
+        [placeholder]="field.label"
+        (valueChange)="onInputChange(field.name, $event)"></fc-form-textarea>
+
+      <fc-form-select *ngSwitchCase="'select'"
+        [options]="field.options || []"
+        [value]="formData[field.name] || ''"
+        (valueChange)="onInputChange(field.name, $event)"></fc-form-select>
+    </div>
+  </ng-container>
+  <fc-form-submit></fc-form-submit>
+</form>

@@ -1,0 +1,17 @@
+@use '../_form-control.scss' as *;
+:host {
+  display: block;
+}
+button {
+  @extend .form-control;
+  background: var(--form-submit-bg, #007bff);
+  color: var(--form-submit-color, #fff) !important;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 0;
+  transition: background 0.2s;
+}
+button:hover, button:focus {
+  background: var(--form-submit-bg-hover, #0056b3);
+}

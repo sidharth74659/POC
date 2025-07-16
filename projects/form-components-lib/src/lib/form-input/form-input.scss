@@ -1,0 +1,7 @@
+@use '../_form-control.scss' as *;
+:host {
+  display: block;
+}
+input {
+  @extend .form-control;
+}
