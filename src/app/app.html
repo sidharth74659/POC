@@ -16,15 +16,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6" *ngIf="selectedConceptIndex === 2">
-      <h2>Change Detection</h2>
-      <p>
-        Change Detection is a mechanism that Angular uses to detect changes in
-        the data and update the UI accordingly.
-      </p>
-      <change-detection></change-detection>
-    </div>
-    <div class="col-md-6" *ngIf="selectedConceptIndex === 1">
+    <div class="col-md-6" *ngIf="selectedConceptIndex === 0">
       <h2>Subject vs BehaviourSubject</h2>
       <p>
         Subject is a simple observable that can be used to emit values.
@@ -33,19 +25,27 @@
       </p>
       <app-subject-vs-behaviorsubject-demo></app-subject-vs-behaviorsubject-demo>
     </div>
-    <div class="col-md-6" *ngIf="selectedConceptIndex === 0">
+    <div class="col-md-6" *ngIf="selectedConceptIndex === 1">
       <!-- 
       <h2>Todo Demo</h2>
       <todo-demo></todo-demo>
       -->
-      <div style="display: flex; border: 1px solid black;">
-        <div style="flex: 1; border-right: 1px solid black; padding: 10px;">
+      <div style="display: flex; border: 1px solid black">
+        <div style="flex: 1; border-right: 1px solid black; padding: 10px">
           <app-todo-one />
         </div>
-        <div style="flex: 1; padding: 10px;">
+        <div style="flex: 1; padding: 10px">
           <app-todo-two />
         </div>
       </div>
+    </div>
+    <div class="col-md-6" *ngIf="selectedConceptIndex === 2">
+      <h2>Change Detection</h2>
+      <p>
+        Change Detection is a mechanism that Angular uses to detect changes in
+        the data and update the UI accordingly.
+      </p>
+      <change-detection></change-detection>
     </div>
   </div>
 </div>

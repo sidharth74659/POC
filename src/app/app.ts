@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ChangeDetectionComponent } from './change-detection/change-detection.component';
 import { SubjectVsBehaviorSubjectDemoComponent } from './subject-vs-behaviorsubject-demo/subject-vs-behaviorsubject-demo.component';
@@ -15,17 +15,13 @@ import { TodoTwoComponent } from './todo/todo-two.component';
     CommonModule,
     TodoOneComponent,
     TodoTwoComponent,
+    NgIf,
   ],
   styleUrls: ['./app.scss'],
 })
 export class App {
   title = 'angular-concepts';
   concepts = [
-    {
-      name: 'Change Detection',
-      description:
-        'Change Detection is a mechanism that Angular uses to detect changes in the data and update the UI accordingly.',
-    },
     {
       name: 'Subject vs BehaviourSubject',
       description:
@@ -35,6 +31,11 @@ export class App {
       name: 'Todo: With & Without Subjects',
       description:
         'Todo: With & Without Subjects is a demo that shows how the code is redundant without Subjects.',
+    },
+    {
+      name: 'Change Detection',
+      description:
+        'Change Detection is a mechanism that Angular uses to detect changes in the data and update the UI accordingly.',
     },
     /* 
      {
