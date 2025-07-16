@@ -1,0 +1,25 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# ✅ RULE: Post-Project Testing
+
+After completing the entire project:
+- **Always test the full functionality** using only the provided **Model Context Protocol tools**: `Puppeteer` or `Playwright`.
+- **Do not** install Puppeteer or Playwright as local npm packages.
+- **Do not** create `.js`, `.sh`, or any other local test scripts for this purpose.
+- Use the tools **exactly as provided** within your environment.
+- If you find any errors during testing, **fix them immediately**, then test again until **all functionality works end-to-end** as designed.
+- You **may** use the `web` tool to search for up-to-date information if needed — but do **not** use it to fetch or install additional test packages.
+
+Note: 
+- You can always use **nvm** to check, install, or switch Node.js versions as needed for the project.
+
+# ✅ RULE: Node Version Management & Autonomy
+- You **have access** to all required tools — use them intelligently and autonomously to complete tasks like changing Node versions, setting environments, or resolving version conflicts.
+- Prioritize **autonomous, smart decisions** — only pause if you hit an unexpected blocker that cannot be resolved with your available tools.
+
+Note:
+- Do **not** repeatedly ask for confirmations when an action is obvious or covered by these rules.
