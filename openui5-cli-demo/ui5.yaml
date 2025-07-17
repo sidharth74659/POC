@@ -1,0 +1,9 @@
+specVersion: '3.1'
+metadata:
+  name: my.openui5.mwe
+type: application
+framework:
+  name: OpenUI5
+  version: "1.120.0"
+  libraries:
+    - name: sap.m

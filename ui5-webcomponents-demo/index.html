@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiori-Style Interactive Demo</title>
+  <style>
+    body {
+      font-family: "72", Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .main-header {
+      background: #354a5f;
+      color: #fff;
+      padding: 1.5rem 0;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .demo-container {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 2rem 1rem 3rem 1rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    .fiori-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .card-header {
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #354a5f;
+      margin: 0 0 0.25rem 0;
+    }
+    .card-subtitle {
+      font-size: 0.875rem;
+      color: #6a6d70;
+      margin: 0;
+    }
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .fiori-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #354a5f;
+      margin-bottom: 0.25rem;
+    }
+    .fiori-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d1d1;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease;
+    }
+    .fiori-input:focus {
+      outline: none;
+      border-color: #0854a0;
+      box-shadow: 0 0 0 2px rgba(8, 84, 160, 0.2);
+    }
+    .fiori-input::placeholder {
+      color: #6a6d70;
+    }
+    .center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .fiori-button {
+      background: #0854a0;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      font-family: inherit;
+    }
+    .fiori-button:hover {
+      background: #064a8f;
+    }
+    .fiori-button:active {
+      background: #053d7a;
+    }
+    .fiori-button.secondary {
+      background: transparent;
+      color: #0854a0;
+      border: 1px solid #0854a0;
+    }
+    .fiori-button.secondary:hover {
+      background: rgba(8, 84, 160, 0.1);
+    }
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #354a5f;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+    @media (max-width: 600px) {
+      .demo-container {
+        padding: 1rem 0.5rem 2rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-header">
+    <h1>Fiori-Style Interactive Demo</h1>
+    <p style="margin:0; font-weight:300; font-size:1.1rem;">Standard HTML with Fiori styling</p>
+  </div>
+  <div class="demo-container">
+    <div class="fiori-card">
+      <div class="card-header">
+        <h2 class="card-title">Fiori Card</h2>
+        <p class="card-subtitle">Standard HTML Components</p>
+      </div>
+      <div class="form-row">
+        <label class="fiori-label" for="name-input">Your Name</label>
+        <input type="text" id="name-input" class="fiori-input" placeholder="Enter your name...">
+      </div>
+      <div class="center">
+        <button id="greet-btn" class="fiori-button">Greet Me</button>
+      </div>
+    </div>
+    <div class="center">
+      <button id="alert-btn" class="fiori-button secondary">Press Me</button>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script>
+    // Reusable toast function
+    function showToast(message, duration = 3000) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
+    }
+
+    // Greet button logic
+    document.getElementById("greet-btn").addEventListener("click", function() {
+      const name = document.getElementById("name-input").value.trim();
+      showToast(name ? `Hi ${name}!` : "Please enter your name.");
+    });
+
+    // Simple alert button
+    document.getElementById("alert-btn").addEventListener("click", function() {
+      showToast("Button pressed!");
+    });
+  </script>
+</body>
+</html> 

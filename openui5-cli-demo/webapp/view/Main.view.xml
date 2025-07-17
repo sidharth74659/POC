@@ -1,0 +1,10 @@
+<mvc:View
+  controllerName="my.openui5.mwe.controller.Main"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m">
+  <VBox class="sapUiSmallMargin" width="300px">
+    <Label text="Enter your name:" labelFor="nameInput"/>
+    <Input id="nameInput" placeholder="Your name..."/>
+    <Button text="Greet Me" press="onGreet"/>
+  </VBox>
+</mvc:View> 

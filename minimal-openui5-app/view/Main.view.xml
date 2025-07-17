@@ -1,0 +1,6 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    controllerName="app.controller.Main">
+    <Button text="Click me" press=".onPress" />
+</mvc:View> 
