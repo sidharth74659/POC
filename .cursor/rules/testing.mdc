@@ -1,0 +1,36 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# ✅ RULE: General Guidelines
+- Provide a Chain-Of-Thought analysis before answering.
+- Review the project files thoroughly. If there is anything you need referenced that’s missing, ask for it.
+- If you’re unsure about any aspect of the task, ask for clarification. Don’t guess. Don’t make assumptions.
+- Don’t do anything unless explicitly instructed to do so. Nothing “extra”.
+- Always preserve everything from the original files, except for what is being updated.
+- Write all code in full with no placeholders. If you get cut off, I’ll say “continue”
+- Prioritize **autonomous, smart decisions** — only pause if you hit an unexpected blocker that cannot be resolved with your available tools.
+- Do **not** repeatedly ask for confirmations when an action is obvious or covered by these rules.
+
+# ✅ RULE: Post-Project Testing
+
+After completing the entire project:
+- **Always test the full functionality** using only the provided **Model Context Protocol tools**: `Puppeteer` or `Playwright`.
+- **Do not** install Puppeteer or Playwright as local npm packages.
+- **Do not** create `.js`, `.sh`, or any other local test scripts for this purpose.
+- Use the tools **exactly as provided** within your environment.
+- If you find any errors during testing, **fix them immediately**, then test again until **all functionality works end-to-end** as designed.
+- You **may** use the `web` tool to search for up-to-date information if needed — but do **not** use it to fetch or install additional test packages.
+- You can use `terminal` to run commands and test the project.
+- Before starting any task check or prepare and maintain a `specs.md` file (for frontend: `frontend-specs.md` and for backend: `backend-specs.md`) to document the project's specifications and requirements and update it as you go.
+- Refer or create and maintain a `test-plan.md` file (for frontend: `frontend-test-plan.md` and for backend: `backend-test-plan.md`) to document the test plan and test cases as a checklist that can be checked off as you test the project.
+- Never install any unnecessary packages or dependencies unless it seems necessary to the task at hand.
+- When stuck in a **loop** — doing the **same thing repeatedly** more than **3 times** — respond with: **`I'm stuck in a loop, please help me break out of it.`** Then clearly mention: **What the issue is**, **How you’ve tried to fix it so far**, **What you’ve already attempted**, and **how the user can help** or suggest a fix.
+
+Note: 
+- You can always use **nvm** to check, install, or switch Node.js versions as needed for the project.
+
+# ✅ RULE: Using Tools
+- You **have access** to all required tools — use them intelligently and autonomously to complete tasks like changing Node versions, setting environments, or resolving version conflicts. Never install any unnecessary packages or dependencies unless it seems necessary to the task at hand. and prefer usage of tools instead of installing their package versions.
