@@ -74,22 +74,25 @@ app.get('/collections/:db', async (req, res) => {
   }
 });
 
-// GET /documents/:db/:col: Return sample documents (first 10)
+// GET /documents/:db/:col: Return paginated documents
 app.get('/documents/:db/:col', async (req, res) => {
   const uri = req.headers['x-mongo-uri'] || MONGO_URI;
   const dbName = req.params.db;
   const colName = req.params.col;
+  const skip = parseInt(req.query.skip) || 0;
+  const limit = parseInt(req.query.limit) || 25;
   let client;
   try {
     client = getClientForUri(uri);
     await client.connect();
     const db = client.db(dbName);
     const collection = db.collection(colName);
-    const docs = await collection.find({}).limit(10).toArray();
-    res.json(docs);
+    const docs = await collection.find({}).skip(skip).limit(limit + 1).toArray();
+    const hasMore = docs.length > limit;
+    res.json({ data: docs.slice(0, limit), hasMore });
   } catch (err) {
     console.error(`Error fetching documents for ${dbName}.${colName}:`, err);
-    res.status(500).json({ error: 'Failed to fetch documents', details: err.message });
+    res.status(500).json({ data: [], hasMore: false, error: 'Failed to fetch documents', details: err.message });
   } finally {
     if (client) await client.close();
   }

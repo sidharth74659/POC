@@ -94,7 +94,8 @@ const mongoAPI = {
 
   // Fetch databases
   // TODO: Replace with actual API call to /api/databases
-  getDatabases: async (uri: string): Promise<{ success: boolean; data: Database[]; message?: string }> => {
+  getDatabases: async (uri: string, delayMs = 0): Promise<{ success: boolean; data: Database[]; message?: string }> => {
+    await delay(delayMs);
     try {
       const res = await fetch('http://localhost:4000/databases', {
         headers: { 'x-mongo-uri': uri }
@@ -115,7 +116,8 @@ const mongoAPI = {
 
   // Fetch collections for a database
   // TODO: Replace with actual API call to /api/collections/{dbName}
-  getCollections: async (uri: string, dbName: string): Promise<{ success: boolean; data: Collection[]; message?: string }> => {
+  getCollections: async (uri: string, dbName: string, delayMs = 0): Promise<{ success: boolean; data: Collection[]; message?: string }> => {
+    await delay(delayMs);
     try {
       const res = await fetch(`http://localhost:4000/collections/${encodeURIComponent(dbName)}`, {
         headers: { 'x-mongo-uri': uri }
@@ -136,25 +138,29 @@ const mongoAPI = {
 
   // Fetch documents from a collection
   // TODO: Replace with actual API call to /api/documents/{dbName}/{collectionName}
-  getDocuments: async (uri: string, dbName: string, collectionName: string): Promise<{ success: boolean; data: Document[]; message?: string }> => {
+  getDocuments: async (uri: string, dbName: string, collectionName: string, skip = 0, limit = 25, delayMs = 0): Promise<{ success: boolean; data: Document[]; hasMore: boolean; message?: string }> => {
+    await delay(delayMs);
     try {
-      const res = await fetch(`http://localhost:4000/documents/${encodeURIComponent(dbName)}/${encodeURIComponent(collectionName)}`, {
+      const res = await fetch(`http://localhost:4000/documents/${encodeURIComponent(dbName)}/${encodeURIComponent(collectionName)}?skip=${skip}&limit=${limit}`, {
         headers: { 'x-mongo-uri': uri }
       });
       if (!res.ok) {
         const err = await res.json();
-        return { success: false, data: [], message: err.error || 'Failed to fetch documents' };
+        return { success: false, data: [], hasMore: false, message: err.error || 'Failed to fetch documents' };
       }
       const data = await res.json();
-      return { success: true, data };
+      return { success: true, data: data.data, hasMore: data.hasMore };
     } catch (err: unknown) {
       let message = 'Network error';
       if (err instanceof Error) message = err.message;
       else if (typeof err === 'string') message = err;
-      return { success: false, data: [], message };
+      return { success: false, data: [], hasMore: false, message };
     }
   }
 };
+
+// Utility: delay
+function delay(ms: number) { return new Promise(res => setTimeout(res, ms)); }
 
 // Connection form component
 interface ConnectionFormProps {
@@ -484,13 +490,6 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
     </div>
   );
 }
-function Loader() {
-  return (
-    <div className="fixed inset-0 flex items-center justify-center z-40 bg-black bg-opacity-10">
-      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-500"></div>
-    </div>
-  );
-}
 // Helper: SegmentTabIcon and SegmentTabLabel components
 function SegmentTabIcon<T extends string>({ options, value, onChange, className = '', ariaLabel }: { options: { icon: React.ReactNode; value: T; label: string; disabled?: boolean; tooltip?: string }[]; value: T; onChange: (v: T) => void; className?: string; ariaLabel?: string }) {
   return (
@@ -537,6 +536,16 @@ function SegmentTabLabel<T extends string>({ options, value, onChange, className
     </div>
   );
 }
+// SkeletonLoader component
+function SkeletonLoader({ rows = 5, height = 24, className = '' }: { rows?: number; height?: number; className?: string }) {
+  return (
+    <div className={`space-y-2 ${className}`}>
+      {Array.from({ length: rows }).map((_, i) => (
+        <div key={i} className="bg-gray-200 animate-pulse rounded" style={{ height, width: '100%' }} />
+      ))}
+    </div>
+  );
+}
 // --- App component: add loader and toast state ---
 const App = () => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -547,23 +556,15 @@ const App = () => {
   const [databases, setDatabases] = useState<Database[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
+  const [hasMoreDocuments, setHasMoreDocuments] = useState<boolean>(true);
+  const [isLoadingDocuments, setIsLoadingDocuments] = useState<boolean>(false);
+  const DOCUMENTS_LIMIT = 25;
   
   const [selectedDatabase, setSelectedDatabase] = useState<string>('');
   const [selectedCollection, setSelectedCollection] = useState<string>('');
   
   const [isLoadingDatabases, setIsLoadingDatabases] = useState<boolean>(false);
   const [isLoadingCollections, setIsLoadingCollections] = useState<boolean>(false);
-  const [isLoadingDocuments, setIsLoadingDocuments] = useState<boolean>(false);
-  
-  const [viewMode, setViewMode] = useState<'table' | 'accordion' | 'card'>('table');
-  const [toast, setToast] = useState<string>('');
-  const [showLoader, setShowLoader] = useState<boolean>(false);
-  const [refreshInterval, setRefreshInterval] = useState<number>(30000); // default 30s
-  const [layout, setLayout] = useState<'columns' | 'stacked' | 'top-split'>('columns');
-  const [stackedLeftWidth, setStackedLeftWidth] = useState(340); // px, for stacked layout
-  const [stackedTopHeight, setStackedTopHeight] = useState(0.4); // percent, for stacked layout (Databases)
-  const [topSplitTopHeight, setTopSplitTopHeight] = useState(0.4); // percent, for top-split layout
-  const [topSplitLeftWidth, setTopSplitLeftWidth] = useState(0.5); // percent, for top-split layout (Databases)
   const VIEW_MODE_OPTIONS_ICON = [
     { label: 'Table View', value: 'table', icon: <Table className="h-4 w-4" /> },
     { label: 'Accordion View', value: 'accordion', icon: <ChevronDown className="h-4 w-4" /> },
@@ -584,36 +585,52 @@ const App = () => {
   type RefreshOption = typeof REFRESH_OPTIONS_LABEL[number];
 
   const [copyToast, setCopyToast] = useState<string>('');
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+  const [refreshInterval, setRefreshInterval] = useState<number>(30000); // default 30s
+  const [showLoader, setShowLoader] = useState<boolean>(false);
+  const [toast, setToast] = useState<string>('');
+  const [viewMode, setViewMode] = useState<'table' | 'accordion' | 'card'>('table');
+  const [layout, setLayout] = useState<'columns' | 'stacked' | 'top-split'>('columns');
+  const [stackedLeftWidth, setStackedLeftWidth] = useState(340); // px, for stacked layout
+  const [stackedTopHeight, setStackedTopHeight] = useState(0.4); // percent, for stacked layout (Databases)
+  const [topSplitTopHeight, setTopSplitTopHeight] = useState(0.4); // percent, for top-split layout
+  const [topSplitLeftWidth, setTopSplitLeftWidth] = useState(0.5); // percent, for top-split layout (Databases)
+  const [documentsError, setDocumentsError] = useState<string | null>(null);
+  const [databasesError, setDatabasesError] = useState<string | null>(null);
+  const [collectionsError, setCollectionsError] = useState<string | null>(null);
+  const [simulateDelay, setSimulateDelay] = useState<number>(0); // ms
 
   // Auto-refresh functionality
   useEffect(() => {
     if (!isConnected || refreshInterval === 0) return;
+    if (!selectedDatabase || !selectedCollection) return;
     const interval = setInterval(async () => {
       // Refresh databases
-      const dbResult = await mongoAPI.getDatabases(connectionURI);
+      const dbResult = await mongoAPI.getDatabases(connectionURI, simulateDelay);
       if (dbResult.success) {
         setDatabases(dbResult.data);
       }
       // Refresh documents if a collection is selected
       if (selectedDatabase && selectedCollection) {
-        const docResult = await mongoAPI.getDocuments(connectionURI, selectedDatabase, selectedCollection);
+        const docResult = await mongoAPI.getDocuments(connectionURI, selectedDatabase, selectedCollection, 0, DOCUMENTS_LIMIT, simulateDelay);
         if (docResult.success) {
           setDocuments(docResult.data);
+          setHasMoreDocuments(docResult.hasMore);
         }
       }
     }, refreshInterval);
     return () => clearInterval(interval);
-  }, [isConnected, connectionURI, selectedDatabase, selectedCollection, refreshInterval]);
+  }, [isConnected, connectionURI, selectedDatabase, selectedCollection, refreshInterval, simulateDelay]);
 
   const handleManualRefresh = async () => {
     // Refresh databases
-    const dbResult = await mongoAPI.getDatabases(connectionURI);
+    const dbResult = await mongoAPI.getDatabases(connectionURI, simulateDelay);
     if (dbResult.success) {
       setDatabases(dbResult.data);
     }
     // Refresh documents if a collection is selected
     if (selectedDatabase && selectedCollection) {
-      const docResult = await mongoAPI.getDocuments(connectionURI, selectedDatabase, selectedCollection);
+      const docResult = await mongoAPI.getDocuments(connectionURI, selectedDatabase, selectedCollection, 0, DOCUMENTS_LIMIT, simulateDelay);
       if (docResult.success) {
         setDocuments(docResult.data);
       }
@@ -656,17 +673,22 @@ const App = () => {
   // Load databases
   const loadDatabases = useCallback(async (uri: string) => {
     setIsLoadingDatabases(true);
+    setDatabasesError(null);
     try {
-      const result = await mongoAPI.getDatabases(uri);
+      const result = await mongoAPI.getDatabases(uri, simulateDelay);
       if (result.success) {
         setDatabases(result.data);
+      } else {
+        setDatabases([]);
+        setDatabasesError(result.message || 'Failed to load databases');
       }
     } catch (error) {
-      console.error('Failed to load databases:', error);
+      setDatabases([]);
+      setDatabasesError((error as Error).message || 'Failed to load databases');
     } finally {
       setIsLoadingDatabases(false);
     }
-  }, []);
+  }, [simulateDelay]);
 
   // Handle database selection
   const handleDatabaseSelect = async (dbName: string) => {
@@ -675,15 +697,64 @@ const App = () => {
     setCollections([]);
     setDocuments([]);
     setIsLoadingCollections(true);
+    setCollectionsError(null);
     try {
-      const result = await mongoAPI.getCollections(connectionURI, dbName);
+      const result = await mongoAPI.getCollections(connectionURI, dbName, simulateDelay);
       if (result.success) {
         setCollections(result.data);
+      } else {
+        setCollections([]);
+        setCollectionsError(result.message || 'Failed to load collections');
       }
     } catch (error) {
-      console.error('Failed to load collections:', error);
+      setCollections([]);
+      setCollectionsError((error as Error).message || 'Failed to load collections');
     } finally {
       setIsLoadingCollections(false);
+    }
+  };
+
+  // Load first page of documents
+  const loadDocuments = useCallback(async (uri: string, db: string, col: string) => {
+    setIsLoadingDocuments(true);
+    setHasMoreDocuments(true);
+    setDocumentsError(null);
+    try {
+      const result = await mongoAPI.getDocuments(uri, db, col, 0, DOCUMENTS_LIMIT, simulateDelay);
+      if (result.success) {
+        setDocuments(result.data);
+        setHasMoreDocuments(result.hasMore);
+      } else {
+        setDocuments([]);
+        setHasMoreDocuments(false);
+        setDocumentsError(result.message || 'Failed to load documents');
+      }
+    } catch (error) {
+      setDocuments([]);
+      setHasMoreDocuments(false);
+      setDocumentsError((error as Error).message || 'Failed to load documents');
+    } finally {
+      setIsLoadingDocuments(false);
+    }
+  }, [simulateDelay]);
+
+  // Load more documents (infinite scroll)
+  const loadMoreDocuments = async () => {
+    if (!hasMoreDocuments || isLoadingMore) return;
+    setIsLoadingMore(true);
+    setDocumentsError(null);
+    try {
+      const result = await mongoAPI.getDocuments(connectionURI, selectedDatabase, selectedCollection, documents.length, DOCUMENTS_LIMIT, simulateDelay);
+      if (result.success) {
+        setDocuments(prev => [...prev, ...result.data]);
+        setHasMoreDocuments(result.hasMore);
+      } else {
+        setDocumentsError(result.message || 'Failed to load more documents');
+      }
+    } catch (error) {
+      setDocumentsError((error as Error).message || 'Failed to load more documents');
+    } finally {
+      setIsLoadingMore(false);
     }
   };
 
@@ -691,15 +762,23 @@ const App = () => {
   const handleCollectionSelect = async (collectionName: string) => {
     setSelectedCollection(collectionName);
     setDocuments([]);
-    
+    setHasMoreDocuments(true);
     setIsLoadingDocuments(true);
+    setDocumentsError(null);
     try {
-      const result = await mongoAPI.getDocuments(connectionURI, selectedDatabase, collectionName);
+      const result = await mongoAPI.getDocuments(connectionURI, selectedDatabase, collectionName, 0, DOCUMENTS_LIMIT, simulateDelay);
       if (result.success) {
         setDocuments(result.data);
+        setHasMoreDocuments(result.hasMore);
+      } else {
+        setDocuments([]);
+        setHasMoreDocuments(false);
+        setDocumentsError(result.message || 'Failed to load documents');
       }
     } catch (error) {
-      console.error('Failed to load documents:', error);
+      setDocuments([]);
+      setHasMoreDocuments(false);
+      setDocumentsError((error as Error).message || 'Failed to load documents');
     } finally {
       setIsLoadingDocuments(false);
     }
@@ -890,6 +969,15 @@ const App = () => {
     document.addEventListener('mouseup', onUp);
   };
 
+  // Infinite scroll handler
+  const handleDocumentsScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (documents.length === 0) return;
+    if (hasMoreDocuments && !isLoadingMore && el.scrollHeight - el.scrollTop - el.clientHeight < 120) {
+      loadMoreDocuments();
+    }
+  };
+
   if (!isConnected) {
     return (
       <ConnectionForm
@@ -902,9 +990,6 @@ const App = () => {
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
-      {showLoader && <Loader />}
-      {toast && <Toast message={toast} onClose={() => setToast('')} />}
-      {copyToast && <CopyToast message={copyToast} onClose={() => setCopyToast('')} />}
       {/* Header */}
       <div className="bg-white border-b border-gray-200 p-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4 min-w-0">
@@ -959,21 +1044,48 @@ const App = () => {
               </button>
             </Tooltip>
           )}
+          <div className="flex items-center gap-2">
+            <label htmlFor="simulate-delay" className="text-xs text-gray-500">Simulate Delay:</label>
+            <select
+              id="simulate-delay"
+              className="border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none"
+              value={simulateDelay}
+              onChange={e => setSimulateDelay(Number(e.target.value))}
+            >
+              <option value={0}>Off</option>
+              <option value={1000}>1s</option>
+              <option value={2000}>2s</option>
+              <option value={3000}>3s</option>
+            </select>
+          </div>
         </div>
       </div>
       {/* Main content area: layout switch */}
       {layout === 'columns' ? (
         <div className="flex-1 flex overflow-hidden" style={{ minWidth: 600 }}>
           <div style={{ width: mainColWidths[0], minWidth: 120, maxWidth: 500 }}>
-            <Column
-              title="Databases"
-              items={databases}
-              selectedItem={selectedDatabase}
-              onItemSelect={handleDatabaseSelect}
-              isLoading={isLoadingDatabases}
-              icon={Database}
-              width={mainColWidths[0]}
-            />
+            <div style={{ height: '100%' }}>
+              {isLoadingDatabases ? (
+                <SkeletonLoader rows={5} height={28} className="mt-4" />
+              ) : databasesError ? (
+                <div className="flex flex-col items-center justify-center h-full p-8 gap-2">
+                  <span className="text-red-600 text-sm font-medium">{databasesError}</span>
+                  <button className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 shadow-sm" onClick={() => loadDatabases(connectionURI)}>
+                    Retry
+                  </button>
+                </div>
+              ) : (
+                <Column
+                  title="Databases"
+                  items={databases}
+                  selectedItem={selectedDatabase}
+                  onItemSelect={handleDatabaseSelect}
+                  isLoading={false}
+                  icon={Database}
+                  width={mainColWidths[0]}
+                />
+              )}
+            </div>
           </div>
           {/* Resizer between Databases and Collections */}
           <div
@@ -1006,13 +1118,26 @@ const App = () => {
               </div>
             </div>
             {/* Make the entire column scrollable, not just the table */}
-            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16 }}>
-              {isLoadingDocuments ? (
-                <div className="flex items-center justify-center p-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-gray-500" aria-label="Loading documents" />
+            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16 }} onScroll={handleDocumentsScroll}>
+              {isLoadingDocuments && selectedCollection ? (
+                <SkeletonLoader rows={8} height={32} className="mt-4" />
+              ) : documentsError ? (
+                <div className="flex flex-col items-center justify-center p-8 gap-2">
+                  <span className="text-red-600 text-sm font-medium">{documentsError}</span>
+                  <button className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 shadow-sm" onClick={() => handleCollectionSelect(selectedCollection)}>
+                    Retry
+                  </button>
                 </div>
               ) : (
-                renderDocumentView()
+                <>
+                  {renderDocumentView()}
+                  {isLoadingMore && (
+                    <SkeletonLoader rows={2} height={32} className="mt-2" />
+                  )}
+                  {!hasMoreDocuments && documents.length > 0 && (
+                    <div className="text-center text-xs text-gray-400 mt-4">No more documents.</div>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -1063,13 +1188,19 @@ const App = () => {
                 <span className="ml-2 text-xs text-gray-500">({documents.length})</span>
               </div>
             </div>
-            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16 }}>
+            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16 }} onScroll={handleDocumentsScroll}>
               {isLoadingDocuments ? (
-                <div className="flex items-center justify-center p-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-gray-500" aria-label="Loading documents" />
-                </div>
+                <SkeletonLoader rows={8} height={32} className="mt-4" />
               ) : (
-                renderDocumentView()
+                <>
+                  {renderDocumentView()}
+                  {isLoadingMore && (
+                    <SkeletonLoader rows={2} height={32} className="mt-2" />
+                  )}
+                  {!hasMoreDocuments && documents.length > 0 && (
+                    <div className="text-center text-xs text-gray-400 mt-4">No more documents.</div>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -1121,18 +1252,26 @@ const App = () => {
                 <span className="ml-2 text-xs text-gray-500">({documents.length})</span>
               </div>
             </div>
-            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16 }}>
+            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16 }} onScroll={handleDocumentsScroll}>
               {isLoadingDocuments ? (
-                <div className="flex items-center justify-center p-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-gray-500" aria-label="Loading documents" />
-                </div>
+                <SkeletonLoader rows={8} height={32} className="mt-4" />
               ) : (
-                renderDocumentView()
+                <>
+                  {renderDocumentView()}
+                  {isLoadingMore && (
+                    <SkeletonLoader rows={2} height={32} className="mt-2" />
+                  )}
+                  {!hasMoreDocuments && documents.length > 0 && (
+                    <div className="text-center text-xs text-gray-400 mt-4">No more documents.</div>
+                  )}
+                </>
               )}
             </div>
           </div>
         </div>
       )}
+      {toast && <Toast message={toast} onClose={() => setToast('')} />}
+      {copyToast && <CopyToast message={copyToast} onClose={() => setCopyToast('')} />}
     </div>
   );
 };
