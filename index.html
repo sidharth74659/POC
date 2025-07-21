@@ -12,23 +12,23 @@
     <div class="container">
         <div class="header">
             <h1>Inventory Asset Management System</h1>
-            <p>SQL-Only Implementation - Frontend Database</p>
+            <p>SQL-Only Implementation - Frontend Database with Function Middleware</p>
         </div>
 
         <div class="main-content">
             <!-- Query Interface Panel -->
             <div class="panel">
-                <h2>Query Interface</h2>
+                <h2>Function Interface</h2>
                 
                 <div id="statusBar" class="status-bar">
                     <strong>Status:</strong> <span id="statusText">Initializing database...</span>
                 </div>
                 
-                <!-- Predefined Queries -->
+                <!-- Predefined Functions -->
                 <div class="query-selector">
-                    <label for="querySelect">Select Predefined Query:</label>
+                    <label for="querySelect">Select SQL Function:</label>
                     <select id="querySelect">
-                        <option value="">Choose a query...</option>
+                        <option value="">Choose a function...</option>
                     </select>
                 </div>
 
@@ -38,7 +38,7 @@
                     <span id="complexityBadge" class="complexity-badge"></span>
                 </div>
 
-                <button class="button" onclick="executePredefinedQuery()" id="executeBtn" disabled>Execute Query</button>
+                <button class="button" onclick="executePredefinedQuery()" id="executeBtn" disabled>Execute Function</button>
                 <button class="button secondary" onclick="clearResults()">Clear Results</button>
 
                 <!-- Custom SQL -->
@@ -51,8 +51,20 @@
             </div>
 
             <!-- Results Panel -->
-            <div class="panel">
+            <div class="results-panel">
                 <h2>Query Results</h2>
+                
+                <!-- Results Controls -->
+                <div class="results-controls" id="resultsControls" style="display: none;">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search results..." />
+                    </div>
+                    <div class="pagination-info">
+                        <span id="paginationInfo">Showing 0 of 0 results</span>
+                        <div class="pagination-controls" id="paginationControls"></div>
+                    </div>
+                </div>
+
                 <div id="resultsContainer" class="results-container">
                     <div class="loading" id="loading" style="display: none;">
                         <div class="spinner"></div>
@@ -64,6 +76,7 @@
         </div>
     </div>
 
+    <script src="js/middleware.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
