@@ -32,57 +32,88 @@ app.use((req, res, next) => {
   next();
 });
 
-let mongoClient;
-
-async function getMongoClient() {
-  if (!mongoClient) {
-    // If running on Docker with port mapping, localhost:27017 works. Otherwise, use the container IP (e.g., 172.17.0.2)
-    mongoClient = new MongoClient(MONGO_URI); // Removed deprecated useUnifiedTopology
-    await mongoClient.connect();
-  }
-  return mongoClient;
+// Helper to get a MongoClient for a given URI (or default)
+function getClientForUri(uri) {
+  return new MongoClient(uri || MONGO_URI);
 }
 
 // GET /databases: List all databases
 app.get('/databases', async (req, res) => {
+  const uri = req.headers['x-mongo-uri'] || MONGO_URI;
+  let client;
   try {
-    const client = await getMongoClient();
+    client = getClientForUri(uri);
+    await client.connect();
     const adminDb = client.db().admin();
     const dbs = await adminDb.listDatabases();
     res.json(dbs.databases.map(db => db.name));
   } catch (err) {
     console.error('Error listing databases:', err);
-    res.status(500).json({ error: 'Failed to list databases' });
+    res.status(500).json({ error: 'Failed to list databases', details: err.message });
+  } finally {
+    if (client) await client.close();
   }
 });
 
 // GET /collections/:db: List collections in a given database
 app.get('/collections/:db', async (req, res) => {
+  const uri = req.headers['x-mongo-uri'] || MONGO_URI;
   const dbName = req.params.db;
+  let client;
   try {
-    const client = await getMongoClient();
+    client = getClientForUri(uri);
+    await client.connect();
     const db = client.db(dbName);
     const collections = await db.listCollections().toArray();
     res.json(collections.map(col => col.name));
   } catch (err) {
     console.error(`Error listing collections for db ${dbName}:`, err);
-    res.status(500).json({ error: 'Failed to list collections' });
+    res.status(500).json({ error: 'Failed to list collections', details: err.message });
+  } finally {
+    if (client) await client.close();
   }
 });
 
 // GET /documents/:db/:col: Return sample documents (first 10)
 app.get('/documents/:db/:col', async (req, res) => {
+  const uri = req.headers['x-mongo-uri'] || MONGO_URI;
   const dbName = req.params.db;
   const colName = req.params.col;
+  let client;
   try {
-    const client = await getMongoClient();
+    client = getClientForUri(uri);
+    await client.connect();
     const db = client.db(dbName);
     const collection = db.collection(colName);
     const docs = await collection.find({}).limit(10).toArray();
     res.json(docs);
   } catch (err) {
     console.error(`Error fetching documents for ${dbName}.${colName}:`, err);
-    res.status(500).json({ error: 'Failed to fetch documents' });
+    res.status(500).json({ error: 'Failed to fetch documents', details: err.message });
+  } finally {
+    if (client) await client.close();
+  }
+});
+
+// POST /connect: Validate a MongoDB connection URI
+app.post('/connect', async (req, res) => {
+  const { uri } = req.body;
+  if (!uri || typeof uri !== 'string') {
+    return res.status(400).json({ success: false, message: 'Missing or invalid URI' });
+  }
+  let client;
+  try {
+    client = new MongoClient(uri);
+    await client.connect();
+    // Optionally, check permissions/read access
+    await client.db().admin().listDatabases();
+    res.json({ success: true, message: 'Connected successfully' });
+  } catch (err) {
+    res.status(400).json({ success: false, message: err.message || 'Connection failed' });
+  } finally {
+    if (client) {
+      await client.close();
+    }
   }
 });
 

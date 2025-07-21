@@ -4,6 +4,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Database, Server, FileText, Table, ChevronDown, ChevronRight, Loader2, AlertCircle } from 'lucide-react';
 
 // API Integration Layer - Single file for all MongoDB operations
+type ConnectResponse = { success: boolean; message: string };
+type Database = { name: string; size?: string; collections?: number };
+type Collection = { name: string; count?: number; avgSize?: string };
+type Document = { [key: string]: any };
+
 const mongoAPI = {
   // Mock data - replace with actual API calls to backend server
   mockDatabases: [
@@ -40,7 +45,7 @@ const mongoAPI = {
       { name: 'application', count: 2500000, avgSize: '0.4 KB' },
       { name: 'errors', count: 15000, avgSize: '1.1 KB' }
     ]
-  },
+  } as Record<string, Collection[]>,
 
   mockDocuments: {
     'ecommerce.products': [
@@ -60,82 +65,94 @@ const mongoAPI = {
       { _id: '507f1f77bcf86cd799439032', event: 'button_click', userId: 'user456', timestamp: '2024-01-15T10:31:15Z', element: 'add-to-cart' },
       { _id: '507f1f77bcf86cd799439033', event: 'purchase', userId: 'user789', timestamp: '2024-01-15T10:32:30Z', amount: 299.99 }
     ]
-  },
+  } as Record<string, Document[]>,
 
   // Validate MongoDB connection URI format
-  validateConnectionURI: (uri) => {
+  validateConnectionURI: (uri: string): boolean => {
     const mongoRegex = /^mongodb(\+srv)?:\/\/([\w\-\.]+(:[\w\-\.]+)?@)?([\w\-\.]+)(:\d+)?(\/[\w\-\.]*)?(\?[\w\-\.\=\&]*)?$/;
     return mongoRegex.test(uri);
   },
 
   // Simulate connection to MongoDB
   // TODO: Replace with actual backend API call to /api/connect
-  connect: async (uri) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (mongoAPI.validateConnectionURI(uri)) {
-          resolve({ success: true, message: 'Connected successfully' });
-        } else {
-          resolve({ success: false, message: 'Invalid MongoDB URI format' });
-        }
-      }, 1000);
-    });
+  connect: async (uri: string): Promise<ConnectResponse> => {
+    try {
+      const res = await fetch('http://localhost:4000/connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uri })
+      });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      return { success: false, message: 'Network error: ' + (err?.message || err) };
+    }
   },
 
   // Fetch databases
   // TODO: Replace with actual API call to /api/databases
-  getDatabases: async (uri) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // Simulate occasional randomization for auto-refresh demo
-        const databases = [...mongoAPI.mockDatabases];
-        if (Math.random() > 0.7) {
-          databases.push({
-            name: `temp_db_${Math.floor(Math.random() * 1000)}`,
-            size: `${Math.floor(Math.random() * 500)} MB`,
-            collections: Math.floor(Math.random() * 10) + 1
-          });
-        }
-        resolve({ success: true, data: databases });
-      }, 500);
-    });
+  getDatabases: async (uri: string): Promise<{ success: boolean; data: Database[]; message?: string }> => {
+    try {
+      const res = await fetch('http://localhost:4000/databases', {
+        headers: { 'x-mongo-uri': uri }
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        return { success: false, data: [], message: err.error || 'Failed to fetch databases' };
+      }
+      const data = await res.json();
+      // The backend returns an array of names, wrap as Database objects
+      return { success: true, data: data.map((name: string) => ({ name })) };
+    } catch (err: any) {
+      return { success: false, data: [], message: err?.message || 'Network error' };
+    }
   },
 
   // Fetch collections for a database
   // TODO: Replace with actual API call to /api/collections/{dbName}
-  getCollections: async (uri, dbName) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const collections = mongoAPI.mockCollections[dbName] || [];
-        resolve({ success: true, data: collections });
-      }, 300);
-    });
+  getCollections: async (uri: string, dbName: string): Promise<{ success: boolean; data: Collection[]; message?: string }> => {
+    try {
+      const res = await fetch(`http://localhost:4000/collections/${encodeURIComponent(dbName)}`, {
+        headers: { 'x-mongo-uri': uri }
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        return { success: false, data: [], message: err.error || 'Failed to fetch collections' };
+      }
+      const data = await res.json();
+      // The backend returns an array of names, wrap as Collection objects
+      return { success: true, data: data.map((name: string) => ({ name })) };
+    } catch (err: any) {
+      return { success: false, data: [], message: err?.message || 'Network error' };
+    }
   },
 
   // Fetch documents from a collection
   // TODO: Replace with actual API call to /api/documents/{dbName}/{collectionName}
-  getDocuments: async (uri, dbName, collectionName) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const key = `${dbName}.${collectionName}`;
-        let documents = mongoAPI.mockDocuments[key] || [];
-        
-        // Simulate data changes for auto-refresh
-        if (Math.random() > 0.6 && documents.length > 0) {
-          documents = documents.map(doc => ({
-            ...doc,
-            _refreshed: new Date().toISOString()
-          }));
-        }
-        
-        resolve({ success: true, data: documents });
-      }, 400);
-    });
+  getDocuments: async (uri: string, dbName: string, collectionName: string): Promise<{ success: boolean; data: Document[]; message?: string }> => {
+    try {
+      const res = await fetch(`http://localhost:4000/documents/${encodeURIComponent(dbName)}/${encodeURIComponent(collectionName)}`, {
+        headers: { 'x-mongo-uri': uri }
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        return { success: false, data: [], message: err.error || 'Failed to fetch documents' };
+      }
+      const data = await res.json();
+      return { success: true, data };
+    } catch (err: any) {
+      return { success: false, data: [], message: err?.message || 'Network error' };
+    }
   }
 };
 
 // Connection form component
-const ConnectionForm = ({ onConnect, isConnecting, error }) => (
+interface ConnectionFormProps {
+  onConnect: () => void;
+  isConnecting: boolean;
+  error: string;
+}
+const ConnectionForm = ({ onConnect, isConnecting, error }: ConnectionFormProps) => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
     <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
       <div className="flex items-center mb-6">
@@ -195,7 +212,15 @@ const ConnectionForm = ({ onConnect, isConnecting, error }) => (
 );
 
 // Column component for Finder-style navigation
-const Column = ({ title, items, selectedItem, onItemSelect, isLoading, icon: Icon }) => (
+interface ColumnProps {
+  title: string;
+  items: any[];
+  selectedItem: string;
+  onItemSelect: (name: string) => void;
+  isLoading: boolean;
+  icon?: React.ElementType;
+}
+const Column = ({ title, items, selectedItem, onItemSelect, isLoading, icon: Icon }: ColumnProps) => (
   <div className="flex-1 border-r border-gray-200 bg-white">
     <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-3">
       <div className="flex items-center">
@@ -241,7 +266,10 @@ const Column = ({ title, items, selectedItem, onItemSelect, isLoading, icon: Ico
 );
 
 // Document views
-const TableView = ({ documents }) => (
+interface TableViewProps {
+  documents: Document[];
+}
+const TableView = ({ documents }: TableViewProps) => (
   <div className="overflow-x-auto">
     <table className="min-w-full divide-y divide-gray-200">
       <thead className="bg-gray-50">
@@ -268,10 +296,13 @@ const TableView = ({ documents }) => (
   </div>
 );
 
-const AccordionView = ({ documents }) => {
-  const [expandedItems, setExpandedItems] = useState(new Set());
+interface AccordionViewProps {
+  documents: Document[];
+}
+const AccordionView = ({ documents }: AccordionViewProps) => {
+  const [expandedItems, setExpandedItems] = useState<Set<string | number>>(new Set());
 
-  const toggleExpanded = (id) => {
+  const toggleExpanded = (id: string | number) => {
     const newExpanded = new Set(expandedItems);
     if (newExpanded.has(id)) {
       newExpanded.delete(id);
@@ -315,7 +346,10 @@ const AccordionView = ({ documents }) => {
   );
 };
 
-const CardView = ({ documents }) => (
+interface CardViewProps {
+  documents: Document[];
+}
+const CardView = ({ documents }: CardViewProps) => (
   <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
     {documents.map((doc, index) => (
       <div key={doc._id || index} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
@@ -344,23 +378,23 @@ const CardView = ({ documents }) => (
 
 // Main application component
 const App = () => {
-  const [isConnected, setIsConnected] = useState(false);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [connectionError, setConnectionError] = useState('');
-  const [connectionURI, setConnectionURI] = useState('');
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [isConnecting, setIsConnecting] = useState<boolean>(false);
+  const [connectionError, setConnectionError] = useState<string>('');
+  const [connectionURI, setConnectionURI] = useState<string>('');
   
-  const [databases, setDatabases] = useState([]);
-  const [collections, setCollections] = useState([]);
-  const [documents, setDocuments] = useState([]);
+  const [databases, setDatabases] = useState<Database[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
+  const [documents, setDocuments] = useState<Document[]>([]);
   
-  const [selectedDatabase, setSelectedDatabase] = useState('');
-  const [selectedCollection, setSelectedCollection] = useState('');
+  const [selectedDatabase, setSelectedDatabase] = useState<string>('');
+  const [selectedCollection, setSelectedCollection] = useState<string>('');
   
-  const [isLoadingDatabases, setIsLoadingDatabases] = useState(false);
-  const [isLoadingCollections, setIsLoadingCollections] = useState(false);
-  const [isLoadingDocuments, setIsLoadingDocuments] = useState(false);
+  const [isLoadingDatabases, setIsLoadingDatabases] = useState<boolean>(false);
+  const [isLoadingCollections, setIsLoadingCollections] = useState<boolean>(false);
+  const [isLoadingDocuments, setIsLoadingDocuments] = useState<boolean>(false);
   
-  const [viewMode, setViewMode] = useState('table');
+  const [viewMode, setViewMode] = useState<'table' | 'accordion' | 'card'>('table');
 
   // Auto-refresh functionality
   useEffect(() => {
@@ -389,20 +423,16 @@ const App = () => {
 
   // Handle connection
   const handleConnect = async () => {
-    const input = document.getElementById('uri');
-    const uri = input.value;
-    
+    const input = document.getElementById('uri') as HTMLInputElement | null;
+    const uri = input?.value || '';
     if (!uri) return;
-    
     setIsConnecting(true);
     setConnectionError('');
-    
     try {
-      const result = await mongoAPI.connect(uri);
+      const result: ConnectResponse = await mongoAPI.connect(uri);
       if (result.success) {
         setConnectionURI(uri);
         setIsConnected(true);
-        // Load initial databases
         loadDatabases(uri);
       } else {
         setConnectionError(result.message);
@@ -415,7 +445,7 @@ const App = () => {
   };
 
   // Load databases
-  const loadDatabases = useCallback(async (uri) => {
+  const loadDatabases = useCallback(async (uri: string) => {
     setIsLoadingDatabases(true);
     try {
       const result = await mongoAPI.getDatabases(uri);
@@ -430,12 +460,11 @@ const App = () => {
   }, []);
 
   // Handle database selection
-  const handleDatabaseSelect = async (dbName) => {
+  const handleDatabaseSelect = async (dbName: string) => {
     setSelectedDatabase(dbName);
     setSelectedCollection('');
     setCollections([]);
     setDocuments([]);
-    
     setIsLoadingCollections(true);
     try {
       const result = await mongoAPI.getCollections(connectionURI, dbName);
@@ -450,7 +479,7 @@ const App = () => {
   };
 
   // Handle collection selection
-  const handleCollectionSelect = async (collectionName) => {
+  const handleCollectionSelect = async (collectionName: string) => {
     setSelectedCollection(collectionName);
     setDocuments([]);
     

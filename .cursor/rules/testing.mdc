@@ -33,4 +33,5 @@ Note:
 - You can always use **nvm** to check, install, or switch Node.js versions as needed for the project.
 
 # ✅ RULE: Using Tools
+- Check for the presence of a `.nvmrc` file. If it exists, set the Node.js version for the project by executing `nvm use` in the terminal. If the file is not found, create a new `.nvmrc` file specifying the Node.js version `20.19.0`, and ensure it is installed by running `nvm install 20.19.0` if necessary.
 - You **have access** to all required tools — use them intelligently and autonomously to complete tasks like changing Node versions, setting environments, or resolving version conflicts. Never install any unnecessary packages or dependencies unless it seems necessary to the task at hand. and prefer usage of tools instead of installing their package versions.
