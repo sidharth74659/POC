@@ -1,0 +1,47 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+type: always
+description: "Security standards and input validation requirements"
+---
+
+# Security and Validation Standards
+
+## Input Validation
+- Validate all user inputs before processing
+- Sanitize data before database operations
+- Use parameterized queries to prevent SQL injection
+- Implement proper type checking
+
+## Sensitive Data Handling
+- Never hardcode API keys, passwords, or secrets
+- Use environment variables for configuration
+- Implement proper error handling without exposing internal details
+- Add rate limiting for API endpoints
+
+## Error Handling
+- Don't expose internal system details in error messages
+- Log security-related events appropriately
+- Use proper HTTP status codes
+- Implement graceful error recovery
+
+## Authentication and Authorization
+- Validate user permissions before operations
+- Implement proper session management
+- Use secure token handling
+- Add proper logout functionality
+
+## Data Protection
+- Encrypt sensitive data in transit and at rest
+- Implement proper access controls
+- Validate data integrity
+- Use HTTPS for all API communications
+
+## Security Testing
+- Test for common vulnerabilities (XSS, CSRF)
+- Validate input sanitization
+- Test authentication flows
+- Verify authorization checks

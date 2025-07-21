@@ -1,0 +1,61 @@
+---
+description: 
+globs: ["**/*.ts
+alwaysApply: false
+---
+---
+type: auto_attached
+description: "TypeScript specific coding standards and type safety"
+---
+
+# TypeScript Standards
+
+## Type Safety
+- Never use `any` type - use specific interfaces or union types
+- Provide default values instead of optional parameters with `?`
+- Use interfaces for object structures, prefix with `I`
+- Use types for unions and primitives, prefix with `T`
+
+## Interface Design
+```typescript
+// Correct interface structure
+interface IUserPayload {
+  id: number;
+  name: string;
+  email: string;
+  role: TUserRole;
+  // Provide defaults instead of optional
+  createdAt: string = new Date().toISOString();
+  updatedAt: string = new Date().toISOString();
+}
+
+type TUserRole = 'Admin' | 'User' | 'Guest';
+```
+
+## Async/Await Standards
+- Always use try/catch blocks with async/await
+- Use `console.error()` in catch blocks for error logging
+- Provide default values when possible to handle errors gracefully
+- Don't re-throw errors if providing defaults
+
+```typescript
+async function fetchUserData(): Promise<IUser[]> {
+  try {
+    const response = await this.apiService.getUsers();
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return []; // Graceful default
+  }
+}
+```
+
+## Guard Clauses
+- Use early returns for error conditions
+- Handle flag-based conditions with guard clauses
+- Reduce nesting with early exits
+
+## Immutable Patterns
+- Use spread operator for arrays: `[...existingArray, newItem]`
+- Use object spread for updates: `{...existingObject, updatedField: newValue}`
+- Consider performance implications for large data structures

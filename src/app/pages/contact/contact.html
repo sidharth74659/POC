@@ -1,0 +1,208 @@
+<div class="contact-container">
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <svg class="title-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+        </svg>
+        Contact Us
+      </h1>
+      <p class="page-subtitle">Get in touch with our team for support, feedback, or collaboration</p>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="contact-grid">
+      <!-- Contact Information Section -->
+      <div class="contact-info-section">
+        <h2 class="section-title">Get in Touch</h2>
+        <p class="section-text">
+          We'd love to hear from you! Whether you have a question about our Voice AI Map Instructions 
+          application, need technical support, or want to collaborate on new features, our team is here to help.
+        </p>
+
+        <div class="contact-methods">
+          <div class="contact-method">
+            <div class="method-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </div>
+            <div class="method-content">
+              <h3>Email</h3>
+              <p>support&#64;voiceai-map.com</p>
+              <p class="method-description">For general inquiries and support</p>
+            </div>
+          </div>
+
+          <div class="contact-method">
+            <div class="method-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+              </svg>
+            </div>
+            <div class="method-content">
+              <h3>Phone</h3>
+              <p>+1 (555) 123-4567</p>
+              <p class="method-description">Available Monday-Friday, 9AM-6PM EST</p>
+            </div>
+          </div>
+
+          <div class="contact-method">
+            <div class="method-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+            </div>
+            <div class="method-content">
+              <h3>Office</h3>
+              <p>123 Innovation Drive</p>
+              <p>Tech City, TC 12345</p>
+              <p class="method-description">Visit us for in-person meetings</p>
+            </div>
+          </div>
+
+          <div class="contact-method">
+            <div class="method-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <div class="method-content">
+              <h3>Support Hours</h3>
+              <p>Monday - Friday: 9AM-6PM EST</p>
+              <p>Saturday: 10AM-4PM EST</p>
+              <p class="method-description">Extended support available for enterprise clients</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form Section -->
+      <div class="contact-form-section">
+        <h2 class="section-title">Send us a Message</h2>
+        <form class="contact-form" (ngSubmit)="submitContactForm()">
+          <div class="form-group">
+            <label for="name" class="form-label">Full Name *</label>
+            <input 
+              type="text" 
+              id="name" 
+              name="name" 
+              class="form-input" 
+              placeholder="Enter your full name"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address *</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-input" 
+              placeholder="Enter your email address"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="subject" class="form-label">Subject *</label>
+            <select id="subject" name="subject" class="form-select" required>
+              <option value="">Select a subject</option>
+              <option value="general">General Inquiry</option>
+              <option value="support">Technical Support</option>
+              <option value="feedback">Feature Request</option>
+              <option value="bug">Bug Report</option>
+              <option value="partnership">Partnership</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message" class="form-label">Message *</label>
+            <textarea 
+              id="message" 
+              name="message" 
+              class="form-textarea" 
+              rows="6"
+              placeholder="Tell us about your inquiry, question, or feedback..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" name="newsletter" class="form-checkbox">
+              <span class="checkmark"></span>
+              Subscribe to our newsletter for updates and new features
+            </label>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <svg class="submit-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+            Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="content-section">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3 class="faq-question">How does the voice recognition work?</h3>
+          <p class="faq-answer">
+            Our application uses the Web Speech API, which provides real-time speech recognition capabilities. 
+            The system processes your voice input and converts it to text, which is then sent to our AI-powered 
+            instruction processor.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h3 class="faq-question">What browsers are supported?</h3>
+          <p class="faq-answer">
+            The application works best on modern browsers that support the Web Speech API, including Chrome, 
+            Firefox, Safari, and Edge. For the best experience, we recommend using the latest version of Chrome.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h3 class="faq-question">Can I use this application offline?</h3>
+          <p class="faq-answer">
+            Currently, the application requires an internet connection for the AI instruction processing. 
+            However, the voice recognition and basic navigation features work offline.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h3 class="faq-question">Is my voice data stored?</h3>
+          <p class="faq-answer">
+            No, we do not store your voice recordings. The speech recognition happens locally in your browser, 
+            and only the processed text is sent to our servers for instruction processing.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <div class="footer-actions">
+      <button type="button" class="nav-btn" (click)="goHome()">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+        Back to Home
+      </button>
+      <button type="button" class="nav-btn" (click)="goAbout()">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+        </svg>
+        About Us
+      </button>
+    </div>
+  </footer>
+</div>

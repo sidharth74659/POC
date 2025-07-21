@@ -1,0 +1,74 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+type: manual
+# description: "Comprehensive PR review checklist - use @pr-checklist to invoke"
+---
+
+# PR Review Checklist
+
+## Performance Considerations
+- Use `find()` instead of `filter()` for single item searches in large arrays
+- Implement proper caching strategies
+- Optimize database queries to avoid N+1 problems
+- Consider lazy loading for large datasets
+
+## Validation and Edge Cases
+- Handle `null`, `undefined`, and empty values
+- Validate all user inputs before processing
+- Add error handling for different HTTP status codes
+- Dismiss loaders on error conditions
+- Provide default values where necessary
+
+## Async Code Standards
+- Use try/catch blocks with async/await
+- Log errors with `console.error()`
+- Handle different status codes for fetch operations
+- Provide graceful fallbacks
+
+## Code Organization
+- Use guard clauses for flag-based conditions
+- Implement immutable data updates
+- Avoid nested if-else chains
+- Extract complex logic to services
+
+## Translation and Messages
+- Add translation support for toasts, modals, popups
+- Use enums for message constants in CAPITAL_CASE
+- Support dynamic content translation
+
+## Subscription Management
+- Unsubscribe in `ngOnDestroy` lifecycle
+- Use `takeUntil()` pattern for multiple subscriptions
+- Implement proper memory leak prevention
+
+## Code Quality Checks
+- Remove `console.log`, `console.warn` (keep `console.error` in catch blocks)
+- Use interfaces/types with proper prefixes (`I`, `T`)
+- Maintain consistent naming conventions
+- Add JSDoc comments for complex methods
+- Remove unused imports and variables
+- Run ESLint and fix all issues
+
+## Documentation Requirements
+- Update README.md for new features
+- Document API changes with examples
+- Add JSDoc for complex business logic
+- Include usage examples and test cases
+
+## Security Validation
+- Never hardcode sensitive data
+- Validate user inputs
+- Use parameterized queries
+- Implement proper error handling
+
+## Before Submitting PR
+1. Run linting and fix all issues
+2. Test edge cases and error scenarios
+3. Verify translation support is added
+4. Check subscription cleanup
+5. Remove debug code and logs
+6. Ensure naming conventions are followed

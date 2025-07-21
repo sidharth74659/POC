@@ -1,0 +1,51 @@
+---
+description: 
+globs: **/*.component.ts,**/*.component.html,**/*.component.scss
+alwaysApply: false
+---
+---
+type: auto_attached
+patterns: ["**/*.component.ts", "**/*.component.html", "**/*.component.scss"]
+description: "Component-based architecture and reusability standards"
+---
+
+# Component Architecture Standards
+
+## Component Organization
+- **Pages**: High-level views (project-view, form-view)
+- **Sections**: Grouped functionality (component-palette, form-canvas) 
+- **Units**: Reusable components (button, radio, input)
+
+## Component Structure Standards
+- `component.html`: Semantic and component-based markup
+- `component.scss`: Component-specific styling only
+- `component.ts`: Component logic and state management (max 300 lines)
+- `component.service.ts`: External logic and API calls
+
+## Reusable Component Pattern
+```typescript
+// Instead of inline buttons
+<button type="button" class="cancel-btn" (click)="cancel()">Cancel</button>
+<button type="button" class="btn publish-btn create-btn" (click)="submitForm()">Submit</button>
+
+// Use component-based approach
+<form-button [text]="'Cancel'" [type]="'cancel'" (onClick)="cancel()"></form-button>
+<form-button [text]="'Submit'" [type]="'primary'" (onClick)="submitForm()"></form-button>
+```
+
+## Abstraction Layers
+- Move complex logic to services
+- Keep components focused on presentation
+- Use shared services for common functionality
+- Implement proper separation of concerns
+
+## Asset Management
+- Use SVG icons instead of PNG
+- Clear descriptive names: `arrow-up.svg`, `arrow-down.svg` (not `up-arrow.svg`)
+- Group related assets logically
+- Remove redundant files: avoid both `edit.png` and `edit.svg`
+
+## Translation Support
+- Add translation keys for all user-facing text
+- Use enums for message constants
+- Support dynamic content translation

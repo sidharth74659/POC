@@ -1,0 +1,60 @@
+<div class="voice-input-container" (keydown)="onKeyDown($event)">
+  <div class="voice-controls">
+    <button 
+      type="button"
+      class="microphone-btn"
+      [class.listening]="isListening"
+      [class.disabled]="!isSupported"
+      (click)="onMicrophoneClick()"
+      [attr.aria-label]="isListening ? 'Stop listening' : 'Start listening'"
+      [attr.aria-pressed]="isListening"
+    >
+      <svg class="microphone-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+      </svg>
+      <span class="btn-text">{{ isListening ? 'Stop' : 'Start' }}</span>
+    </button>
+    
+    <button 
+      type="button"
+      class="clear-btn"
+      (click)="clearTranscript()"
+      [disabled]="!transcript"
+      aria-label="Clear transcript"
+    >
+      <svg class="clear-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="transcript-container">
+    <div class="transcript-label">
+      <span *ngIf="isListening" class="listening-indicator">
+        <span class="pulse-dot"></span>
+        Listening...
+      </span>
+      <span *ngIf="!isListening && !transcript">Click the microphone to start speaking</span>
+      <span *ngIf="!isListening && transcript">Transcript:</span>
+    </div>
+    
+    <div class="transcript-text" [class.has-content]="transcript">
+      {{ transcript || 'No speech detected yet...' }}
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <svg class="error-icon" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+    </svg>
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isSupported" class="unsupported-message">
+    <svg class="warning-icon" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+    </svg>
+    Voice recognition is not supported in this browser. Please use Chrome, Firefox, or Safari.
+  </div>
+</div>

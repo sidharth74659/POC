@@ -1,0 +1,47 @@
+---
+description: Performance optimization guidelines and best practices for Angular applications
+globs: 
+alwaysApply: false
+---
+---
+type: agent_requested
+description: "Performance optimization guidelines and best practices"
+---
+
+# Performance Optimization Guidelines
+
+## Angular Performance
+- Use OnPush change detection strategy where appropriate
+- Implement trackBy functions for *ngFor loops
+- Lazy load feature modules
+- Use async pipe for observables in templates
+
+## Data Handling
+- Implement pagination for large datasets
+- Use virtual scrolling for long lists
+- Cache frequently accessed data
+- Optimize bundle size by tree-shaking unused code
+
+## Network Optimization
+- Implement request caching strategies
+- Use compression for API responses
+- Minimize HTTP requests
+- Implement proper loading states
+
+## Memory Management
+- Unsubscribe from observables
+- Clear intervals and timeouts
+- Remove event listeners properly
+- Optimize image sizes and formats
+
+## Code Optimization
+- Use `find()` instead of `filter()` for single items
+- Implement debouncing for search inputs
+- Use lazy evaluation where possible
+- Optimize recursive functions
+
+## Monitoring
+- Add performance monitoring for critical paths
+- Track bundle sizes
+- Monitor memory usage
+- Implement error tracking

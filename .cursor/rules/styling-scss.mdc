@@ -1,0 +1,89 @@
+---
+description: 
+globs: **/*.scss
+alwaysApply: false
+---
+---
+type: auto_attached
+description: "SCSS styling conventions and component-based styling"
+---
+
+# SCSS Styling Standards
+
+## CSS/HTML Styling Standards
+- **Strictly use BEM (Block Element Modifier) convention for all CSS classes**
+- Block: `.card`, `.header`, `.navigation`
+- Element: `.card__title`, `.header__logo`, `.navigation__item`
+- Modifier: `.card--featured`, `.header--fixed`, `.navigation__item--active`
+- Never use nested selectors beyond BEM structure
+- Avoid generic class names like `.red`, `.big`, `.left`
+- Use semantic class names that describe purpose, not appearance
+- Keep BEM blocks independent and reusable
+- Use single hyphens for multi-word blocks: `.search-form`, `.user-profile`
+- Ensure all HTML elements have proper BEM class names, avoid styling by tag names
+- For comments use "//" instead of "/* */"
+
+## File Organization
+```scss
+// Order of placement in .scss files:
+// 1. Imports
+@import 'variables';
+@import 'mixins';
+
+// 2. Variables
+$label-width: 30%;
+--text-color: #333;
+
+// 3. Component styles
+.component-name {
+  // styles
+}
+
+```
+
+## Nesting and Structure
+- Use SCSS nesting effectively, avoid deep nesting (max 3 levels)
+- Each component should have main container class matching filename
+
+```scss
+// Good nesting structure
+.form-canvas {
+  .canvas-heading {
+    font-size: 1.2rem;
+    
+    .canvas-title {
+      font-weight: bold;
+    }
+  }
+  
+  .canvas-content {
+    padding: 1rem;
+  }
+}
+
+// Avoid flat CSS in SCSS
+.form-group .form-control { border-radius: 0px; }
+.form-group .form-label { padding: 0px; }
+
+// Use SCSS nesting instead
+.form-group {
+  .form-control {
+    border-radius: 0px;
+  }
+  
+  .form-label {
+    padding: 0px;
+  }
+}
+```
+
+## CSS Class Naming
+- Use kebab-case: `user-profile`, `submit-btn`, `form-control-settings`
+- Be descriptive, avoid generic names: Use `primary-action-btn` not `orange-txt`
+- Follow BEM convention where appropriate
+- Maintain consistency across components
+
+## Component-Specific Styling
+- Each component must have styles scoped to main container
+- Avoid global style pollution
+- Use CSS custom properties for theming support
