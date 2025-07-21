@@ -292,6 +292,9 @@ function displayFilteredResults(columns) {
     // Update pagination info
     updatePaginationInfo(filteredResults.length, totalPages);
     
+    // Update pagination controls
+    updatePaginationControls(totalPages);
+    
     // Generate table HTML
     let html = `
         <div class="results-header">
@@ -310,16 +313,17 @@ function displayFilteredResults(columns) {
     pageData.forEach(row => {
         html += '<tr>';
         row.forEach(value => {
-            html += `<td>${value !== null && value !== undefined ? value : '<em>null</em>'}</td>`;
+            const displayValue = value !== null && value !== undefined ? value : '<em>null</em>';
+            const cellContent = String(displayValue);
+            const isLong = cellContent.length > 50;
+            const title = isLong ? cellContent : '';
+            html += `<td${title ? ` title="${title.replace(/"/g, '&quot;')}"` : ''}>${displayValue}</td>`;
         });
         html += '</tr>';
     });
 
     html += '</tbody></table></div>';
     container.innerHTML = html;
-    
-    // Update pagination controls
-    updatePaginationControls(totalPages);
 }
 
 // Update pagination info
@@ -397,12 +401,18 @@ function getCurrentColumns() {
 
 // Show results controls
 function showResultsControls() {
-    document.getElementById('resultsControls').style.display = 'flex';
+    const controls = document.querySelector('.results-controls');
+    if (controls) {
+        controls.style.display = 'flex';
+    }
 }
 
 // Hide results controls
 function hideResultsControls() {
-    document.getElementById('resultsControls').style.display = 'none';
+    const controls = document.querySelector('.results-controls');
+    if (controls) {
+        controls.style.display = 'none';
+    }
 }
 
 // Search functionality
@@ -446,4 +456,27 @@ function clearResults() {
 }
 
 // Initialize the application
-window.addEventListener('load', initDatabase); 
+async function initApp() {
+    try {
+        updateStatus('Initializing database...', 'info');
+        await initDatabase();
+        
+        updateStatus('Loading SQL functions...', 'info');
+        await loadAllFunctions();
+        
+        updateStatus('Loading available functions...', 'info');
+        await loadAvailableFunctions();
+        
+        // Initialize results controls
+        hideResultsControls();
+        
+        updateStatus('System ready. Select a function or enter custom SQL.', 'success');
+        
+    } catch (error) {
+        console.error('Initialization error:', error);
+        updateStatus('Initialization failed: ' + error.message, 'error');
+    }
+}
+
+// Initialize the application
+window.addEventListener('load', initApp); 
