@@ -1,0 +1,41 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+type: always
+description: "Fundamental coding standards for Angular project - naming, structure, and quality"
+---
+
+# Core Development Standards
+
+## Naming Conventions
+- Use camelCase for variables and functions: `userName`, `calculateUserAge()`
+- Use kebab-case for file names: `user-profile.component.ts`
+- Use kebab-case for CSS classes: `user-profile`, `submit-btn`
+- Prefix interfaces with `I`: `IUserPayload`, `IFormSettings`
+- Prefix types with `T`: `TComponentType`, `TValidationResult`
+- Use CAPITAL_CASE for constants: `FORM_TEMPLATE_STATUS`, `API_ENDPOINTS`
+
+## Boolean Naming
+- Use verbs for boolean variables: `enableRealTimeSync`, `showValidation`
+- Avoid redundant prefixes: Use `enableCycleCount` not `isEnabledCycleCount`
+
+## File Structure Requirements
+- Maintain clear distinction between pages, sections, and unit-level components
+- Group related service files in folders: `form-elements/`, `user-management/`
+- Use descriptive service names: `form-elements.api.service.ts`, `user-storage.service.ts`
+
+## Code Quality Standards
+- Maximum function length: 50 lines
+- Maximum component file length: 200 lines for .html, 300 lines for .ts
+- No nested conditionals deeper than 3 levels
+- Remove unused imports, variables, and code blocks
+- Always use semicolons at end of statements
+
+## Before Generating Code
+1. Review naming conventions and apply consistently
+2. Check file structure and organization requirements
+3. Ensure code quality standards are met
+4. Validate proper abstractions and separations

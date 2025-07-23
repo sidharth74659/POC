@@ -1,0 +1,122 @@
+---
+description: Comprehensive PR review checklist and code quality enforcement - use @pr-checklist-complete to invoke
+globs: 
+alwaysApply: false
+---
+---
+type: manual
+description: "Comprehensive PR review checklist and code quality enforcement - use @pr-checklist-complete to invoke"
+---
+
+# Comprehensive PR Review Checklist & Code Quality Standards
+
+## Performance Considerations
+- Use `find()` instead of `filter()` for single item searches in large arrays
+- Implement proper caching strategies for frequently accessed data
+- Optimize database queries to avoid N+1 problems
+- Consider lazy loading for large datasets
+- Minimize bundle size by avoiding unnecessary dependencies
+- Add performance monitoring for critical paths
+
+## Code Quality Standards
+- Follow consistent naming conventions (camelCase for JS/TS, snake_case for Python)
+- Add JSDoc/docstring comments for all public functions and classes
+- Maintain maximum function length of 50 lines
+- Use meaningful variable names that describe their purpose
+- Avoid nested conditionals deeper than 3 levels
+- Use interfaces/types with proper prefixes (`I`, `T`)
+- Remove unused imports and variables
+- Run ESLint and fix all issues
+
+## Validation and Edge Cases
+- Handle `null`, `undefined`, and empty values
+- Validate all user inputs before processing
+- Add error handling for different HTTP status codes
+- Dismiss loaders on error conditions
+- Provide default values where necessary
+- Add edge case testing for error conditions
+
+## Async Code Standards
+- Use try/catch blocks with async/await
+- Log errors with `console.error()`
+- Handle different status codes for fetch operations
+- Provide graceful fallbacks
+- Implement proper error handling without exposing internal details
+
+## Code Organization
+- Use guard clauses for flag-based conditions
+- Implement immutable data updates
+- Avoid nested if-else chains
+- Extract complex logic to services
+- Keep PRs focused on single features or bug fixes
+
+## Translation and Messages
+- Add translation support for toasts, modals, popups
+- Use enums for message constants in CAPITAL_CASE
+- Support dynamic content translation
+
+## Subscription Management
+- Unsubscribe in `ngOnDestroy` lifecycle
+- Use `takeUntil()` pattern for multiple subscriptions
+- Implement proper memory leak prevention
+
+## Security Requirements
+- Never hardcode API keys, passwords, or sensitive data
+- Validate all user inputs before processing
+- Use parameterized queries for database operations
+- Implement proper error handling without exposing internal details
+- Add rate limiting for API endpoints
+
+## Testing Requirements
+- Write unit tests for all new functions with minimum 80% coverage
+- Include integration tests for API endpoints
+- Add edge case testing for error conditions
+- Mock external dependencies in tests
+- Ensure tests are deterministic and can run independently
+
+## Documentation Standards
+- Update README.md when adding new features or changing setup
+- Document API endpoints with request/response examples
+- Add inline comments for complex business logic
+- Keep changelogs updated with user-facing changes
+- Include migration guides for breaking changes
+- Add JSDoc for complex business logic
+- Include usage examples and test cases
+
+## Code Review Readiness
+- Write descriptive commit messages following conventional commits
+- Ensure all CI/CD checks pass before requesting review
+- Remove commented-out code and debug statements
+- Add screenshots for UI changes
+- Remove `console.log`, `console.warn` (keep `console.error` in catch blocks)
+
+## Accessibility & UX
+- Ensure proper ARIA labels for interactive elements
+- Maintain color contrast ratios above WCAG AA standards
+- Test keyboard navigation functionality
+- Add loading states for async operations
+- Implement proper error messages for user actions
+
+## Before Submitting PR Checklist
+1. Run linting and fix all issues
+2. Test edge cases and error scenarios
+3. Verify translation support is added
+4. Check subscription cleanup
+5. Remove debug code and logs
+6. Ensure naming conventions are followed
+7. Verify all tests pass with minimum 80% coverage
+8. Update documentation as needed
+
+## Reminder Instructions
+Before generating any code:
+1. Review these checklist items and ensure compliance
+2. Ask clarifying questions if requirements are unclear
+3. Suggest improvements that align with these standards
+4. Flag potential issues that might fail PR review
+5. Recommend additional tests or documentation needed
+
+When reviewing existing code:
+- Identify violations of these standards
+- Suggest specific improvements with examples
+- Prioritize security and performance issues
+- Check for missing tests or documentation gaps

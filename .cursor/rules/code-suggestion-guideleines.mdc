@@ -1,0 +1,62 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+type: always
+description: "Core development principles and error handling approach"
+---
+
+## Core Principles
+- Do not use any non-recommended methods such as flags like `--force`
+- Use web search if any information is needed
+- You can use the terminal to execute all necessary commands
+- Once setup/required changes are completed, run the project to ensure it works without any errors
+- If any errors occur, do not rush to fix — instead, evaluate 4-5 efficient solutions with pros and cons, and proceed with the one that is least likely to introduce new problems
+
+## Problem-Solving Approach
+When encountering errors:
+1. Analyze the error thoroughly
+2. Research 4-5 potential solutions
+3. Evaluate pros and cons of each approach
+4. Choose the solution least likely to introduce new problems
+5. Implement with proper testing
+
+### 🛠️ **Execution Plan:**
+1. **Split the requirement into atomic tasks**
+   Break the full functionality into achievable, self-contained steps.
+2. **Use only Cursor-supported Puppeteer MCP tools for testing**
+   Do not use standalone JavaScript or Shell scripts. Use the available inspection, navigation, assertion, and DOM interaction features.
+3. **Track Progress in a `.md` File**
+   * Before starting, write down the requirement, plan, chunk-wise progress and test-cases into a single `.md` file.
+   * For each completed chunk:
+     * checklist that item in the `.md` file
+     * Mark it as complete once validated
+     * Include context or outcome if needed (e.g., if a task was skipped or failed) with reason for the same.
+   * After completing the task, update the `.md` file with the current progress.
+   * Task Structure Example:
+    ```md
+    # Form Builder Validation Tasks
+    - [x] Add reactive form control binding on component drop
+    - [x] Validate that `label` field is required for text/long-text
+    - [ ] Highlight invalid component in canvas with red border
+    - [ ] Show validation error in @component-properties panel
+    - [ ] Disable Save/Publish if form invalid
+    - [ ] Implement Cancel to revert to initial form data
+    - [ ] Verify isolation of validation (other components not affected)
+    ```
+4. **Resume Support**
+   Ensure the Markdown file reflects the current progress so the session can be resumed seamlessly from any stage in another chat.
+5. **Following instructions**
+  Take intiative in choosing the best option and fixing it and proceed step by step without reconfirming.
+  
+### Using Tools:
+- When prompted to use tools or MCP, use the respective tools (not `.js` or `.sh` scripts) available via Cursor for testing this application.
+
+Notes to remember:
+- Cover all basic and important functionalities and edge-cases.
+- After every change, test first using Puppetter MCP and proceed with the next change only if the test passes, otherwise identify the issue and fix it and then test again till the test passes.
+- Testing a functionality should not affect other functionalities.
+- Please perform end-to-end task completion without any confirmation, take the initiatives and best approach yourself.
+- Please use the available tools (DOM inspector, binding tools, logic evaluators) to validate behavior at each step.

@@ -1,6 +1,12 @@
-// routes/orders.js
-router.get('/', async (req, res) => {
-  const tenantId = req.tenantId; // from subdomain
-  const orders = await Order.find({ tenantId });
-  res.json(orders);
+const mongoose = require('mongoose');
+
+const orderSchema = new mongoose.Schema({
+  tenantId: { type: String, required: true, index: true },
+  // Add other order fields as needed, e.g.:
+  product: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  price: { type: Number, required: true },
+  createdAt: { type: Date, default: Date.now },
 });
+
+module.exports = mongoose.model('Order', orderSchema);

@@ -1,0 +1,52 @@
+---
+description: 
+globs: **/*.component.ts,**/*.service.ts
+alwaysApply: false
+---
+---
+type: auto_attached
+patterns: ["**/*.component.ts", "**/*.service.ts", "**/*.module.ts", "**/*.directive.ts", "**/*.pipe.ts"]
+description: "Angular framework specific standards and best practices"
+---
+
+# Angular Framework Standards
+
+## Component Architecture
+- Use functional components with dependency injection
+- Keep constructor parameters with same key-value naming: `private loggerService: LoggerService`
+- Use `private` instead of `public` appropriately, avoid unnecessary `protected`
+- Each component must have main container class matching filename
+
+## Lifecycle Management
+- Always unsubscribe in `ngOnDestroy` if using `subscribe()`
+- Import and implement `OnDestroy` interface when needed
+- Use `takeUntil(destroy$)` pattern for multiple subscriptions
+
+## Dependency Injection
+- Follow constructor parameter naming: `private userService: UserService`
+- Use appropriate access modifiers (`private`, `public`, `protected`)
+- Avoid circular dependencies
+
+## Observable Pattern
+```typescript
+// Always unsubscribe pattern
+private destroy$ = new Subject<void>();
+
+ngOnInit() {
+  this.dataService.getData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(data => {
+      // Handle data
+    });
+}
+
+ngOnDestroy() {
+  this.destroy$.next();
+  this.destroy$.complete();
+}
+```
+
+## Form Handling
+- Use reactive forms over template-driven forms
+- Implement proper form validation
+- Add translation support for form labels and error messages

@@ -12,6 +12,8 @@ app.get('/', (req, res) => {
   res.send('Basic Express server with tenant detection is running. Tenant ID: ' + req.tenantId);
 });
 
+app.use('/api/tenants', require('./src/routes/tenant.routes'));
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
