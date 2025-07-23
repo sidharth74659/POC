@@ -1,32 +1,33 @@
-const Cloudflare = require('cloudflare');
 const axios = require('axios');
 
-const cf = new Cloudflare({
-    token: process.env.CLOUDFLARE_API_TOKEN,
-});
-
 // Helper: Fetch Zone ID for your domain
-async function getZoneId(domain) {
-    const zones = await cf.zones.list();
-    const zone = zones.result.find(z => z.name === domain);
+async function getZoneId(domain, apiToken) {
+    const response = await axios.get('https://api.cloudflare.com/client/v4/zones', {
+        headers: { Authorization: `Bearer ${apiToken}` }
+    });
+    const zone = response.data.result.find(z => z.name === domain);
     if (!zone) throw new Error('Zone not found');
     return zone.id;
 }
 
 // Function to create subdomain dynamically
 async function createSubdomain(tenantSubdomain) {
-    const zoneId = await getZoneId('hubnest.live'); // Get your zone ID
+    const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+    const domain = 'hubnest.live';
+    const zoneId = await getZoneId(domain, apiToken);
 
     const record = {
         type: 'CNAME',
         name: tenantSubdomain, // e.g., "tenant2"
-        content: 'hubnest.live', // Points to root domain
+        content: domain, // Points to root domain
         proxied: true, // Enable Cloudflare proxy (for SSL)
         ttl: 1, // Auto TTL
     };
 
-    await cf.dnsRecords.add(zoneId, record);
-    console.log(`Subdomain ${tenantSubdomain}.hubnest.live created!`);
+    await axios.post(`https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`, record, {
+        headers: { Authorization: `Bearer ${apiToken}` }
+    });
+    console.info(`Subdomain ${tenantSubdomain}.hubnest.live created!`);
 }
 
 module.exports = { createSubdomain }; 

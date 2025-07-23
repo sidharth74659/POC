@@ -1,9 +1,23 @@
 // middlewares/tenantExtractor.js
-module.exports = function tenantExtractor(req, res, next) {
-  const host = req.headers.host; // e.g., tenant1.example.com:3000
-  const subdomain = host.split('.')[0]; // crude, assumes 1-level subdomain
+const Tenant = require('../models/Tenant');
+
+module.exports = async function tenantExtractor(req, res, next) {
+  const host = req.headers.host;
+  const subdomain = host.split('.')[0];
   if (!subdomain) return res.status(400).json({ message: 'Invalid tenant' });
 
-  req.tenantId = subdomain; // attach to request
+  req.tenantId = subdomain;
+  try {
+    const tenant = await Tenant.findOne({ subdomain });
+    if (!tenant) {
+      req.tenantNotFound = true;
+    } else {
+      req.tenant = tenant;
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'Error checking tenant', error: err.message });
+  }
   next();
 };

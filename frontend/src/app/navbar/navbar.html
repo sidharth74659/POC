@@ -1,6 +1,0 @@
-<nav>
-  <a *ngIf="hasRole('admin')" routerLink="/admin">Admin Panel</a>
-  <a *ngIf="hasRole('agent')" routerLink="/orders">Orders</a>
-</nav>
-
-<p *ngIf="roles.length === 0">No roles assigned. Please contact your administrator for access.</p>
