@@ -43,6 +43,7 @@ For this project, to test the frontend, visit `hubnest.live` and check if the fr
 - To check multiple tenants, visit `tenanta.hubnest.live`, `tenantb.hubnest.live`, etc.
 - use a subdomain that doesn't exist yet to test the tenant registration and login.
 - When testing backend APIs, always test using `hubnest.live` domain, never with `localhost:3000` for this project, and for testing tenancy, you can change subdomains appropriately (e.g. `testtenanta.hubnest.live`, `testtenant2.hubnest.live`, etc.).
+- Do not use `localhost:3000` for testing the backend APIs or frontend.
 
 - Existing tenants are:
   - `tenantb.hubnest.live`. credentials: `admin@tenantb.com`, `TestPass123!`

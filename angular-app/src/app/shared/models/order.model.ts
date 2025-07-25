@@ -1,7 +1,7 @@
 // Import types from shared schemas
 import type {
   TOrder,
-  TOrderItem,
+  TOrderDetails,
   TOrderStatus,
   TOrderCreateRequest,
   TOrderUpdateRequest,
@@ -14,7 +14,7 @@ import type {
 
 // Re-export shared types for use in Angular components
 export type IOrder = TOrder;
-export type IOrderItem = TOrderItem;
+export type IOrderDetails = TOrderDetails;
 export type OrderStatus = TOrderStatus;
 export type IOrderCreateRequest = TOrderCreateRequest;
 export type IOrderUpdateRequest = TOrderUpdateRequest;

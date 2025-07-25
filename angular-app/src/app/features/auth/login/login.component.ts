@@ -18,7 +18,7 @@ import { ILoginRequest } from '../../../shared/models/auth.model';
     <div class="login-container">
       <div class="login-card">
         <div class="login-header">
-          <h1 class="login-title">Sign In Now</h1>
+          <h1 class="login-title">Sign In</h1>
           <p class="login-subtitle">Access your account</p>
         </div>
 
@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(authState => {
       if (authState.isAuthenticated) {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/customers']);
       }
       
       if (authState.error) {

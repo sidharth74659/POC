@@ -11,41 +11,34 @@ export const OrderStatusSchema = z.enum([
   'refunded'
 ]);
 
-export const OrderItemSchema = z.object({
-  id: z.string(),
-  productId: z.string(),
-  productName: z.string().min(1, 'Product name is required'),
+export const OrderDetailsSchema = z.object({
+  product: z.string().min(1, 'Product is required'),
   quantity: z.number().positive('Quantity must be positive'),
-  unitPrice: z.number().positive('Unit price must be positive'),
-  totalPrice: z.number().positive('Total price must be positive'),
+  price: z.number().positive('Price must be positive'),
+  notes: z.string().optional(),
 });
 
 export const OrderSchema = z.object({
   id: z.string(),
-  orderNumber: z.string(),
-  customerId: z.string(),
-  customerName: z.string().min(1, 'Customer name is required'),
-  customerEmail: z.string().email('Valid email is required'),
-  items: z.array(OrderItemSchema),
-  status: OrderStatusSchema,
-  total: z.number().positive('Total must be positive'),
-  currency: z.string().default('USD'),
-  notes: z.string().optional(),
   tenantId: z.string(),
+  customerId: z.string(),
+  orderId: z.string(),
+  details: OrderDetailsSchema,
+  status: OrderStatusSchema,
   createdAt: z.date(),
   updatedAt: z.date(),
 });
 
 // Request schemas
 export const OrderCreateRequestSchema = z.object({
-  product: z.string().min(1, 'Product is required'),
-  quantity: z.number().positive('Quantity must be positive'),
-  price: z.number().positive('Price must be positive'),
+  customerId: z.string().min(1, 'Customer ID is required'),
+  orderId: z.string().min(1, 'Order ID is required'),
+  details: OrderDetailsSchema,
 });
 
 export const OrderUpdateRequestSchema = z.object({
   status: OrderStatusSchema.optional(),
-  notes: z.string().optional(),
+  details: OrderDetailsSchema.optional(),
 });
 
 export const OrderFiltersSchema = z.object({
@@ -57,12 +50,15 @@ export const OrderFiltersSchema = z.object({
 });
 
 // Response schemas
-export const OrderResponseSchema = z.object({
-  id: z.string(),
-  product: z.string(),
-  quantity: z.number(),
-  price: z.number(),
-  createdAt: z.date(),
+export const OrderResponseSchema = OrderSchema.pick({
+  id: true,
+  tenantId: true,
+  customerId: true,
+  orderId: true,
+  details: true,
+  status: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 export const OrdersResponseSchema = z.array(OrderResponseSchema);
@@ -84,7 +80,7 @@ export const OrdersApiResponseSchema = z.object({
 
 // Type exports
 export type TOrder = z.infer<typeof OrderSchema>;
-export type TOrderItem = z.infer<typeof OrderItemSchema>;
+export type TOrderDetails = z.infer<typeof OrderDetailsSchema>;
 export type TOrderStatus = z.infer<typeof OrderStatusSchema>;
 export type TOrderCreateRequest = z.infer<typeof OrderCreateRequestSchema>;
 export type TOrderUpdateRequest = z.infer<typeof OrderUpdateRequestSchema>;

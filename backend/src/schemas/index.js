@@ -37,7 +37,18 @@ const {
   OrdersResponseSchema,
   OrderApiResponseSchema,
   OrdersApiResponseSchema,
-} = require('../../../shared-schemas-zod/dist');
+
+  // Customer schemas
+  CustomerCreateRequestSchema,
+  CustomerUpdateRequestSchema,
+  CustomerIdParamSchema,
+  CustomerResponseSchema,
+  CustomersResponseSchema,
+  CustomerDeleteResponseSchema,
+  CustomerApiResponseSchema,
+  CustomersApiResponseSchema,
+  CustomerDeleteApiResponseSchema,
+} = require('../../../shared-schemas-zod/dist/index.js');
 
 module.exports = {
   // Auth schemas
@@ -77,4 +88,15 @@ module.exports = {
   OrdersResponseSchema,
   OrderApiResponseSchema,
   OrdersApiResponseSchema,
+
+  // Customer schemas
+  CustomerCreateRequestSchema,
+  CustomerUpdateRequestSchema,
+  CustomerIdParamSchema,
+  CustomerResponseSchema,
+  CustomersResponseSchema,
+  CustomerDeleteResponseSchema,
+  CustomerApiResponseSchema,
+  CustomersApiResponseSchema,
+  CustomerDeleteApiResponseSchema,
 };

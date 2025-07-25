@@ -22,14 +22,21 @@ import {
   TenantResponseSchema,
   // Order schemas
   OrderSchema,
-  OrderItemSchema,
+  OrderDetailsSchema,
   OrderStatusSchema,
   OrderCreateRequestSchema,
   OrderUpdateRequestSchema,
   OrderFiltersSchema,
   OrderResponseSchema,
-  OrdersResponseSchema
-} from '../../../../../shared-schemas-zod/dist';
+  OrdersResponseSchema,
+  // Customer schemas
+  CustomerSchema,
+  CustomerContactSchema,
+  CustomerCreateRequestSchema,
+  CustomerUpdateRequestSchema,
+  CustomerResponseSchema,
+  CustomersResponseSchema
+} from '../../../../../shared-schemas-zod/dist/index.js';
 
 @Injectable({
   providedIn: 'root'
@@ -59,13 +66,21 @@ export class SchemaService {
 
   // Order schemas
   readonly orderSchema = OrderSchema;
-  readonly orderItemSchema = OrderItemSchema;
+  readonly orderDetailsSchema = OrderDetailsSchema;
   readonly orderStatusSchema = OrderStatusSchema;
   readonly orderCreateRequestSchema = OrderCreateRequestSchema;
   readonly orderUpdateRequestSchema = OrderUpdateRequestSchema;
   readonly orderFiltersSchema = OrderFiltersSchema;
   readonly orderResponseSchema = OrderResponseSchema;
   readonly ordersResponseSchema = OrdersResponseSchema;
+
+  // Customer schemas
+  readonly customerSchema = CustomerSchema;
+  readonly customerContactSchema = CustomerContactSchema;
+  readonly customerCreateRequestSchema = CustomerCreateRequestSchema;
+  readonly customerUpdateRequestSchema = CustomerUpdateRequestSchema;
+  readonly customerResponseSchema = CustomerResponseSchema;
+  readonly customersResponseSchema = CustomersResponseSchema;
 
   /**
    * Validate data against a Zod schema

@@ -1,8 +1,10 @@
 {
-  "name": "shared-schemas",
+  "name": "shared-schemas-zod",
   "version": "1.0.0",
   "description": "Shared Zod schemas for multi-tenant SaaS application",
   "main": "index.js",
+  "module": "index.js",
+  "type": "module",
   "types": "index.d.ts",
   "scripts": {
     "build": "tsc",

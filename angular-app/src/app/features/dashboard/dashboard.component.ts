@@ -21,9 +21,9 @@ import { ButtonComponent } from '../../shared/components/button/button.component
       <main class="dashboard-content">
         <div class="dashboard-grid">
           <div class="dashboard-card">
-            <h3>Orders</h3>
-            <p>Manage your orders</p>
-            <app-button (clickEvent)="navigateToOrders()">View Orders</app-button>
+            <h3>Customers</h3>
+            <p>Manage your customers</p>
+            <app-button (clickEvent)="navigateToCustomers()">View Customers</app-button>
           </div>
           
           <div class="dashboard-card" *ngIf="isAdmin">
@@ -61,8 +61,8 @@ export class DashboardComponent {
     });
   }
 
-  navigateToOrders(): void {
-    this.router.navigate(['/orders']);
+  navigateToCustomers(): void {
+    this.router.navigate(['/customers']);
   }
 
   navigateToUsers(): void {

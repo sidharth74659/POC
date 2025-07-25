@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-const tenantExtractor = require('./src/middlewares/tenantExtractor');
+const { extractTenantId } = require('./src/middlewares/tenantExtractor');
 const auth = require('./src/middlewares/auth');
 const validateTenant = require('./src/middlewares/validateTenant');
 const User = require('./src/models/User');
@@ -12,7 +12,7 @@ const bcrypt = require('bcrypt');
 const app = express();
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(tenantExtractor);
+app.use(extractTenantId);
 
 // Public routes
 app.post('/api/auth/login', async (req, res) => {

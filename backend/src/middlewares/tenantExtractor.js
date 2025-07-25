@@ -1,7 +1,7 @@
 // middlewares/tenantExtractor.js
 const Tenant = require('../models/Tenant');
 
-module.exports = async function tenantExtractor(req, res, next) {
+async function extractTenantId(req, res, next) {
   const host = req.headers.host;
   const subdomain = host.split('.')[0];
   if (!subdomain) return res.status(400).json({ message: 'Invalid tenant' });
@@ -20,4 +20,8 @@ module.exports = async function tenantExtractor(req, res, next) {
       .json({ message: 'Error checking tenant', error: err.message });
   }
   next();
+}
+
+module.exports = {
+  extractTenantId,
 };

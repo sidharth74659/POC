@@ -1,0 +1,83 @@
+<div class="customer-detail-container">
+  <header class="customer-detail-header">
+    <div class="header-content">
+      <button class="back-button" (click)="goBack()" type="button">
+        ← Back to Customers
+      </button>
+      <h1>Customer Details</h1>
+    </div>
+    <div class="header-actions">
+      <span class="user-info">Welcome, {{ currentUser?.email }}</span>
+      <app-button variant="ghost" (clickEvent)="logout()">Logout</app-button>
+    </div>
+  </header>
+  
+  <main class="customer-detail-content">
+    <div class="customer-info-section" *ngIf="customer; else loading">
+      <div class="customer-card">
+        <h2>{{ customer.name }}</h2>
+        <div class="customer-details">
+          <p><strong>Customer ID:</strong> {{ customer.customerId }}</p>
+          <p><strong>Email:</strong> {{ customer.contact.email }}</p>
+          <p *ngIf="customer.contact.phone"><strong>Phone:</strong> {{ customer.contact.phone }}</p>
+          <div *ngIf="customer.contact.address" class="address-section">
+            <h3>Address</h3>
+            <p *ngIf="customer.contact.address.street">{{ customer.contact.address.street }}</p>
+            <p *ngIf="customer.contact.address.city || customer.contact.address.state || customer.contact.address.zipCode">
+              {{ customer.contact.address.city }}{{ customer.contact.address.city && customer.contact.address.state ? ', ' : '' }}
+              {{ customer.contact.address.state }} {{ customer.contact.address.zipCode }}
+            </p>
+            <p *ngIf="customer.contact.address.country">{{ customer.contact.address.country }}</p>
+          </div>
+        </div>
+        <div class="customer-actions">
+          <app-button (clickEvent)="editCustomer()">Edit Customer</app-button>
+          <app-button variant="ghost" (clickEvent)="deleteCustomer()">Delete Customer</app-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="orders-section" *ngIf="customer">
+      <div class="orders-header">
+        <h2>Orders</h2>
+        <app-button (clickEvent)="createOrder()">Add Order</app-button>
+      </div>
+      
+      <div class="orders-list" *ngIf="!isLoadingOrders; else loadingOrders">
+        <div class="order-card" *ngFor="let order of orders" (click)="editOrder(order)" tabindex="0" (keyup.enter)="editOrder(order)">
+          <div class="order-header">
+            <h3>Order #{{ order.orderId }}</h3>
+            <span class="order-status" [class]="'status-' + order.status">{{ order.status }}</span>
+          </div>
+          <div class="order-details">
+            <p><strong>Product:</strong> {{ order.details.product }}</p>
+            <p><strong>Quantity:</strong> {{ order.details.quantity }}</p>
+            <p><strong>Price:</strong> ${{ order.details.price }}</p>
+            <p *ngIf="order.details.notes"><strong>Notes:</strong> {{ order.details.notes }}</p>
+          </div>
+          <div class="order-meta">
+            <p>Created: {{ order.createdAt | date:'short' }}</p>
+            <p>Updated: {{ order.updatedAt | date:'short' }}</p>
+          </div>
+        </div>
+        
+        <div class="empty-orders" *ngIf="orders.length === 0">
+          <p>No orders found for this customer.</p>
+          <app-button (clickEvent)="createOrder()">Create First Order</app-button>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #loading>
+      <div class="loading-state">
+        <p>Loading customer details...</p>
+      </div>
+    </ng-template>
+
+    <ng-template #loadingOrders>
+      <div class="loading-state">
+        <p>Loading orders...</p>
+      </div>
+    </ng-template>
+  </main>
+</div> 

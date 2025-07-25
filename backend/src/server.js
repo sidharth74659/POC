@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-const tenantExtractor = require('./middlewares/tenantExtractor');
+const { extractTenantId } = require('./middlewares/tenantExtractor');
 const auth = require('./middlewares/auth');
 const validateTenant = require('./middlewares/validateTenant');
 const path = require('path');
@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
 
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(tenantExtractor);
+app.use(extractTenantId);
 
 // Public API routes (must come BEFORE static/catch-all)
 app.use('/api/auth', require('./routes/auth.routes'));
@@ -47,6 +47,7 @@ app.use('/api/tenants', require('./routes/tenant.routes'));
 // Authenticated API routes
 app.use(auth);
 app.use(validateTenant);
+app.use('/api/customers', require('./routes/customer.routes'));
 app.use('/api/orders', require('./routes/order.routes'));
 
 // Common error handling middleware

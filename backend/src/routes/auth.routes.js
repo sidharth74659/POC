@@ -10,7 +10,7 @@ const {
   LoginResponseSchema,
   LogoutResponseSchema,
   MeResponseSchema,
-} = require('../schemas');
+} = require('../schemas/index.js');
 
 router.post('/users', auth, authorizeRoles('admin'), async (req, res) => {
   // Create user in this tenant
