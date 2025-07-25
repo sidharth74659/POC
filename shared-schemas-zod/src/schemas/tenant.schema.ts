@@ -62,6 +62,8 @@ export const TenantResponseSchema = TenantSchema.pick({
   updatedAt: true,
 });
 
+export const TenantsResponseSchema = z.array(TenantResponseSchema);
+
 export const TenantCreateResponseSchema = z.object({
   message: z.string(),
 });
@@ -92,14 +94,23 @@ export const TenantCheckApiResponseSchema = z.object({
   message: z.string().optional(),
 });
 
+export const TenantsApiResponseSchema = z.object({
+  success: z.boolean(),
+  data: TenantsResponseSchema.optional(),
+  error: z.string().optional(),
+  message: z.string().optional(),
+});
+
 // Type exports
 export type TTenant = z.infer<typeof TenantSchema>;
 export type TTenantSettings = z.infer<typeof TenantSettingsSchema>;
 export type TTenantCreateRequest = z.infer<typeof TenantCreateRequestSchema>;
 export type TTenantUpdateRequest = z.infer<typeof TenantUpdateRequestSchema>;
 export type TTenantResponse = z.infer<typeof TenantResponseSchema>;
+export type TTenantsResponse = z.infer<typeof TenantsResponseSchema>;
 export type TTenantCreateResponse = z.infer<typeof TenantCreateResponseSchema>;
 export type TTenantCheckResponse = z.infer<typeof TenantCheckResponseSchema>;
 export type TTenantApiResponse = z.infer<typeof TenantApiResponseSchema>;
+export type TTenantsApiResponse = z.infer<typeof TenantsApiResponseSchema>;
 export type TTenantCreateApiResponse = z.infer<typeof TenantCreateApiResponseSchema>;
 export type TTenantCheckApiResponse = z.infer<typeof TenantCheckApiResponseSchema>; 

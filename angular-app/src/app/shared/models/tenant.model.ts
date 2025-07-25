@@ -1,56 +1,25 @@
-export interface ITenant {
-  id: string;
-  name: string;
-  subdomain: string;
-  domain: string;
-  isActive: boolean;
-  settings: ITenantSettings;
-  createdAt: Date;
-  updatedAt: Date;
-}
+// Import types from shared schemas
+import type {
+  TTenant,
+  TTenantSettings,
+  TTenantCreateRequest,
+  TTenantUpdateRequest,
+  TTenantResponse,
+  TTenantsResponse,
+  TTenantApiResponse,
+  TTenantsApiResponse,
+  TTenantCreateApiResponse,
+  TTenantCheckApiResponse
+} from '../../../../../shared-schemas-zod/dist';
 
-export interface ITenantSettings {
-  theme: {
-    primaryColor: string;
-    secondaryColor: string;
-    logo?: string;
-  };
-  features: {
-    analytics: boolean;
-    reporting: boolean;
-    integrations: boolean;
-  };
-  limits: {
-    maxUsers: number;
-    maxOrders: number;
-    maxStorage: number;
-  };
-}
-
-export interface ITenantCreateRequest {
-  name: string;
-  subdomain: string;
-  adminEmail: string;
-  adminPassword: string;
-  settings?: Partial<ITenantSettings>;
-}
-
-export interface ITenantUpdateRequest {
-  name?: string;
-  isActive?: boolean;
-  settings?: Partial<ITenantSettings>;
-}
-
-export interface ITenantResponse {
-  success: boolean;
-  data?: ITenant;
-  error?: string;
-  message?: string;
-}
-
-export interface ITenantsResponse {
-  success: boolean;
-  data?: ITenant[];
-  error?: string;
-  message?: string;
-} 
+// Re-export shared types for use in Angular components
+export type ITenant = TTenant;
+export type ITenantSettings = TTenantSettings;
+export type ITenantCreateRequest = TTenantCreateRequest;
+export type ITenantUpdateRequest = TTenantUpdateRequest;
+export type ITenantResponse = TTenantResponse;
+export type ITenantsResponse = TTenantsResponse;
+export type ITenantApiResponse = TTenantApiResponse;
+export type ITenantsApiResponse = TTenantsApiResponse;
+export type ITenantCreateApiResponse = TTenantCreateApiResponse;
+export type ITenantCheckApiResponse = TTenantCheckApiResponse; 

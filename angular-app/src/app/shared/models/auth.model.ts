@@ -1,54 +1,26 @@
-// Local type definitions for shared schemas
-export interface ILoginRequest {
-  email: string;
-  password: string;
-}
+// Import types from shared schemas
+import type {
+  TLoginRequest,
+  TLoginResponse,
+  TLogoutRequest,
+  TLogoutResponse,
+  TMeResponse,
+  TUser,
+  TUserRoles,
+  TLoginApiResponse,
+  TMeApiResponse
+} from '../../../../../shared-schemas-zod/dist';
 
-export interface ILoginResponse {
-  token: string;
-  user: IUser;
-}
-
-export interface ILogoutRequest {
-  // Empty interface for logout request
-}
-
-export interface ILogoutResponse {
-  message: string;
-}
-
-export interface IMeResponse {
-  user: IUser;
-}
-
-export interface IUser {
-  id: string;
-  email: string;
-  roles: string[];
-  tenantId: string;
-  firstName?: string;
-  lastName?: string;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export type IUserRoles = 'admin' | 'agent' | 'customer';
-
-// API Response wrapper interfaces
-export interface ILoginApiResponse {
-  success: boolean;
-  data?: ILoginResponse;
-  error?: string;
-  message?: string;
-}
-
-export interface IMeApiResponse {
-  success: boolean;
-  data?: IMeResponse;
-  error?: string;
-  message?: string;
-}
+// Re-export shared types for use in Angular components
+export type ILoginRequest = TLoginRequest;
+export type ILoginResponse = TLoginResponse;
+export type ILogoutRequest = TLogoutRequest;
+export type ILogoutResponse = TLogoutResponse;
+export type IMeResponse = TMeResponse;
+export type IUser = TUser;
+export type IUserRoles = TUserRoles;
+export type ILoginApiResponse = TLoginApiResponse;
+export type IMeApiResponse = TMeApiResponse;
 
 // Legacy interface for backward compatibility
 export interface IAuthState {

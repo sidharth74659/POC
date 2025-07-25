@@ -1,6 +1,9 @@
+const subdomain = window.location.hostname.split('.')[0];
+const apiBaseUrl = `https://${subdomain}.hubnest.live/api`;
+
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://hubnest.live/api',
+  apiBaseUrl: apiBaseUrl,
   appName: 'Multi-Tenant SaaS',
   version: '1.0.0',
   defaultTenant: 'tenantb',

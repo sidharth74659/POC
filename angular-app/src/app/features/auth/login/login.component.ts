@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { SchemaService } from '../../../shared/services/schema.service';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { ILoginRequest } from '../../../shared/models/auth.model';
@@ -17,7 +18,7 @@ import { ILoginRequest } from '../../../shared/models/auth.model';
     <div class="login-container">
       <div class="login-card">
         <div class="login-header">
-          <h1 class="login-title">Sign In</h1>
+          <h1 class="login-title">Sign In Now</h1>
           <p class="login-subtitle">Access your account</p>
         </div>
 
@@ -78,6 +79,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private schemaService = inject(SchemaService);
   private router = inject(Router);
 
   constructor(
@@ -115,6 +117,14 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.errorMessage = '';
 
       const credentials: ILoginRequest = this.loginForm.value;
+
+      // Validate form data using shared schema
+      const validation = this.schemaService.validateForm(this.schemaService.loginRequestSchema, credentials);
+      if (!validation.isValid) {
+        this.errorMessage = 'Please check your input and try again';
+        this.isLoading = false;
+        return;
+      }
 
       this.authService.login(credentials).subscribe({
         next: () => {

@@ -10,6 +10,7 @@ import {
   IUser, 
   IMeResponse
 } from '../../shared/models/auth.model';
+import { SchemaService } from '../../shared/services/schema.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,7 @@ export class AuthService {
   public authState$ = this.authStateSubject.asObservable();
 
   private http = inject(HttpClient);
+  private schemaService = inject(SchemaService);
 
   constructor() {
     this.initializeAuth();
@@ -52,8 +54,26 @@ export class AuthService {
   login(credentials: ILoginRequest): Observable<ILoginResponse> {
     this.updateAuthState({ ...this.getCurrentState(), isLoading: true, error: null });
 
+    // Validate request data using shared schema
+    const validation = this.schemaService.safeValidate(this.schemaService.loginRequestSchema, credentials);
+    if (!validation.success) {
+      const error = new Error('Invalid login data');
+      this.updateAuthState({
+        ...this.getCurrentState(),
+        isLoading: false,
+        error: 'Invalid login data'
+      });
+      return throwError(() => error);
+    }
+
     return this.http.post<ILoginResponse>(`${this.API_URL}/login`, credentials).pipe(
       tap(response => {
+        // Validate response using shared schema
+        const responseValidation = this.schemaService.safeValidate(this.schemaService.loginResponseSchema, response);
+        if (!responseValidation.success) {
+          console.warn('Invalid login response format:', responseValidation.error);
+        }
+        
         const { token, user } = response;
         localStorage.setItem(this.TOKEN_KEY, token);
         this.updateAuthState({
@@ -100,6 +120,12 @@ export class AuthService {
 
     this.http.get<IMeResponse>(`${this.API_URL}/me`).pipe(
       map(response => {
+        // Validate response using shared schema
+        const responseValidation = this.schemaService.safeValidate(this.schemaService.meResponseSchema, response);
+        if (!responseValidation.success) {
+          console.warn('Invalid me response format:', responseValidation.error);
+        }
+        
         this.updateAuthState({
           user: response.user,
           token,
