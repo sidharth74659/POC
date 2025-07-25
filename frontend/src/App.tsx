@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { TenantRegistration } from './components/auth/TenantRegistration';
 import { LoginForm } from './components/auth/LoginForm';
 import { Dashboard } from './components/dashboard/Dashboard';
@@ -9,48 +10,80 @@ import { Tenant } from './types';
 
 function App() {
   const { user, loading: authLoading } = useAuth();
-  const [currentView, setCurrentView] = useState<'registration' | 'login' | 'dashboard'>('registration');
   const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
   const [appLoading, setAppLoading] = useState(true);
+  const [forceUpdate, setForceUpdate] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Force re-render when user changes
+  useEffect(() => {
+    console.log('[App] User received from useAuth:', { user, hasUser: !!user });
+    setForceUpdate(prev => prev + 1);
+  }, [user]);
+
+  // Manual navigation check - if user is set but we're still on login, force navigation
+  useEffect(() => {
+    if (user && location.pathname === '/login' && !authLoading) {
+      console.log('[App] MANUAL NAVIGATION: User is set but still on login, forcing navigation to /orders');
+      navigate('/orders', { replace: true });
+    }
+  }, [user, location.pathname, authLoading, navigate]);
 
   useEffect(() => {
+    console.log('[App] useEffect triggered', { user, authLoading, location: location.pathname, forceUpdate });
     if (!authLoading) {
       if (user) {
-        setCurrentView('dashboard');
+        // User is authenticated, navigate to orders if not already there
+        console.log('[App] User is authenticated, checking if should navigate to orders');
+        if (location.pathname !== '/orders') {
+          console.log('[App] Navigating to /orders');
+          navigate('/orders', { replace: true });
+        } else {
+          console.log('[App] Already on /orders, no navigation needed');
+        }
       } else {
-        // Check if we're on a tenant subdomain (in a real app, this would be determined by URL)
+        // User is not authenticated, check tenant status and navigate accordingly
+        console.log('[App] User is not authenticated, checking tenant status');
         checkTenantStatus();
       }
       setAppLoading(false);
     }
-  }, [user, authLoading]);
+    // eslint-disable-next-line
+  }, [user, authLoading, location.pathname, navigate, forceUpdate]);
+
+  // Debug useEffect to track user changes
+  useEffect(() => {
+    console.log('[App] User state changed:', { user, hasUser: !!user });
+  }, [user]);
 
   const checkTenantStatus = async () => {
-    // In a real application, you would extract the subdomain from the URL
-    // For demo purposes, we'll simulate this
-    const demoSubdomain = 'acme-corp';
-    
+    const host = window.location.host;
+    const parts = host.split('.');
+    let subdomain = '';
+    if (parts.length > 2) {
+      subdomain = parts[0];
+    }
+    if (!subdomain) {
+      navigate('/register', { replace: true });
+      return;
+    }
     try {
-      const response = await TenantController.getTenantBySubdomain(demoSubdomain);
+      const response = await TenantController.getTenantBySubdomain(subdomain);
       if (response.success && response.data) {
         setCurrentTenant(response.data);
-        setCurrentView('login');
+        navigate('/login', { replace: true });
       } else {
-        setCurrentView('registration');
+        navigate('/register', { replace: true });
       }
-    } catch (error) {
-      setCurrentView('registration');
+    } catch {
+      navigate('/register', { replace: true });
     }
   };
 
   const handleRegistrationComplete = (tenant: Tenant) => {
     setCurrentTenant(tenant);
-    setCurrentView('login');
-  };
-
-  const handleBackToRegistration = () => {
-    setCurrentTenant(null);
-    setCurrentView('registration');
+    navigate('/login', { replace: true });
   };
 
   if (authLoading || appLoading) {
@@ -61,21 +94,14 @@ function App() {
     );
   }
 
-  if (currentView === 'dashboard' && user) {
-    return <Dashboard />;
-  }
-
-  if (currentView === 'login') {
-    return (
-      <LoginForm
-        tenantId={currentTenant?.id}
-        tenantName={currentTenant?.name}
-        onBackToRegistration={handleBackToRegistration}
-      />
-    );
-  }
-
-  return <TenantRegistration onRegistrationComplete={handleRegistrationComplete} />;
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginForm tenantName={currentTenant?.name} />} />
+      <Route path="/register" element={<TenantRegistration onRegistrationComplete={handleRegistrationComplete} />} />
+      <Route path="/orders" element={user ? <Dashboard /> : <Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to={user ? '/orders' : '/login'} replace />} />
+    </Routes>
+  );
 }
 
 export default App;

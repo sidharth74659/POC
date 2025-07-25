@@ -4,9 +4,11 @@ import { Input } from '../ui/Input';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
 import { TenantController } from '../../api/controllers/tenantController';
 import { Building2, CheckCircle } from 'lucide-react';
+import { Tenant } from '../../types';
+import { useNavigate } from 'react-router-dom';
 
 interface TenantRegistrationProps {
-  onRegistrationComplete: (tenant: any) => void;
+  onRegistrationComplete: (tenant: Tenant) => void;
 }
 
 export function TenantRegistration({ onRegistrationComplete }: TenantRegistrationProps) {
@@ -22,11 +24,21 @@ export function TenantRegistration({ onRegistrationComplete }: TenantRegistratio
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    // Pre-fill subdomain if present in URL
+    const host = window.location.host;
+    const parts = host.split('.');
+    if (parts.length > 2) {
+      const subdomain = parts[0];
+      setFormData(prev => ({ ...prev, subdomain }));
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
@@ -35,54 +47,43 @@ export function TenantRegistration({ onRegistrationComplete }: TenantRegistratio
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
     if (!formData.tenantName.trim()) {
       newErrors.tenantName = 'Company name is required';
     }
-
     if (!formData.subdomain.trim()) {
       newErrors.subdomain = 'Subdomain is required';
     } else if (!/^[a-z0-9-]+$/.test(formData.subdomain)) {
       newErrors.subdomain = 'Subdomain can only contain lowercase letters, numbers, and hyphens';
     }
-
     if (!formData.adminEmail.trim()) {
       newErrors.adminEmail = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.adminEmail)) {
       newErrors.adminEmail = 'Invalid email format';
     }
-
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
     }
-
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
-
     if (!formData.firstName.trim()) {
       newErrors.firstName = 'First name is required';
     }
-
     if (!formData.lastName.trim()) {
       newErrors.lastName = 'Last name is required';
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!validateForm()) {
       return;
     }
-
     setLoading(true);
-    
     try {
       const response = await TenantController.registerTenant({
         tenantName: formData.tenantName,
@@ -92,7 +93,6 @@ export function TenantRegistration({ onRegistrationComplete }: TenantRegistratio
         firstName: formData.firstName,
         lastName: formData.lastName
       });
-
       if (response.success) {
         setSuccess(true);
         setTimeout(() => {
@@ -101,7 +101,7 @@ export function TenantRegistration({ onRegistrationComplete }: TenantRegistratio
       } else {
         setErrors({ submit: response.error || 'Registration failed' });
       }
-    } catch (error) {
+    } catch {
       setErrors({ submit: 'An unexpected error occurred' });
     } finally {
       setLoading(false);
@@ -228,9 +228,13 @@ export function TenantRegistration({ onRegistrationComplete }: TenantRegistratio
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{' '}
-            <a href="#" className="text-blue-600 hover:text-blue-500 font-medium">
+            <button
+              type="button"
+              onClick={() => navigate('/login')}
+              className="text-blue-600 hover:text-blue-500 font-medium"
+            >
               Sign in
-            </a>
+            </button>
           </p>
         </div>
       </div>

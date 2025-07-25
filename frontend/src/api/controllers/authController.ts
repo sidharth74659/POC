@@ -1,75 +1,42 @@
-import { AuthMiddleware } from '../middleware/auth';
-import { ValidationMiddleware } from '../middleware/validation';
-import { MockDatabase } from '../data/mockDatabase';
-import { ApiResponse, User } from '../../types';
-import bcrypt from 'bcryptjs';
-
 export class AuthController {
-  static async login(email: string, password: string, tenantId?: string): Promise<ApiResponse<{ token: string; user: Omit<User, 'password'> }>> {
+  static async login(email: string, password: string) {
     try {
-      // Validate input
-      const emailErrors = ValidationMiddleware.validateEmail(email);
-      if (emailErrors.length > 0) {
-        return { success: false, error: emailErrors[0].message };
-      }
-      
-      if (!password) {
-        return { success: false, error: 'Password is required' };
-      }
-      
-      // Find user by email and tenant
-      let user: User | null = null;
-      
-      if (tenantId) {
-        user = await MockDatabase.getUserByEmail(email, tenantId);
-      } else {
-        // For admin login, check all tenants
-        const allUsers = Array.from((MockDatabase as any).users.values());
-        user = allUsers.find((u: User) => u.email === email && u.isActive) || null;
-      }
-      
-      if (!user) {
-        return { success: false, error: 'Invalid credentials' };
-      }
-      
-      // Verify password
-      if (!user.password || !await bcrypt.compare(password, user.password)) {
-        return { success: false, error: 'Invalid credentials' };
-      }
-      
-      // Generate token
-      const token = AuthMiddleware.generateToken(user);
-      
-      return {
-        success: true,
-        data: {
-          token,
-          user: { ...user, password: undefined }
-        }
-      };
-    } catch (error) {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) return { success: false, error: data.message || 'Login failed' };
+      return { success: true, data };
+    } catch {
       return { success: false, error: 'Login failed' };
     }
   }
-  
-  static async logout(token: string): Promise<ApiResponse> {
+
+  static async logout(token: string) {
     try {
-      AuthMiddleware.invalidateToken(token);
-      return { success: true, message: 'Logged out successfully' };
-    } catch (error) {
+      const res = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (!res.ok) return { success: false, error: 'Logout failed' };
+      return { success: true };
+    } catch {
       return { success: false, error: 'Logout failed' };
     }
   }
-  
-  static async validateSession(token: string): Promise<ApiResponse<Omit<User, 'password'>>> {
+
+  static async validateSession(token: string) {
     try {
-      const user = AuthMiddleware.validateToken(token);
-      if (!user) {
-        return { success: false, error: 'Invalid session' };
-      }
-      
-      return { success: true, data: user };
-    } catch (error) {
+      const res = await fetch('/api/auth/me', {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) return { success: false, error: data.message || 'Invalid session' };
+      return { success: true, data };
+    } catch {
       return { success: false, error: 'Session validation failed' };
     }
   }

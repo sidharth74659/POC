@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { flushSync } from 'react-dom';
 import { User } from '../types';
 import { AuthController } from '../api/controllers/authController';
 
@@ -25,7 +26,7 @@ export function useAuth() {
 
     const response = await AuthController.validateSession(token);
     if (response.success && response.data) {
-      setUser(response.data);
+      setUser(response.data.user);
     } else {
       localStorage.removeItem('auth_token');
       setToken(null);
@@ -33,17 +34,27 @@ export function useAuth() {
     setLoading(false);
   };
 
-  const login = async (email: string, password: string, tenantId?: string) => {
-    const response = await AuthController.login(email, password, tenantId);
-    
+  const login = async (email: string, password: string) => {
+    console.log('[useAuth] login called', { email, password });
+    const response = await AuthController.login(email, password);
+    console.log('[useAuth] AuthController.login response', response);
     if (response.success && response.data) {
       const { token: authToken, user: userData } = response.data;
+      console.log('[useAuth] Setting token and user', { authToken, userData });
       localStorage.setItem('auth_token', authToken);
-      setToken(authToken);
-      setUser(userData);
+      
+      // Force synchronous state updates
+      flushSync(() => {
+        setToken(authToken);
+        setUser(userData);
+      });
+      
+      console.log('[useAuth] About to setUser with:', userData);
+      console.log('[useAuth] setUser called, user should be updated');
+      console.log('[useAuth] Login success, user set', userData);
       return { success: true };
     }
-    
+    console.log('[useAuth] Login failed', response.error);
     return { success: false, error: response.error };
   };
 
@@ -55,6 +66,10 @@ export function useAuth() {
       setUser(null);
     }
   };
+
+  useEffect(() => {
+    console.log('[useAuth] user/token changed', { user, token });
+  }, [user, token]);
 
   return {
     user,

@@ -9,6 +9,19 @@ router.post('/', async (req, res) => {
   const { companyName, requestedSubdomain, adminEmail, adminPassword } =
     req.body;
 
+  // Subdomain validation (RFC 1123)
+  const subdomainPattern = /^(?!-)[a-z0-9-]{3,63}(?<!-)$/;
+
+  if (
+    !subdomainPattern.test(requestedSubdomain) ||
+    requestedSubdomain.includes('--')
+  ) {
+    return res.status(400).json({
+      message:
+        'Invalid subdomain format. Subdomain must be 3-63 chars, lowercase letters, numbers, hyphens, not start/end with hyphen, and no consecutive hyphens.',
+    });
+  }
+
   const exists = await Tenant.findOne({ subdomain: requestedSubdomain });
   if (exists) return res.status(409).json({ message: 'Subdomain taken' });
 
@@ -16,6 +29,8 @@ router.post('/', async (req, res) => {
     name: companyName,
     companyName,
     subdomain: requestedSubdomain,
+    // ? `dbUri` is not required, as we're doing Shared DB, Shared Collections By tenantId in each document, but not database-per-tenant pattern.
+    // it is not used in the current shared-DB approach, but keeping it here for future flexibility.
     dbUri: `mongodb://localhost/${requestedSubdomain}`,
   });
   const passwordHash = await bcrypt.hash(adminPassword, 10);

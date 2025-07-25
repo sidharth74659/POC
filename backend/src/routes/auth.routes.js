@@ -40,10 +40,16 @@ router.post('/logout', (req, res) => {
 });
 // Protected routes
 router.get('/me', auth, async (req, res) => {
-  // For user-specific queries:
   const user = await User.findOne({ _id: req.user.id, tenantId: req.tenantId });
   if (!user) return res.status(404).json({ message: 'Not found' });
-  res.json(user);
+  res.json({
+    user: {
+      id: user._id,
+      email: user.email,
+      roles: user.roles,
+      tenantId: user.tenantId,
+    },
+  });
 });
 
 module.exports = router;

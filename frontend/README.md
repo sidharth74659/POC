@@ -154,8 +154,8 @@ The application includes sample data for testing:
 
 To migrate to production:
 
-1. **Database**: Replace MockDatabase with real MongoDB
-2. **Authentication**: Implement real JWT with proper secrets
+1. **Database**: All data now comes from the real backend API (mock data deprecated)
+2. **Authentication**: Real JWT with backend validation
 3. **Cloudflare**: Add actual Cloudflare API integration
 4. **Monitoring**: Set up logging and monitoring systems
 5. **Security**: Configure SSL/TLS and security headers

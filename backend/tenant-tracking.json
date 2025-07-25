@@ -1,0 +1,13 @@
+{
+    "validTenants": [
+        "tenanta",
+        "tenantb"
+    ],
+    "invalidTenants": [
+        "tenanta",
+        "invalid!subdomain",
+        "-startdash",
+        "enddash-",
+        "double--dash"
+    ]
+}

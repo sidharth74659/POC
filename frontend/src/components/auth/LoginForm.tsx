@@ -3,14 +3,13 @@ import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Shield, Building2 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginFormProps {
-  tenantId?: string;
   tenantName?: string;
-  onBackToRegistration?: () => void;
 }
 
-export function LoginForm({ tenantId, tenantName, onBackToRegistration }: LoginFormProps) {
+export function LoginForm({ tenantName }: LoginFormProps) {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -18,11 +17,11 @@ export function LoginForm({ tenantId, tenantName, onBackToRegistration }: LoginF
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
     if (error) {
       setError('');
     }
@@ -32,14 +31,13 @@ export function LoginForm({ tenantId, tenantName, onBackToRegistration }: LoginF
     e.preventDefault();
     setLoading(true);
     setError('');
-
     try {
-      const result = await login(formData.email, formData.password, tenantId);
-      
+      const result = await login(formData.email, formData.password);
       if (!result.success) {
         setError(result.error || 'Login failed');
       }
-    } catch (err) {
+      // Navigation to /orders is now handled in App.tsx after user is set
+    } catch {
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -102,19 +100,18 @@ export function LoginForm({ tenantId, tenantName, onBackToRegistration }: LoginF
           </Button>
         </form>
 
-        {onBackToRegistration && (
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Need to create a new tenant?{' '}
-              <button
-                onClick={onBackToRegistration}
-                className="text-blue-600 hover:text-blue-500 font-medium"
-              >
-                Register here
-              </button>
-            </p>
-          </div>
-        )}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            Need to create a new tenant?{' '}
+            <button
+              type="button"
+              onClick={() => navigate('/register')}
+              className="text-blue-600 hover:text-blue-500 font-medium"
+            >
+              Register here
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );
