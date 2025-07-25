@@ -1,0 +1,21 @@
+{
+  "name": "shared-schemas",
+  "version": "1.0.0",
+  "description": "Shared Zod schemas for multi-tenant SaaS application",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "@types/node": "^20.0.0"
+  },
+  "peerDependencies": {
+    "zod": "^3.22.4"
+  }
+} 

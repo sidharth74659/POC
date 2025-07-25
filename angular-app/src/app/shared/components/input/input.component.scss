@@ -1,0 +1,171 @@
+@use '../../../../styles/design-tokens' as *;
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  
+  &--error {
+    .input {
+      border-color: $error-500;
+      
+      &:focus {
+        border-color: $error-600;
+        box-shadow: 0 0 0 3px rgba($error-500, 0.1);
+      }
+    }
+    
+    .input-label {
+      color: $error-700;
+    }
+  }
+  
+  &--disabled {
+    opacity: $disabled-opacity;
+    pointer-events: none;
+  }
+}
+
+.input-label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $secondary-700;
+  line-height: $line-height-tight;
+  
+  .required-indicator {
+    color: $error-500;
+    margin-left: $spacing-1;
+  }
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  font-family: $font-family-sans;
+  font-size: $font-size-base;
+  line-height: $line-height-normal;
+  color: $secondary-900;
+  background-color: $white;
+  border: $border-width-1 solid $secondary-300;
+  border-radius: $border-radius-base;
+  transition: all $transition-fast;
+  
+  &::placeholder {
+    color: $secondary-400;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-500;
+    box-shadow: 0 0 0 3px rgba($primary-500, 0.1);
+  }
+  
+  &:disabled {
+    background-color: $secondary-100;
+    color: $secondary-500;
+    cursor: $disabled-cursor;
+  }
+  
+  // Size variants
+  &--sm {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-sm;
+    min-height: 32px;
+  }
+  
+  &--md {
+    padding: $spacing-3 $spacing-4;
+    font-size: $font-size-base;
+    min-height: 40px;
+  }
+  
+  &--lg {
+    padding: $spacing-4 $spacing-5;
+    font-size: $font-size-lg;
+    min-height: 48px;
+  }
+  
+  // Error state
+  &--error {
+    border-color: $error-500;
+    
+    &:focus {
+      border-color: $error-600;
+      box-shadow: 0 0 0 3px rgba($error-500, 0.1);
+    }
+  }
+  
+  // Disabled state
+  &--disabled {
+    background-color: $secondary-100;
+    color: $secondary-500;
+    cursor: $disabled-cursor;
+  }
+}
+
+.password-toggle {
+  position: absolute;
+  right: $spacing-3;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.password-toggle-btn {
+  background: none;
+  border: none;
+  padding: $spacing-1;
+  cursor: pointer;
+  color: $secondary-400;
+  transition: color $transition-fast;
+  
+  &:hover {
+    color: $secondary-600;
+  }
+  
+  &:focus {
+    @include focus-ring;
+  }
+}
+
+.password-toggle-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  
+  &.icon-eye {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z' /%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z' /%3E%3C/svg%3E");
+  }
+  
+  &.icon-eye-off {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21' /%3E%3C/svg%3E");
+  }
+}
+
+.input-helper {
+  font-size: $font-size-sm;
+  color: $secondary-600;
+  line-height: $line-height-normal;
+}
+
+.input-error {
+  font-size: $font-size-sm;
+  color: $error-600;
+  line-height: $line-height-normal;
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
+  
+  &::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23dc2626'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' /%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}

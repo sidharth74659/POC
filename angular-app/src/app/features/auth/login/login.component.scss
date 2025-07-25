@@ -1,0 +1,122 @@
+@use '../../../../styles/design-tokens' as *;
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $primary-50 0%, $primary-100 100%);
+  padding: $spacing-4;
+}
+
+.login-card {
+  background: $white;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-xl;
+  padding: $spacing-8;
+  width: 100%;
+  max-width: 400px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: $spacing-8;
+}
+
+.login-title {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: $secondary-900;
+  margin-bottom: $spacing-2;
+}
+
+.login-subtitle {
+  font-size: $font-size-base;
+  color: $secondary-600;
+  margin: 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+  margin-bottom: $spacing-6;
+}
+
+.form-actions {
+  margin-top: $spacing-4;
+}
+
+.login-footer {
+  text-align: center;
+  padding-top: $spacing-6;
+  border-top: 1px solid $secondary-200;
+}
+
+.login-footer-text {
+  font-size: $font-size-sm;
+  color: $secondary-600;
+  margin: 0;
+}
+
+.login-footer-link {
+  color: $primary-600;
+  text-decoration: none;
+  font-weight: $font-weight-medium;
+  
+  &:hover {
+    color: $primary-700;
+    text-decoration: underline;
+  }
+}
+
+.error-message {
+  margin-top: $spacing-4;
+  padding: $spacing-3 $spacing-4;
+  background-color: $error-50;
+  border: 1px solid $error-200;
+  border-radius: $border-radius-base;
+  color: $error-700;
+  font-size: $font-size-sm;
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  
+  &::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23dc2626'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' /%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive design
+@include responsive(sm) {
+  .login-card {
+    padding: $spacing-10;
+  }
+}
+
+@include responsive(md) {
+  .login-container {
+    padding: $spacing-6;
+  }
+  
+  .login-card {
+    max-width: 450px;
+  }
+} 

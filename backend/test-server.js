@@ -8,7 +8,6 @@ const validateTenant = require('./src/middlewares/validateTenant');
 const User = require('./src/models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const path = require('path');
 
 const app = express();
 app.use(morgan('dev'));
@@ -55,12 +54,6 @@ app.use('/api/orders', require('./src/routes/order.routes'));
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'An error occurred', error: err.message });
-});
-
-// Serve Angular application (catch-all, must be last)
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 // DB connect & start
