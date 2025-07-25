@@ -1,6 +1,21 @@
-const mongoose = require('mongoose');
+import mongoose, { Document, Schema } from 'mongoose';
 
-const orderSchema = new mongoose.Schema({
+export interface IOrder extends Document {
+  tenantId: string;
+  customerId: string;
+  orderId: string;
+  details: {
+    product: string;
+    quantity: number;
+    price: number;
+    notes?: string;
+  };
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const orderSchema = new Schema<IOrder>({
   tenantId: { type: String, required: true, index: true },
   customerId: { type: String, required: true, index: true },
   orderId: { type: String, required: true },
@@ -37,4 +52,4 @@ orderSchema.pre('save', function(next) {
   next();
 });
 
-module.exports = mongoose.model('Order', orderSchema);
+export default mongoose.model<IOrder>('Order', orderSchema); 

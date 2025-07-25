@@ -1,7 +1,13 @@
-// models/User.js
-const mongoose = require('mongoose');
+import mongoose, { Document, Schema } from 'mongoose';
 
-const userSchema = new mongoose.Schema({
+export interface IUser extends Document {
+  tenantId: string;
+  email: string;
+  passwordHash: string;
+  roles: string[];
+}
+
+const userSchema = new Schema<IUser>({
   tenantId: {
     type: String,
     required: true,
@@ -20,4 +26,4 @@ const userSchema = new mongoose.Schema({
 
 userSchema.index({ tenantId: 1, email: 1 }, { unique: true });
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model<IUser>('User', userSchema); 

@@ -1,6 +1,26 @@
-const mongoose = require('mongoose');
+import mongoose, { Document, Schema } from 'mongoose';
 
-const customerSchema = new mongoose.Schema({
+export interface ICustomer extends Document {
+  tenantId: string;
+  customerId: string;
+  name: string;
+  contact: {
+    email: string;
+    phone?: string;
+    address?: {
+      street?: string;
+      city?: string;
+      state?: string;
+      zipCode?: string;
+      country?: string;
+    };
+  };
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const customerSchema = new Schema<ICustomer>({
   tenantId: {
     type: String,
     required: true,
@@ -58,4 +78,4 @@ customerSchema.pre('save', function (next) {
   next();
 });
 
-module.exports = mongoose.model('Customer', customerSchema);
+export default mongoose.model<ICustomer>('Customer', customerSchema); 
