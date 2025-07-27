@@ -80,4 +80,4 @@ router.get('/check', (req: TenantRequest, res: Response) => {
   res.json({ success: true, data: { tenant: req.tenant } });
 });
 
-export default router; 
+export default router;

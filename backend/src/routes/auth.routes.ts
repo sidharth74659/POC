@@ -4,8 +4,52 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import { authorizeRoles } from '../middlewares/roles';
 import auth from '../middlewares/auth';
+import { z } from 'zod';
 
 const router = express.Router();
+
+// Local schema definitions for now
+const LoginRequestSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+const LoginApiResponseSchema = z.object({
+  success: z.boolean(),
+  data: z
+    .object({
+      token: z.string(),
+      user: z.object({
+        id: z.string(),
+        email: z.string(),
+        roles: z.array(z.string()),
+        tenantId: z.string(),
+      }),
+    })
+    .optional(),
+  error: z.string().optional(),
+  message: z.string().optional(),
+});
+
+const MeApiResponseSchema = z.object({
+  success: z.boolean(),
+  data: z
+    .object({
+      user: z.object({
+        id: z.string(),
+        email: z.string(),
+        roles: z.array(z.string()),
+        tenantId: z.string(),
+      }),
+    })
+    .optional(),
+  error: z.string().optional(),
+  message: z.string().optional(),
+});
+
+type TLoginRequest = z.infer<typeof LoginRequestSchema>;
+type TLoginApiResponse = z.infer<typeof LoginApiResponseSchema>;
+type TMeApiResponse = z.infer<typeof MeApiResponseSchema>;
 
 interface AuthRequest extends Request {
   user?: {
@@ -17,52 +61,92 @@ interface AuthRequest extends Request {
 }
 
 // Create user in this tenant
-router.post('/users', auth, authorizeRoles('admin'), async (req: AuthRequest, res: Response) => {
-  // Create user in this tenant
-  res.status(501).json({ message: 'Not implemented' });
-});
+router.post(
+  '/users',
+  auth,
+  authorizeRoles('admin'),
+  async (req: AuthRequest, res: Response) => {
+    // Create user in this tenant
+    res.status(501).json({ message: 'Not implemented' });
+  },
+);
 
 // Login endpoint
 router.post('/login', async (req: AuthRequest, res: Response) => {
   try {
-    const { email, password } = req.body;
-    const tenantId = req.tenantId;
-    
-    if (!tenantId) {
-      return res.status(400).json({ message: 'Tenant not detected' });
+    // Validate request using schema
+    const validationResult = LoginRequestSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid request data',
+        message:
+          validationResult.error.issues[0]?.message || 'Validation failed',
+      });
     }
-    
+
+    const { email, password }: TLoginRequest = validationResult.data;
+    const tenantId = req.tenantId;
+
+    if (!tenantId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Tenant not detected',
+        message: 'Tenant not detected',
+      });
+    }
+
     const user = await User.findOne({ email, tenantId });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid credentials',
+        message: 'Invalid credentials',
+      });
     }
-    
+
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid credentials',
+        message: 'Invalid credentials',
+      });
     }
-    
+
     const token = jwt.sign(
       { userId: user._id, tenantId: user.tenantId, roles: user.roles },
       process.env.JWT_SECRET || '',
       { expiresIn: '1d' },
     );
-    
-    res.json({
+
+    const response: TLoginApiResponse = {
       success: true,
       data: {
         token,
         user: {
-          id: user._id,
+          id: String(user._id),
           email: user.email,
           roles: user.roles,
           tenantId: user.tenantId,
         },
       },
-    });
+    };
+
+    // Validate response using schema
+    const responseValidation = LoginApiResponseSchema.safeParse(response);
+    if (!responseValidation.success) {
+      console.warn('Invalid login response format:', responseValidation.error);
+    }
+
+    res.json(response);
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+      message: 'Internal server error',
+    });
   }
 });
 
@@ -76,33 +160,53 @@ router.post('/logout', (req: Request, res: Response) => {
 router.get('/me', auth, async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ message: 'Not authenticated' });
+      return res.status(401).json({
+        success: false,
+        error: 'Not authenticated',
+        message: 'Not authenticated',
+      });
     }
-    
+
     const user = await User.findOne({
       _id: req.user.id,
       tenantId: req.tenantId,
     });
-    
+
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({
+        success: false,
+        error: 'User not found',
+        message: 'User not found',
+      });
     }
-    
-    res.json({
+
+    const response: TMeApiResponse = {
       success: true,
       data: {
         user: {
-          id: user._id,
+          id: String(user._id),
           email: user.email,
           roles: user.roles,
           tenantId: user.tenantId,
         },
       },
-    });
+    };
+
+    // Validate response using schema
+    const responseValidation = MeApiResponseSchema.safeParse(response);
+    if (!responseValidation.success) {
+      console.warn('Invalid me response format:', responseValidation.error);
+    }
+
+    res.json(response);
   } catch (error) {
     console.error('Get user error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+      message: 'Internal server error',
+    });
   }
 });
 
-export default router; 
+export default router;

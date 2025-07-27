@@ -117,9 +117,4 @@ const validateResponse = (schema: ZodSchema) => {
   };
 };
 
-export {
-  validateBody,
-  validateParams,
-  validateQuery,
-  validateResponse,
-}; 
+export { validateBody, validateParams, validateQuery, validateResponse };

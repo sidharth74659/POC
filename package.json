@@ -1,0 +1,49 @@
+{
+  "name": "multi-tenant-saas",
+  "version": "1.0.0",
+  "description": "Multi-tenant SaaS application with Angular frontend and Node.js backend",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "angular-app"
+  ],
+  "scripts": {
+    "dev": "concurrently --kill-others --names \"backend,frontend\" --prefix-colors \"blue,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=angular-app",
+    "build": "npm run clean && npm run build:backend && npm run build:frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=angular-app",
+    "start": "concurrently --kill-others --names \"backend,frontend\" --prefix-colors \"blue,green\" \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "npm run start --workspace=backend",
+    "start:frontend": "npm run start --workspace=angular-app",
+    "clean": "npm run clean:backend && npm run clean:frontend",
+    "clean:backend": "npm run clean --workspace=backend",
+    "clean:frontend": "npm run clean --workspace=angular-app",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "npm run lint --workspace=backend",
+    "lint:frontend": "npm run lint --workspace=angular-app",
+    "lint:fix": "npm run lint:fix:backend && npm run lint:fix:frontend",
+    "lint:fix:backend": "npm run lint:fix --workspace=backend",
+    "lint:fix:frontend": "npm run lint:fix --workspace=angular-app",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "npm run test --workspace=backend",
+    "test:frontend": "npm run test --workspace=angular-app",
+    "type-check": "npm run type-check:backend && npm run type-check:frontend",
+    "type-check:backend": "npm run type-check --workspace=backend",
+    "type-check:frontend": "npm run type-check --workspace=angular-app",
+    "install:all": "npm install && npm install --workspace=backend && npm install --workspace=angular-app",
+    "setup": "npm run install:all && npm run build",
+    "reset": "npm run clean && npm run install:all && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "rimraf": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=20.19.0",
+    "npm": ">=10.0.0"
+  },
+  "packageManager": "npm@10.0.0"
+}

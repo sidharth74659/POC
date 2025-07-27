@@ -1,20 +1,20 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
 import { CustomerService } from '../../../core/services/customer.service';
 import { OrderService } from '../../../core/services/order.service';
-import { AuthService } from '../../../core/services/auth.service';
+import { ICustomer, ICustomerApiResponse } from '../../../shared/models/customer.model';
+import { IOrder, IOrdersApiResponse } from '../../../shared/models/order.model';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
-import { ICustomer, ICustomerResponse } from '../../../shared/models/customer.model';
-import { IOrder, IOrdersResponse } from '../../../shared/models/order.model';
 
 @Component({
   selector: 'app-customer-detail',
-  standalone: true,
-  imports: [CommonModule, ButtonComponent],
   templateUrl: './customer-detail.component.html',
-  styleUrls: ['./customer-detail.component.scss']
+  styleUrls: ['./customer-detail.component.scss'],
+  imports: [CommonModule, ButtonComponent],
+  standalone: true
 })
 export class CustomerDetailComponent implements OnInit, OnDestroy {
   private customerService = inject(CustomerService);
@@ -51,9 +51,13 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
     this.customerService.getCustomerById(customerId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: ICustomerResponse) => {
-          this.customer = response.data;
-          this.loadOrders();
+        next: (response: ICustomerApiResponse) => {
+          this.customer = response.data || null;
+          if (this.customer) {
+            this.loadOrders();
+          } else {
+            this.router.navigate(['/customers']);
+          }
         },
         error: (error: Error) => {
           console.error('Error loading customer:', error);
@@ -69,7 +73,7 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
     this.orderService.getOrdersByCustomer(this.customer.customerId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: IOrdersResponse) => {
+        next: (response: IOrdersApiResponse) => {
           this.orders = response.data || [];
           this.isLoadingOrders = false;
         },

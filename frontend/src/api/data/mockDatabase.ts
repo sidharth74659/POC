@@ -1,1 +1,0 @@
-// This file is now deprecated. All data is handled by the backend API.

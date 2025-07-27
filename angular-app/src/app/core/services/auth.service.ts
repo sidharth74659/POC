@@ -5,10 +5,11 @@ import { map, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { 
   ILoginRequest, 
-  ILoginResponse, 
+  ILoginApiResponse, 
   IAuthState, 
-  IUser, 
-  IMeResponse
+  IUserResponse, 
+  IMeApiResponse,
+  IUserRoles
 } from '../../shared/models/auth.model';
 import { SchemaService } from '../../shared/services/schema.service';
 
@@ -51,7 +52,7 @@ export class AuthService {
     }
   }
 
-  login(credentials: ILoginRequest): Observable<ILoginResponse> {
+  login(credentials: ILoginRequest): Observable<ILoginApiResponse> {
     this.updateAuthState({ ...this.getCurrentState(), isLoading: true, error: null });
 
     // Validate request data using shared schema
@@ -66,23 +67,33 @@ export class AuthService {
       return throwError(() => error);
     }
 
-    return this.http.post<ILoginResponse>(`${this.API_URL}/login`, credentials).pipe(
+    return this.http.post<ILoginApiResponse>(`${this.API_URL}/login`, credentials).pipe(
       tap(response => {
         // Validate response using shared schema
-        const responseValidation = this.schemaService.safeValidate(this.schemaService.loginResponseSchema, response);
+        const responseValidation = this.schemaService.safeValidate(this.schemaService.loginApiResponseSchema, response);
         if (!responseValidation.success) {
           console.warn('Invalid login response format:', responseValidation.error);
         }
         
-        const { token, user } = response;
-        localStorage.setItem(this.TOKEN_KEY, token);
-        this.updateAuthState({
-          user,
-          token,
-          isAuthenticated: true,
-          isLoading: false,
-          error: null
-        });
+        // Handle the wrapped response structure
+        if (response.success && response.data) {
+          const { token, user } = response.data;
+          
+          if (!token || !user) {
+            throw new Error('Invalid login response: missing token or user data');
+          }
+          
+          localStorage.setItem(this.TOKEN_KEY, token);
+          this.updateAuthState({
+            user,
+            token,
+            isAuthenticated: true,
+            isLoading: false,
+            error: null
+          });
+        } else {
+          throw new Error('Login failed: invalid response');
+        }
       }),
       catchError(error => {
         this.updateAuthState({
@@ -118,23 +129,31 @@ export class AuthService {
   validateSession(token: string): void {
     this.updateAuthState({ ...this.getCurrentState(), isLoading: true });
 
-    this.http.get<IMeResponse>(`${this.API_URL}/me`).pipe(
+    this.http.get<IMeApiResponse>(`${this.API_URL}/me`).pipe(
       map(response => {
+        // Handle the wrapped response structure
+        const user = response.data?.user;
+        
+        if (!user) {
+          throw new Error('Invalid user data in response');
+        }
+        
         // Validate response using shared schema
-        const responseValidation = this.schemaService.safeValidate(this.schemaService.meResponseSchema, response);
+        const responseValidation = this.schemaService.safeValidate(this.schemaService.meApiResponseSchema, response);
         if (!responseValidation.success) {
           console.warn('Invalid me response format:', responseValidation.error);
         }
         
         this.updateAuthState({
-          user: response.user,
+          user,
           token,
           isAuthenticated: true,
           isLoading: false,
           error: null
         });
       }),
-      catchError(() => {
+      catchError((error) => {
+        console.error('Session validation failed:', error);
         this.clearAuth();
         return throwError(() => new Error('Session validation failed'));
       })
@@ -161,7 +180,7 @@ export class AuthService {
   }
 
   // Getters for current state
-  get currentUser(): IUser | null {
+  get currentUser(): IUserResponse | null {
     return this.getCurrentState().user;
   }
 
@@ -182,12 +201,12 @@ export class AuthService {
   }
 
   // Helper methods
-  hasRole(role: string): boolean {
+  hasRole(role: IUserRoles): boolean {
     const user = this.currentUser;
     return user ? user.roles.includes(role) : false;
   }
 
-  hasAnyRole(roles: string[]): boolean {
+  hasAnyRole(roles: IUserRoles[]): boolean {
     const user = this.currentUser;
     return user ? roles.some(role => user.roles.includes(role)) : false;
   }

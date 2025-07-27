@@ -17,7 +17,7 @@ router.get('/', async (req: CustomerRequest, res: Response) => {
   try {
     const { page = 1, limit = 10, search, isActive } = req.query;
     const tenantId = req.tenantId;
-    
+
     if (!tenantId) {
       return res.status(400).json({ message: 'Tenant ID required' });
     }
@@ -62,7 +62,7 @@ router.get('/:id', async (req: CustomerRequest, res: Response) => {
   try {
     const { id } = req.params;
     const tenantId = req.tenantId;
-    
+
     if (!tenantId) {
       return res.status(400).json({ message: 'Tenant ID required' });
     }
@@ -106,7 +106,7 @@ router.put('/:id', async (req: CustomerRequest, res: Response) => {
   try {
     const { id } = req.params;
     const tenantId = req.tenantId;
-    
+
     if (!tenantId) {
       return res.status(400).json({ message: 'Tenant ID required' });
     }
@@ -114,7 +114,7 @@ router.put('/:id', async (req: CustomerRequest, res: Response) => {
     const customer = await Customer.findOneAndUpdate(
       { customerId: id, tenantId },
       req.body,
-      { new: true }
+      { new: true },
     );
 
     if (!customer) {
@@ -133,12 +133,15 @@ router.delete('/:id', async (req: CustomerRequest, res: Response) => {
   try {
     const { id } = req.params;
     const tenantId = req.tenantId;
-    
+
     if (!tenantId) {
       return res.status(400).json({ message: 'Tenant ID required' });
     }
 
-    const customer = await Customer.findOneAndDelete({ customerId: id, tenantId });
+    const customer = await Customer.findOneAndDelete({
+      customerId: id,
+      tenantId,
+    });
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
     }
@@ -150,4 +153,4 @@ router.delete('/:id', async (req: CustomerRequest, res: Response) => {
   }
 });
 
-export default router; 
+export default router;

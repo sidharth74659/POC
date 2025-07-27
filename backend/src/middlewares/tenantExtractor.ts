@@ -8,21 +8,28 @@ interface TenantRequest extends Request {
   tenantNotFound?: boolean;
 }
 
-async function extractTenantId(req: TenantRequest, res: Response, next: NextFunction): Promise<void> {
-  const host = req.headers.host;
-  if (!host) {
-    res.status(400).json({ message: 'Host header is required' });
+async function extractTenantId(
+  req: TenantRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  // Try to get tenant from X-Tenant-Host header first, then fall back to Host header
+  const tenantHost =
+    (req.headers['x-tenant-host'] as string) || req.headers.host;
+
+  if (!tenantHost) {
+    res.status(400).json({ message: 'Tenant host header is required' });
     return;
   }
 
-  const subdomain = host.split('.')[0];
+  const subdomain = tenantHost.split('.')[0];
   if (!subdomain) {
     res.status(400).json({ message: 'Invalid tenant' });
     return;
   }
 
   req.tenantId = subdomain;
-  
+
   try {
     const tenant = await Tenant.findOne({ subdomain });
     if (!tenant) {
@@ -32,10 +39,12 @@ async function extractTenantId(req: TenantRequest, res: Response, next: NextFunc
     }
   } catch (err) {
     const error = err as Error;
-    res.status(500).json({ message: 'Error checking tenant', error: error.message });
+    res
+      .status(500)
+      .json({ message: 'Error checking tenant', error: error.message });
     return;
   }
   next();
 }
 
-export { extractTenantId }; 
+export { extractTenantId };

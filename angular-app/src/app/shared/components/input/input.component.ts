@@ -4,6 +4,7 @@ import {
   Output,
   EventEmitter,
   forwardRef,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -24,14 +25,14 @@ export type InputSize = 'sm' | 'md' | 'lg';
   imports: [CommonModule],
   template: `
     <div class="input-wrapper" [class]="wrapperClasses">
-      <label *ngIf="label" [for]="id" class="input-label">
+      <label *ngIf="label" [for]="inputId" class="input-label">
         {{ label }}
         <span *ngIf="required" class="required-indicator">*</span>
       </label>
 
       <div class="input-container">
         <input
-          [id]="id"
+          [id]="inputId"
           [type]="inputType"
           [placeholder]="placeholder"
           [required]="required"
@@ -82,7 +83,7 @@ export type InputSize = 'sm' | 'md' | 'lg';
     },
   ],
 })
-export class InputComponent implements ControlValueAccessor {
+export class InputComponent implements ControlValueAccessor, OnInit {
   @Input() label?: string;
   @Input() placeholder?: string;
   @Input() type: InputType = 'text';
@@ -102,11 +103,17 @@ export class InputComponent implements ControlValueAccessor {
 
   value = '';
   showPassword = false;
+  inputId = '';
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
   private onChange = (_value: string) => {};
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onTouched = () => {};
+
+  ngOnInit(): void {
+    // Generate unique ID if not provided
+    this.inputId = this.id || `input-${Math.random().toString(36).substr(2, 9)}`;
+  }
 
   get inputType(): string {
     if (this.type === 'password' && this.showPassword) {

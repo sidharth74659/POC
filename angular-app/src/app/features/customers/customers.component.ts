@@ -6,7 +6,7 @@ import { CustomerService } from '../../core/services/customer.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { InputComponent } from '../../shared/components/input/input.component';
-import { ICustomer, ICustomersResponse } from '../../shared/models/customer.model';
+import { ICustomer, ICustomersApiResponse, ICustomersResponse } from '../../shared/models/customer.model';
 
 @Component({
   selector: 'app-customers',
@@ -94,7 +94,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
     this.customerService.getAllCustomers()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: ICustomersResponse) => {
+        next: (response: ICustomersApiResponse) => {
           this.customers = response.data || [];
           this.filterCustomers();
           this.isLoading = false;

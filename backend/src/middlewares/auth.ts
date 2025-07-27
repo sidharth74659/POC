@@ -38,7 +38,7 @@ function auth(req: AuthRequest, res: Response, next: NextFunction): void {
       res.status(401).json({ message: 'Invalid token' });
       return;
     }
-    
+
     const payload = decoded as JWTPayload;
     req.user = {
       id: payload.userId,
@@ -49,4 +49,4 @@ function auth(req: AuthRequest, res: Response, next: NextFunction): void {
   });
 }
 
-export default auth; 
+export default auth;

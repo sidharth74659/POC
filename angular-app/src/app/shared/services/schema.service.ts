@@ -1,42 +1,21 @@
 import { Injectable } from '@angular/core';
 import { z } from 'zod';
 import {
-  // Auth schemas
   LoginRequestSchema,
   LoginResponseSchema,
-  LogoutRequestSchema,
-  LogoutResponseSchema,
+  LoginApiResponseSchema,
   MeResponseSchema,
+  MeApiResponseSchema,
   UserSchema,
-  UserRolesSchema,
-  // User schemas
-  UserCreateRequestSchema,
-  UserUpdateRequestSchema,
-  UserResponseSchema,
-  UsersResponseSchema,
-  // Tenant schemas
-  TenantSchema,
-  TenantSettingsSchema,
-  TenantCreateRequestSchema,
-  TenantUpdateRequestSchema,
-  TenantResponseSchema,
-  // Order schemas
-  OrderSchema,
-  OrderDetailsSchema,
-  OrderStatusSchema,
-  OrderCreateRequestSchema,
-  OrderUpdateRequestSchema,
-  OrderFiltersSchema,
-  OrderResponseSchema,
-  OrdersResponseSchema,
-  // Customer schemas
   CustomerSchema,
   CustomerContactSchema,
   CustomerCreateRequestSchema,
   CustomerUpdateRequestSchema,
   CustomerResponseSchema,
-  CustomersResponseSchema
-} from '../../../../../shared-schemas-zod/dist/index.js';
+  CustomerApiResponseSchema,
+  OrderSchema,
+  TenantSchema
+} from '@shared-schemas';
 
 @Injectable({
   providedIn: 'root'
@@ -45,34 +24,12 @@ export class SchemaService {
   // Auth schemas
   readonly loginRequestSchema = LoginRequestSchema;
   readonly loginResponseSchema = LoginResponseSchema;
-  readonly logoutRequestSchema = LogoutRequestSchema;
-  readonly logoutResponseSchema = LogoutResponseSchema;
+  readonly loginApiResponseSchema = LoginApiResponseSchema;
   readonly meResponseSchema = MeResponseSchema;
-  readonly userSchema = UserSchema;
-  readonly userRolesSchema = UserRolesSchema;
+  readonly meApiResponseSchema = MeApiResponseSchema;
 
   // User schemas
-  readonly userCreateRequestSchema = UserCreateRequestSchema;
-  readonly userUpdateRequestSchema = UserUpdateRequestSchema;
-  readonly userResponseSchema = UserResponseSchema;
-  readonly usersResponseSchema = UsersResponseSchema;
-
-  // Tenant schemas
-  readonly tenantSchema = TenantSchema;
-  readonly tenantSettingsSchema = TenantSettingsSchema;
-  readonly tenantCreateRequestSchema = TenantCreateRequestSchema;
-  readonly tenantUpdateRequestSchema = TenantUpdateRequestSchema;
-  readonly tenantResponseSchema = TenantResponseSchema;
-
-  // Order schemas
-  readonly orderSchema = OrderSchema;
-  readonly orderDetailsSchema = OrderDetailsSchema;
-  readonly orderStatusSchema = OrderStatusSchema;
-  readonly orderCreateRequestSchema = OrderCreateRequestSchema;
-  readonly orderUpdateRequestSchema = OrderUpdateRequestSchema;
-  readonly orderFiltersSchema = OrderFiltersSchema;
-  readonly orderResponseSchema = OrderResponseSchema;
-  readonly ordersResponseSchema = OrdersResponseSchema;
+  readonly userSchema = UserSchema;
 
   // Customer schemas
   readonly customerSchema = CustomerSchema;
@@ -80,7 +37,13 @@ export class SchemaService {
   readonly customerCreateRequestSchema = CustomerCreateRequestSchema;
   readonly customerUpdateRequestSchema = CustomerUpdateRequestSchema;
   readonly customerResponseSchema = CustomerResponseSchema;
-  readonly customersResponseSchema = CustomersResponseSchema;
+  readonly customerApiResponseSchema = CustomerApiResponseSchema;
+
+  // Order schemas
+  readonly orderSchema = OrderSchema;
+
+  // Tenant schemas
+  readonly tenantSchema = TenantSchema;
 
   /**
    * Validate data against a Zod schema

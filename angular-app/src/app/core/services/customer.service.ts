@@ -5,9 +5,10 @@ import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import {
   ICustomerCreateRequest,
-  ICustomerResponse,
-  ICustomersResponse,
-  ICustomerUpdateRequest
+  ICustomerApiResponse,
+  ICustomersApiResponse,
+  ICustomerUpdateRequest,
+  ICustomerResponse
 } from '../../shared/models/customer.model';
 import { SchemaService } from '../../shared/services/schema.service';
 import { tap } from 'rxjs/operators';
@@ -21,19 +22,19 @@ export class CustomerService {
   private http = inject(HttpClient);
   private schemaService = inject(SchemaService);
 
-  getAllCustomers(): Observable<ICustomersResponse> {
-    return this.http.get<ICustomersResponse>(this.API_URL).pipe(
+  getAllCustomers(): Observable<ICustomersApiResponse> {
+    return this.http.get<ICustomersApiResponse>(this.API_URL).pipe(
       catchError(this.handleError)
     );
   }
 
-  getCustomerById(customerId: string): Observable<ICustomerResponse> {
-    return this.http.get<ICustomerResponse>(`${this.API_URL}/${customerId}`).pipe(
+  getCustomerById(customerId: string): Observable<ICustomerApiResponse> {
+    return this.http.get<ICustomerApiResponse>(`${this.API_URL}/${customerId}`).pipe(
       catchError(this.handleError)
     );
   }
 
-  createCustomer(customerData: ICustomerCreateRequest): Observable<ICustomerResponse> {
+  createCustomer(customerData: ICustomerCreateRequest): Observable<ICustomerApiResponse> {
     // Validate request data using shared schema
     const validation = this.schemaService.safeValidate(
       this.schemaService.customerCreateRequestSchema, 
@@ -43,11 +44,11 @@ export class CustomerService {
       return throwError(() => new Error('Invalid customer data'));
     }
 
-    return this.http.post<ICustomerResponse>(this.API_URL, customerData).pipe(
+    return this.http.post<ICustomerApiResponse>(this.API_URL, customerData).pipe(
       tap(response => {
         // Validate response using shared schema
         const responseValidation = this.schemaService.safeValidate(
-          this.schemaService.customerResponseSchema, 
+          this.schemaService.customerApiResponseSchema, 
           response
         );
         if (!responseValidation.success) {
@@ -58,7 +59,7 @@ export class CustomerService {
     );
   }
 
-  updateCustomer(customerId: string, customerData: ICustomerUpdateRequest): Observable<ICustomerResponse> {
+  updateCustomer(customerId: string, customerData: ICustomerUpdateRequest): Observable<ICustomerApiResponse> {
     // Validate request data using shared schema
     const validation = this.schemaService.safeValidate(
       this.schemaService.customerUpdateRequestSchema, 
@@ -68,11 +69,11 @@ export class CustomerService {
       return throwError(() => new Error('Invalid customer data'));
     }
 
-    return this.http.put<ICustomerResponse>(`${this.API_URL}/${customerId}`, customerData).pipe(
+    return this.http.put<ICustomerApiResponse>(`${this.API_URL}/${customerId}`, customerData).pipe(
       tap(response => {
         // Validate response using shared schema
         const responseValidation = this.schemaService.safeValidate(
-          this.schemaService.customerResponseSchema, 
+          this.schemaService.customerApiResponseSchema, 
           response
         );
         if (!responseValidation.success) {
@@ -99,8 +100,7 @@ export class CustomerService {
     } else if (typeof error === 'string') {
       errorMessage = error;
     }
-
-    console.error('CustomerService error:', error);
+    
     return throwError(() => new Error(errorMessage));
   }
 } 

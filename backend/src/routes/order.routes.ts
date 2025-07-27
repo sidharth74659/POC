@@ -16,9 +16,16 @@ interface OrderRequest extends Request {
 // Get all orders with pagination and filters
 router.get('/', async (req: OrderRequest, res: Response) => {
   try {
-    const { page = 1, limit = 10, customerId, status, startDate, endDate } = req.query;
+    const {
+      page = 1,
+      limit = 10,
+      customerId,
+      status,
+      startDate,
+      endDate,
+    } = req.query;
     const tenantId = req.tenantId;
-    
+
     if (!tenantId) {
       return res.status(400).json({ message: 'Tenant ID required' });
     }
@@ -69,7 +76,7 @@ router.get('/:id', async (req: OrderRequest, res: Response) => {
   try {
     const { id } = req.params;
     const tenantId = req.tenantId;
-    
+
     if (!tenantId) {
       return res.status(400).json({ message: 'Tenant ID required' });
     }
@@ -95,7 +102,10 @@ router.post('/', async (req: OrderRequest, res: Response) => {
     }
 
     // Verify customer exists
-    const customer = await Customer.findOne({ customerId: req.body.customerId, tenantId });
+    const customer = await Customer.findOne({
+      customerId: req.body.customerId,
+      tenantId,
+    });
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
     }
@@ -119,7 +129,7 @@ router.put('/:id', async (req: OrderRequest, res: Response) => {
   try {
     const { id } = req.params;
     const tenantId = req.tenantId;
-    
+
     if (!tenantId) {
       return res.status(400).json({ message: 'Tenant ID required' });
     }
@@ -127,7 +137,7 @@ router.put('/:id', async (req: OrderRequest, res: Response) => {
     const order = await Order.findOneAndUpdate(
       { orderId: id, tenantId },
       req.body,
-      { new: true }
+      { new: true },
     );
 
     if (!order) {
@@ -146,7 +156,7 @@ router.delete('/:id', async (req: OrderRequest, res: Response) => {
   try {
     const { id } = req.params;
     const tenantId = req.tenantId;
-    
+
     if (!tenantId) {
       return res.status(400).json({ message: 'Tenant ID required' });
     }
@@ -163,4 +173,4 @@ router.delete('/:id', async (req: OrderRequest, res: Response) => {
   }
 });
 
-export default router; 
+export default router;

@@ -14,4 +14,4 @@ const tenantSchema = new Schema<ITenant>({
   isActive: { type: Boolean, default: true },
 });
 
-export default mongoose.model<ITenant>('Tenant', tenantSchema); 
+export default mongoose.model<ITenant>('Tenant', tenantSchema);

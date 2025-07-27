@@ -3,6 +3,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import path from 'path';
+import cors from 'cors';
 import { extractTenantId } from './middlewares/tenantExtractor';
 import auth from './middlewares/auth';
 import validateTenant from './middlewares/validateTenant';
@@ -17,6 +18,37 @@ import orderRoutes from './routes/order.routes';
 dotenv.config();
 
 const app = express();
+
+// CORS configuration
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      // Allow all subdomains of hubnest.live
+      if (
+        origin.endsWith('.hubnest.live') ||
+        origin === 'https://hubnest.live'
+      ) {
+        return callback(null, true);
+      }
+
+      // Allow localhost for development
+      if (
+        origin.startsWith('http://localhost:') ||
+        origin.startsWith('https://localhost:')
+      ) {
+        return callback(null, true);
+      }
+
+      callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-Host'],
+  }),
+);
 
 // Log every request: method, url, host
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -70,7 +102,7 @@ const startServer = async (): Promise<void> => {
   try {
     await mongoose.connect(process.env.MONGO_URI || '');
     console.info('MongoDB connected');
-    
+
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
       console.info(`Server running on http://localhost:${port}`);
@@ -81,4 +113,4 @@ const startServer = async (): Promise<void> => {
   }
 };
 
-startServer(); 
+startServer();

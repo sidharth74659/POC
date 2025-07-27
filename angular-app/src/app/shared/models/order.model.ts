@@ -10,7 +10,7 @@ import type {
   TOrdersResponse,
   TOrderApiResponse,
   TOrdersApiResponse
-} from '../../../../../shared-schemas-zod/dist';
+} from '@shared-schemas';
 
 // Re-export shared types for use in Angular components
 export type IOrder = TOrder;

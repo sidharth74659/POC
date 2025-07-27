@@ -12,18 +12,20 @@ export const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn):
   
   // Get token from localStorage
   const token = localStorage.getItem(TOKEN_KEY);
+  
+  // Get current hostname for tenant identification
+  const currentHost = window.location.hostname;
 
-  // Clone the request and add authorization header if token exists
-  if (token) {
-    req = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  }
+  // Create a new request with the required headers
+  const modifiedReq = req.clone({
+    setHeaders: {
+      'X-Tenant-Host': currentHost,
+      ...(token && { 'Authorization': `Bearer ${token}` })
+    }
+  });
 
   // Handle the request and catch errors
-  return next(req).pipe(
+  return next(modifiedReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
         // Unauthorized - clear auth and redirect to login

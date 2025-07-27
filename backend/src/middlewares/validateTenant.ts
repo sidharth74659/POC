@@ -9,7 +9,11 @@ interface ValidateTenantRequest extends Request {
   tenantId?: string;
 }
 
-const validateTenant = (req: ValidateTenantRequest, res: Response, next: NextFunction): void => {
+const validateTenant = (
+  req: ValidateTenantRequest,
+  res: Response,
+  next: NextFunction,
+): void => {
   if (!req.user) {
     res.status(401).json({ message: 'User not authenticated' });
     return;
@@ -24,8 +28,8 @@ const validateTenant = (req: ValidateTenantRequest, res: Response, next: NextFun
     res.status(403).json({ message: 'Tenant mismatch' });
     return;
   }
-  
+
   next();
 };
 
-export default validateTenant; 
+export default validateTenant;

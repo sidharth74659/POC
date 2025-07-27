@@ -78,4 +78,4 @@ customerSchema.pre('save', function (next) {
   next();
 });
 
-export default mongoose.model<ICustomer>('Customer', customerSchema); 
+export default mongoose.model<ICustomer>('Customer', customerSchema);

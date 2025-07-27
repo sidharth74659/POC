@@ -47,9 +47,9 @@ orderSchema.index({ tenantId: 1, customerId: 1 });
 orderSchema.index({ tenantId: 1, orderId: 1 }, { unique: true });
 
 // Update the updatedAt field on save
-orderSchema.pre('save', function(next) {
+orderSchema.pre('save', function (next) {
   this.updatedAt = new Date();
   next();
 });
 
-export default mongoose.model<IOrder>('Order', orderSchema); 
+export default mongoose.model<IOrder>('Order', orderSchema);

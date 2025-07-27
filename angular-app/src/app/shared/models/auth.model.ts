@@ -9,7 +9,7 @@ import type {
   TUserRoles,
   TLoginApiResponse,
   TMeApiResponse
-} from '../../../../../shared-schemas-zod/dist';
+} from '@shared-schemas';
 
 // Re-export shared types for use in Angular components
 export type ILoginRequest = TLoginRequest;
@@ -22,9 +22,12 @@ export type IUserRoles = TUserRoles;
 export type ILoginApiResponse = TLoginApiResponse;
 export type IMeApiResponse = TMeApiResponse;
 
+// Define a simplified user type for API responses
+export type IUserResponse = Pick<IUser, 'id' | 'email' | 'roles' | 'tenantId'>;
+
 // Legacy interface for backward compatibility
 export interface IAuthState {
-  user: IUser | null;
+  user: IUserResponse | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -34,7 +37,7 @@ export interface IAuthState {
 export interface IValidateSessionResponse {
   success: boolean;
   data?: {
-    user: IUser;
+    user: IUserResponse;
   };
   error?: string;
   message?: string;

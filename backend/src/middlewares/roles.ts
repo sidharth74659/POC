@@ -14,15 +14,15 @@ export function authorizeRoles(...allowedRoles: string[]) {
       res.status(401).json({ message: 'Unauthorized' });
       return;
     }
-    
+
     const userRoles = req.user.roles || [];
     const hasRole = userRoles.some((r) => allowedRoles.includes(r));
-    
+
     if (!hasRole) {
       res.status(403).json({ message: 'Forbidden' });
       return;
     }
-    
+
     next();
   };
-} 
+}

@@ -1,12 +1,11 @@
 import { Request } from 'express';
-import { Tenant, User } from '../schemas/zod-schemas';
 
 // Extend Express Request interface to include tenant and user
 declare global {
   namespace Express {
     interface Request {
-      tenant?: Tenant;
-      user?: User;
+      tenant?: any;
+      user?: any;
       tenantId?: string;
     }
   }
@@ -119,14 +118,14 @@ export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 export type RouteHandler = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => Promise<void> | void;
 
 // Middleware function type
 export type Middleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => void | Promise<void>;
 
 // Database operation result
@@ -164,4 +163,4 @@ export interface HealthCheck {
     used: number;
     total: number;
   };
-} 
+}

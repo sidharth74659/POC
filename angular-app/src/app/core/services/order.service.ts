@@ -6,8 +6,8 @@ import { environment } from '../../../environments/environment';
 import { 
   IOrderCreateRequest, 
   IOrderUpdateRequest, 
-  IOrderResponse, 
-  IOrdersResponse,
+  IOrderApiResponse, 
+  IOrdersApiResponse,
   IOrderFilters,
   OrderStatus
 } from '../../shared/models/order.model';
@@ -20,7 +20,7 @@ export class OrderService {
 
   private http = inject(HttpClient);
 
-  getAllOrders(filters?: IOrderFilters): Observable<IOrdersResponse> {
+  getAllOrders(filters?: IOrderFilters): Observable<IOrdersApiResponse> {
     let params = new HttpParams();
     
     if (filters) {
@@ -31,55 +31,55 @@ export class OrderService {
       if (filters.search) params = params.set('search', filters.search);
     }
 
-    return this.http.get<IOrdersResponse>(this.API_URL, { params }).pipe(
+    return this.http.get<IOrdersApiResponse>(this.API_URL, { params }).pipe(
       catchError(this.handleError)
     );
   }
 
-  getOrderById(id: string): Observable<IOrderResponse> {
-    return this.http.get<IOrderResponse>(`${this.API_URL}/${id}`).pipe(
+  getOrderById(id: string): Observable<IOrderApiResponse> {
+    return this.http.get<IOrderApiResponse>(`${this.API_URL}/${id}`).pipe(
       catchError(this.handleError)
     );
   }
 
-  createOrder(orderData: IOrderCreateRequest): Observable<IOrderResponse> {
-    return this.http.post<IOrderResponse>(this.API_URL, orderData).pipe(
+  createOrder(orderData: IOrderCreateRequest): Observable<IOrderApiResponse> {
+    return this.http.post<IOrderApiResponse>(this.API_URL, orderData).pipe(
       catchError(this.handleError)
     );
   }
 
-  updateOrder(id: string, orderData: IOrderUpdateRequest): Observable<IOrderResponse> {
-    return this.http.put<IOrderResponse>(`${this.API_URL}/${id}`, orderData).pipe(
+  updateOrder(id: string, orderData: IOrderUpdateRequest): Observable<IOrderApiResponse> {
+    return this.http.put<IOrderApiResponse>(`${this.API_URL}/${id}`, orderData).pipe(
       catchError(this.handleError)
     );
   }
 
-  deleteOrder(id: string): Observable<IOrderResponse> {
-    return this.http.delete<IOrderResponse>(`${this.API_URL}/${id}`).pipe(
+  deleteOrder(id: string): Observable<IOrderApiResponse> {
+    return this.http.delete<IOrderApiResponse>(`${this.API_URL}/${id}`).pipe(
       catchError(this.handleError)
     );
   }
 
-  updateOrderStatus(id: string, status: OrderStatus): Observable<IOrderResponse> {
-    return this.http.patch<IOrderResponse>(`${this.API_URL}/${id}/status`, { status }).pipe(
+  updateOrderStatus(id: string, status: OrderStatus): Observable<IOrderApiResponse> {
+    return this.http.patch<IOrderApiResponse>(`${this.API_URL}/${id}/status`, { status }).pipe(
       catchError(this.handleError)
     );
   }
 
-  getOrdersByStatus(status: OrderStatus): Observable<IOrdersResponse> {
-    return this.http.get<IOrdersResponse>(`${this.API_URL}/status/${status}`).pipe(
+  getOrdersByStatus(status: OrderStatus): Observable<IOrdersApiResponse> {
+    return this.http.get<IOrdersApiResponse>(`${this.API_URL}/status/${status}`).pipe(
       catchError(this.handleError)
     );
   }
 
-  getOrdersByCustomer(customerId: string): Observable<IOrdersResponse> {
-    return this.http.get<IOrdersResponse>(`${this.API_URL}/customer/${customerId}`).pipe(
+  getOrdersByCustomer(customerId: string): Observable<IOrdersApiResponse> {
+    return this.http.get<IOrdersApiResponse>(`${this.API_URL}/customer/${customerId}`).pipe(
       catchError(this.handleError)
     );
   }
 
-  getOrderStatistics(): Observable<IOrderResponse> {
-    return this.http.get<IOrderResponse>(`${this.API_URL}/statistics`).pipe(
+  getOrderStatistics(): Observable<IOrderApiResponse> {
+    return this.http.get<IOrderApiResponse>(`${this.API_URL}/statistics`).pipe(
       catchError(this.handleError)
     );
   }
@@ -103,8 +103,8 @@ export class OrderService {
     );
   }
 
-  bulkUpdateOrders(orderIds: string[], updates: Partial<IOrderUpdateRequest>): Observable<IOrdersResponse> {
-    return this.http.patch<IOrdersResponse>(`${this.API_URL}/bulk-update`, {
+  bulkUpdateOrders(orderIds: string[], updates: Partial<IOrderUpdateRequest>): Observable<IOrdersApiResponse> {
+    return this.http.patch<IOrdersApiResponse>(`${this.API_URL}/bulk-update`, {
       orderIds,
       updates
     }).pipe(
@@ -112,9 +112,9 @@ export class OrderService {
     );
   }
 
-  bulkDeleteOrders(orderIds: string[]): Observable<IOrdersResponse> {
-    return this.http.post<IOrdersResponse>(`${this.API_URL}/bulk-delete`, {
-      orderIds
+  bulkDeleteOrders(orderIds: string[]): Observable<IOrdersApiResponse> {
+    return this.http.delete<IOrdersApiResponse>(`${this.API_URL}/bulk-delete`, {
+      body: { orderIds }
     }).pipe(
       catchError(this.handleError)
     );
@@ -130,8 +130,7 @@ export class OrderService {
     } else if (typeof error === 'string') {
       errorMessage = error;
     }
-
-    console.error('OrderService error:', error);
+    
     return throwError(() => new Error(errorMessage));
   }
 } 

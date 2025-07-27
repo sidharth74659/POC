@@ -82,8 +82,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private schemaService = inject(SchemaService);
   private router = inject(Router);
 
-  constructor(
-  ) {
+  constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -95,13 +94,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService.authState$.pipe(
       takeUntil(this.destroy$)
     ).subscribe(authState => {
+      this.isLoading = authState.isLoading;
+      
       if (authState.isAuthenticated) {
         this.router.navigate(['/customers']);
       }
       
       if (authState.error) {
         this.errorMessage = authState.error;
-        this.isLoading = false;
       }
     });
   }
@@ -113,7 +113,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      this.isLoading = true;
       this.errorMessage = '';
 
       const credentials: ILoginRequest = this.loginForm.value;
@@ -122,18 +121,15 @@ export class LoginComponent implements OnInit, OnDestroy {
       const validation = this.schemaService.validateForm(this.schemaService.loginRequestSchema, credentials);
       if (!validation.isValid) {
         this.errorMessage = 'Please check your input and try again';
-        this.isLoading = false;
         return;
       }
 
       this.authService.login(credentials).subscribe({
         next: () => {
           // Login successful, navigation is handled by auth service
-          this.isLoading = false;
         },
         error: (error) => {
           this.errorMessage = error.message || 'Login failed';
-          this.isLoading = false;
         }
       });
     } else {

@@ -2,9 +2,10 @@ import { inject, Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/router';
 import { map, Observable, take } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { TUserRoles } from '@shared-schemas';
 
 export interface RoleGuardData {
-  roles: string[];
+  roles: TUserRoles[];
   requireAll?: boolean;
 }
 
@@ -16,7 +17,7 @@ export class RoleGuard implements CanActivate {
   private router = inject(Router);
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
-    const requiredRoles = route.data['roles'] as string[];
+    const requiredRoles = route.data['roles'] as TUserRoles[];
     const requireAll = route.data['requireAll'] as boolean || false;
 
     if (!requiredRoles || requiredRoles.length === 0) {

@@ -4,7 +4,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "baseUrl": "./",
+    "paths": {
+      "@shared-schemas/*": ["../shared-schemas-zod/dist/*"],
+      "@shared-schemas": ["../shared-schemas-zod/dist"]
+    }
   },
   "include": [
     "src/**/*.ts"
