@@ -18,13 +18,14 @@ import { ILoginRequest } from '../../../shared/models/auth.model';
     <div class="login-container">
       <div class="login-card">
         <div class="login-header">
-          <h1 class="login-title">Sign In</h1>
+          <h1 class="login-title">Sign On</h1>
           <p class="login-subtitle">Access your account</p>
         </div>
 
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
           <app-input
             formControlName="email"
+            id="email"
             label="Email"
             type="email"
             placeholder="Enter your email"
@@ -35,6 +36,7 @@ import { ILoginRequest } from '../../../shared/models/auth.model';
 
           <app-input
             formControlName="password"
+            id="password"
             label="Password"
             type="password"
             placeholder="Enter your password"

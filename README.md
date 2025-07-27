@@ -1,3 +1,9 @@
+```bash
+cloudflared tunnel run --url http://localhost:3000 hubnest-tunnel
+```
+
+---
+
 # Multi-Tenant SaaS Application
 
 A full-stack monorepo with Angular frontend and Node.js backend, featuring multi-tenant architecture.
@@ -282,3 +288,77 @@ npm run test:e2e
 ## 📄 License
 
 This project is licensed under the MIT License.
+
+---
+---
+
+```bash
+    "ng": "ng",
+    "start": "ng serve --port 4200 --host 0.0.0.0",
+    "dev": "ng serve --port 4200 --host 0.0.0.0 --watch",
+    "build": "ng build --configuration production",
+    "build:dev": "ng build --configuration development",
+    "build:watch": "ng build --watch --configuration development",
+    "build:prod": "ng build --configuration production",
+    "test": "ng test --watch=false --browsers=ChromeHeadless",
+    "test:watch": "ng test",
+    "lint": "ng lint --max-warnings 0",
+    "lint:fix": "ng lint --fix",
+    "format": "prettier --write \"src/**/*.{ts,html,scss,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\"",
+    "type-check": "tsc --noEmit",
+    "clean": "rimraf dist",
+    "clean:all": "rimraf dist node_modules package-lock.json",
+    "prebuild": "npm run clean",
+    "postbuild": "echo 'Angular build completed successfully'",
+    "predev": "npm run type-check",
+    "validate": "npm run lint && npm run type-check && npm run format:check",
+    "reset": "npm run clean:all && npm install && npm run build",
+    "analyze": "ng build --configuration production --stats-json && npx webpack-bundle-analyzer dist/angular-app/stats.json"
+
+
+    "dev": "concurrently --kill-others --names \"backend,frontend\" --prefix-colors \"blue,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=angular-app",
+    "build": "npm run clean && npm run build:backend && npm run build:frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=angular-app",
+    "start": "concurrently --kill-others --names \"backend,frontend\" --prefix-colors \"blue,green\" \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "npm run start --workspace=backend",
+    "start:frontend": "npm run start --workspace=angular-app",
+    "clean": "npm run clean:backend && npm run clean:frontend",
+    "clean:backend": "npm run clean --workspace=backend",
+    "clean:frontend": "npm run clean --workspace=angular-app",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "npm run lint --workspace=backend",
+    "lint:frontend": "npm run lint --workspace=angular-app",
+    "lint:fix": "npm run lint:fix:backend && npm run lint:fix:frontend",
+    "lint:fix:backend": "npm run lint:fix --workspace=backend",
+    "lint:fix:frontend": "npm run lint:fix --workspace=angular-app",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "npm run test --workspace=backend",
+    "test:frontend": "npm run test --workspace=angular-app",
+    "type-check": "npm run type-check:backend && npm run type-check:frontend",
+    "type-check:backend": "npm run type-check --workspace=backend",
+    "type-check:frontend": "npm run type-check --workspace=angular-app",
+    "install:all": "npm install && npm install --workspace=backend && npm install --workspace=angular-app",
+    "setup": "npm run install:all && npm run build",
+    "reset": "npm run clean && npm run install:all && npm run build"
+
+
+
+    "test": "ts-node test-server.ts",
+    "test:watch": "nodemon --exec \"ts-node test-server.ts\" --watch src --ext ts",
+    "lint": "eslint ./src --ext .ts --max-warnings 0",
+    "lint:fix": "eslint ./src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.{ts,js,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json}\"",
+    "type-check": "tsc --noEmit",
+    "clean": "rimraf dist",
+    "clean:all": "rimraf dist node_modules package-lock.json",
+    "prebuild": "npm run clean",
+    "postbuild": "echo 'Backend build completed successfully'",
+    "predev": "npm run type-check",
+    "validate": "npm run lint && npm run type-check && npm run format:check",
+    "reset": "npm run clean:all && npm install && npm run build"
+   ```

@@ -4,24 +4,11 @@
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
-    "dev": "nodemon --exec \"ts-node --transpile-only\" src/server.ts --watch src --ext ts,js,json",
-    "dev:watch": "nodemon --exec \"ts-node --transpile-only\" src/server.ts --watch src --ext ts,js,json",
+    "dev": "nodemon",
     "build": "npm run clean && tsc",
-    "build:watch": "tsc --watch",
-    "test": "ts-node test-server.ts",
-    "test:watch": "nodemon --exec \"ts-node test-server.ts\" --watch src --ext ts",
-    "lint": "eslint ./src --ext .ts --max-warnings 0",
-    "lint:fix": "eslint ./src --ext .ts --fix",
-    "format": "prettier --write \"src/**/*.{ts,js,json}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,js,json}\"",
-    "type-check": "tsc --noEmit",
     "clean": "rimraf dist",
-    "clean:all": "rimraf dist node_modules package-lock.json",
-    "prebuild": "npm run clean",
-    "postbuild": "echo 'Backend build completed successfully'",
-    "predev": "npm run type-check",
-    "validate": "npm run lint && npm run type-check && npm run format:check",
-    "reset": "npm run clean:all && npm install && npm run build"
+    "lint": "eslint src/**/*.ts --max-warnings 0",
+    "lint:fix": "eslint src/**/*.ts --fix"
   },
   "dependencies": {
     "@types/cors": "^2.8.19",

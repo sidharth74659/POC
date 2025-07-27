@@ -16,13 +16,21 @@ export const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn):
   // Get current hostname for tenant identification
   const currentHost = window.location.hostname;
 
-  // Create a new request with the required headers
-  const modifiedReq = req.clone({
+  // Create a new request with minimal headers
+  let modifiedReq = req.clone({
     setHeaders: {
-      'X-Tenant-Host': currentHost,
-      ...(token && { 'Authorization': `Bearer ${token}` })
+      'X-Tenant-Host': currentHost
     }
   });
+
+  // Add Authorization header if token exists
+  if (token) {
+    modifiedReq = modifiedReq.clone({
+      setHeaders: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  }
 
   // Handle the request and catch errors
   return next(modifiedReq).pipe(
