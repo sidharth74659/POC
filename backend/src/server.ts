@@ -81,6 +81,14 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(extractTenantId);
 
+// app.get('/api/test', (req: Request, res: Response) => {
+//   res.json({
+//     success: true,
+//     message: 'GET request for testing successful',
+//     tenant: req.tenant,
+//   });
+// });
+
 // Public API routes (must come BEFORE static/catch-all)
 app.use('/api/auth', authRoutes);
 app.use('/api/tenants', tenantRoutes);

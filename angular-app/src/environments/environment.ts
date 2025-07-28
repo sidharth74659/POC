@@ -1,5 +1,7 @@
-const subdomain = window.location.hostname.split('.')[0];
-const apiBaseUrl = `https://${subdomain}.hubnest.live/api`;
+const hostname = window.location.hostname;
+const apiBaseUrl = hostname === 'hubnest.live' 
+  ? 'https://hubnest.live/api'
+  : `https://${hostname.split('.')[0]}.hubnest.live/api`;
 
 export const environment = {
   production: false,

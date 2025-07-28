@@ -3,13 +3,12 @@ Note:
 Note: Replace {{subdomain}} with the subdomain of the tenant.
 
 
-1. To create a tenant:
+1. To create a tenant (no auth required):
 
 **Request:**
 ```bash
 curl --location 'https://{{subdomain}}.hubnest.live/api/tenants' \
---header 'Content-Type: application/json' \
---header 'Authorization: ••••••' \
+--header 'Content-Type: application/json'
 --data-raw '{
     "name": "Test Tenant",
     "subdomain": "{{subdomain}}",

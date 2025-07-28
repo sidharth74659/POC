@@ -5,8 +5,7 @@ import { RoleGuard } from './core/guards/role.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/auth/login',
-    pathMatch: 'full'
+    loadComponent: () => import('./features/auth/landing/landing.component').then(m => m.LandingComponent)
   },
   {
     path: 'auth',

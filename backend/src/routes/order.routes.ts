@@ -14,32 +14,47 @@ interface OrderRequest extends Request {
 }
 
 // Get orders by customer ID
-router.get('/customer/:customerId', async (req: OrderRequest, res: Response) => {
-  try {
-    const { customerId } = req.params;
-    const tenantId = req.tenantId;
+router.get(
+  '/customer/:customerId',
+  async (req: OrderRequest, res: Response) => {
+    try {
+      const { customerId } = req.params;
+      const tenantId = req.tenantId;
 
-    if (!tenantId) {
-      return res.status(400).json({ message: 'Tenant ID required' });
+      if (!tenantId) {
+        return res.status(400).json({
+          success: false,
+          message: 'Tenant ID required',
+        });
+      }
+
+      // Verify customer exists
+      const customer = await Customer.findOne({ customerId, tenantId });
+      if (!customer) {
+        return res.status(404).json({
+          success: false,
+          message: 'Customer not found',
+        });
+      }
+
+      const orders = await Order.find({ customerId, tenantId }).sort({
+        createdAt: -1,
+      });
+
+      res.json({
+        success: true,
+        data: orders,
+      });
+    } catch (error) {
+      console.error('Get orders by customer error:', error);
+      res.status(500).json({
+        success: false,
+        message:
+          error instanceof Error ? error.message : 'Internal server error',
+      });
     }
-
-    // Verify customer exists
-    const customer = await Customer.findOne({ customerId, tenantId });
-    if (!customer) {
-      return res.status(404).json({ message: 'Customer not found' });
-    }
-
-    const orders = await Order.find({ customerId, tenantId }).sort({ createdAt: -1 });
-
-    res.json({
-      success: true,
-      data: orders,
-    });
-  } catch (error) {
-    console.error('Get orders by customer error:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
+  },
+);
 
 // Get all orders with pagination and filters
 router.get('/', async (req: OrderRequest, res: Response) => {
@@ -55,7 +70,10 @@ router.get('/', async (req: OrderRequest, res: Response) => {
     const tenantId = req.tenantId;
 
     if (!tenantId) {
-      return res.status(400).json({ message: 'Tenant ID required' });
+      return res.status(400).json({
+        success: false,
+        message: 'Tenant ID required',
+      });
     }
 
     const filter: any = { tenantId };
@@ -95,7 +113,10 @@ router.get('/', async (req: OrderRequest, res: Response) => {
     });
   } catch (error) {
     console.error('Get orders error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal server error',
+    });
   }
 });
 
@@ -106,18 +127,27 @@ router.get('/:id', async (req: OrderRequest, res: Response) => {
     const tenantId = req.tenantId;
 
     if (!tenantId) {
-      return res.status(400).json({ message: 'Tenant ID required' });
+      return res.status(400).json({
+        success: false,
+        message: 'Tenant ID required',
+      });
     }
 
     const order = await Order.findOne({ orderId: id, tenantId });
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      });
     }
 
     res.json({ success: true, data: order });
   } catch (error) {
     console.error('Get order error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal server error',
+    });
   }
 });
 
@@ -126,7 +156,10 @@ router.post('/', async (req: OrderRequest, res: Response) => {
   try {
     const tenantId = req.tenantId;
     if (!tenantId) {
-      return res.status(400).json({ message: 'Tenant ID required' });
+      return res.status(400).json({
+        success: false,
+        message: 'Tenant ID required',
+      });
     }
 
     // Verify customer exists
@@ -135,7 +168,10 @@ router.post('/', async (req: OrderRequest, res: Response) => {
       tenantId,
     });
     if (!customer) {
-      return res.status(404).json({ message: 'Customer not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Customer not found',
+      });
     }
 
     const orderId = `ORD_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -148,7 +184,10 @@ router.post('/', async (req: OrderRequest, res: Response) => {
     res.status(201).json({ success: true, data: order });
   } catch (error) {
     console.error('Create order error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal server error',
+    });
   }
 });
 
@@ -159,7 +198,10 @@ router.put('/:id', async (req: OrderRequest, res: Response) => {
     const tenantId = req.tenantId;
 
     if (!tenantId) {
-      return res.status(400).json({ message: 'Tenant ID required' });
+      return res.status(400).json({
+        success: false,
+        message: 'Tenant ID required',
+      });
     }
 
     const order = await Order.findOneAndUpdate(
@@ -169,13 +211,19 @@ router.put('/:id', async (req: OrderRequest, res: Response) => {
     );
 
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      });
     }
 
     res.json({ success: true, data: order });
   } catch (error) {
     console.error('Update order error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal server error',
+    });
   }
 });
 
@@ -186,18 +234,27 @@ router.delete('/:id', async (req: OrderRequest, res: Response) => {
     const tenantId = req.tenantId;
 
     if (!tenantId) {
-      return res.status(400).json({ message: 'Tenant ID required' });
+      return res.status(400).json({
+        success: false,
+        message: 'Tenant ID required',
+      });
     }
 
     const order = await Order.findOneAndDelete({ orderId: id, tenantId });
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      });
     }
 
     res.json({ success: true, message: 'Order deleted' });
   } catch (error) {
     console.error('Delete order error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal server error',
+    });
   }
 });
 

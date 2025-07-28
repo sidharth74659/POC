@@ -12,6 +12,8 @@ npm run dev
 # cd backend && npm run dev
 # cd angular-app && npm run build:watch
 
+# in short: pkill -f "concurrently" && pkill -f "nodemon" && pkill -f "build:watch" && sleep 2 && npm run dev
+
 # Run this command to start the tunnel:
 cloudflared tunnel run --url http://localhost:3000 hubnest-tunnel
 docker start mongodb

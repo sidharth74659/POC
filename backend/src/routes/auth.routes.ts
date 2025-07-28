@@ -68,7 +68,6 @@ router.post('/test/create-user', async (req: AuthRequest, res: Response) => {
     if (!tenantId) {
       return res.status(400).json({
         success: false,
-        error: 'Tenant ID required',
         message: 'Tenant ID required',
       });
     }
@@ -78,7 +77,6 @@ router.post('/test/create-user', async (req: AuthRequest, res: Response) => {
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        error: 'User already exists',
         message: 'User already exists',
       });
     }
@@ -110,8 +108,7 @@ router.post('/test/create-user', async (req: AuthRequest, res: Response) => {
     console.error('Create test user error:', error);
     res.status(500).json({
       success: false,
-      error: 'Internal server error',
-      message: 'Internal server error',
+      message: error instanceof Error ? error.message : 'Internal server error',
     });
   }
 });
@@ -129,7 +126,6 @@ router.post(
       if (!tenantId) {
         return res.status(400).json({
           success: false,
-          error: 'Tenant not detected',
           message: 'Tenant not detected',
         });
       }
@@ -139,7 +135,6 @@ router.post(
       if (existingUser) {
         return res.status(400).json({
           success: false,
-          error: 'User already exists',
           message: 'User already exists',
         });
       }
@@ -171,8 +166,8 @@ router.post(
       console.error('Create user error:', error);
       res.status(500).json({
         success: false,
-        error: 'Internal server error',
-        message: 'Internal server error',
+        message:
+          error instanceof Error ? error.message : 'Internal server error',
       });
     }
   },
@@ -186,7 +181,6 @@ router.post('/login', async (req: AuthRequest, res: Response) => {
     if (!validationResult.success) {
       return res.status(400).json({
         success: false,
-        error: 'Invalid request data',
         message:
           validationResult.error.issues[0]?.message || 'Validation failed',
       });
@@ -198,7 +192,6 @@ router.post('/login', async (req: AuthRequest, res: Response) => {
     if (!tenantId) {
       return res.status(400).json({
         success: false,
-        error: 'Tenant not detected',
         message: 'Tenant not detected',
       });
     }
@@ -207,7 +200,6 @@ router.post('/login', async (req: AuthRequest, res: Response) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: 'Invalid credentials',
         message: 'Invalid credentials',
       });
     }
@@ -216,7 +208,6 @@ router.post('/login', async (req: AuthRequest, res: Response) => {
     if (!valid) {
       return res.status(401).json({
         success: false,
-        error: 'Invalid credentials',
         message: 'Invalid credentials',
       });
     }
@@ -251,8 +242,7 @@ router.post('/login', async (req: AuthRequest, res: Response) => {
     console.error('Login error:', error);
     res.status(500).json({
       success: false,
-      error: 'Internal server error',
-      message: 'Internal server error',
+      message: error instanceof Error ? error.message : 'Internal server error',
     });
   }
 });
@@ -269,7 +259,6 @@ router.get('/me', auth, async (req: AuthRequest, res: Response) => {
     if (!req.user) {
       return res.status(401).json({
         success: false,
-        error: 'Not authenticated',
         message: 'Not authenticated',
       });
     }
@@ -282,7 +271,6 @@ router.get('/me', auth, async (req: AuthRequest, res: Response) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        error: 'User not found',
         message: 'User not found',
       });
     }
@@ -310,8 +298,7 @@ router.get('/me', auth, async (req: AuthRequest, res: Response) => {
     console.error('Get user error:', error);
     res.status(500).json({
       success: false,
-      error: 'Internal server error',
-      message: 'Internal server error',
+      message: error instanceof Error ? error.message : 'Internal server error',
     });
   }
 });

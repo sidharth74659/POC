@@ -18,9 +18,10 @@ router.post('/', async (req: TenantRequest, res: Response) => {
 
     const exists = await Tenant.findOne({ subdomain });
     if (exists) {
-      return res
-        .status(409)
-        .json({ success: false, message: 'Subdomain taken' });
+      return res.status(409).json({
+        success: false,
+        message: 'Subdomain taken',
+      });
     }
 
     await Tenant.create({
@@ -62,7 +63,10 @@ router.post('/', async (req: TenantRequest, res: Response) => {
     });
   } catch (error) {
     console.error('Tenant creation error:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal server error',
+    });
   }
 });
 
@@ -81,9 +85,13 @@ router.get('/', (req: TenantRequest, res: Response) => {
 // Check tenant existence
 router.get('/check', (req: TenantRequest, res: Response) => {
   if (req.tenantNotFound) {
-    return res.status(404).json({ message: 'Tenant not found' });
+    return res
+      .status(404)
+      .json({ success: false, message: 'Tenant not found' });
   }
-  res.json({ success: true, data: { tenant: req.tenant } });
+
+  // console.log('req.tenant', req.tenant);
+  res.json({ success: true, data: req.tenant });
 });
 
 export default router;

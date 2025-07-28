@@ -10,4 +10,8 @@ export class SharedService {
     return `https://${subdomain}.${environment.apiBaseUrl}`;
   }
    */
+
+  getSubdomain(): string {
+    return window.location.hostname.split('.')[0] || '';
+  }
 }

@@ -40,7 +40,10 @@ export class AuthService {
   private initializeAuth(): void {
     const token = localStorage.getItem(this.TOKEN_KEY);
     if (token) {
-      this.validateSession(token);
+      // Use setTimeout to avoid circular dependency during initialization
+      setTimeout(() => {
+        this.validateSession(token);
+      }, 0);
     } else {
       this.updateAuthState({
         user: null,
@@ -126,6 +129,16 @@ export class AuthService {
     }
   }
 
+  // Method to clear auth and trigger redirect (called by interceptor)
+  clearAuthAndRedirect(): void {
+    this.clearAuth();
+  }
+
+  // Method to handle session validation failure (called by interceptor)
+  handleSessionValidationFailure(): void {
+    this.clearAuth();
+  }
+
   validateSession(token: string): void {
     this.updateAuthState({ ...this.getCurrentState(), isLoading: true });
 
@@ -154,6 +167,7 @@ export class AuthService {
       }),
       catchError((error) => {
         console.error('Session validation failed:', error);
+        // Just clear auth without redirect - let the interceptor handle navigation
         this.clearAuth();
         return throwError(() => new Error('Session validation failed'));
       })

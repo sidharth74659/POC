@@ -14,7 +14,9 @@ import {
   CustomerResponseSchema,
   CustomerApiResponseSchema,
   OrderSchema,
-  TenantSchema
+  TenantSchema,
+  TenantCreateRequestSchema,
+  TenantCreateApiResponseSchema
 } from '@shared-schemas';
 
 @Injectable({
@@ -44,6 +46,8 @@ export class SchemaService {
 
   // Tenant schemas
   readonly tenantSchema = TenantSchema;
+  readonly tenantCreateRequestSchema = TenantCreateRequestSchema;
+  readonly tenantCreateApiResponseSchema = TenantCreateApiResponseSchema;
 
   /**
    * Validate data against a Zod schema

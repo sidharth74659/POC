@@ -1,10 +1,10 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Base schemas
 export const TenantSettingsSchema = z.object({
   theme: z.object({
-    primaryColor: z.string().default('#3b82f6'),
-    secondaryColor: z.string().default('#64748b'),
+    primaryColor: z.string().default("#3b82f6"),
+    secondaryColor: z.string().default("#64748b"),
     logo: z.string().optional(),
   }),
   features: z.object({
@@ -21,8 +21,11 @@ export const TenantSettingsSchema = z.object({
 
 export const TenantSchema = z.object({
   id: z.string(),
-  name: z.string().min(1, 'Company name is required'),
-  subdomain: z.string().min(3, 'Subdomain must be at least 3 characters').max(63, 'Subdomain must be at most 63 characters'),
+  name: z.string().min(1, "Company name is required"),
+  subdomain: z
+    .string()
+    .min(3, "Subdomain must be at least 3 characters")
+    .max(63, "Subdomain must be at most 63 characters"),
   domain: z.string(),
   isActive: z.boolean().default(true),
   settings: TenantSettingsSchema,
@@ -32,20 +35,30 @@ export const TenantSchema = z.object({
 
 // Request schemas
 export const TenantCreateRequestSchema = z.object({
-  companyName: z.string().min(1, 'Company name is required'),
-  requestedSubdomain: z.string()
-    .min(3, 'Subdomain must be at least 3 characters')
-    .max(63, 'Subdomain must be at most 63 characters')
-    .regex(/^[a-z0-9-]+$/, 'Subdomain can only contain lowercase letters, numbers, and hyphens')
-    .refine(val => !val.startsWith('-') && !val.endsWith('-'), 'Subdomain cannot start or end with hyphen')
-    .refine(val => !val.includes('--'), 'Subdomain cannot contain consecutive hyphens'),
-  adminEmail: z.string().email('Valid email is required'),
-  adminPassword: z.string().min(6, 'Password must be at least 6 characters'),
+  name: z.string().min(1, "Company name is required"),
+  subdomain: z
+    .string()
+    .min(3, "Subdomain must be at least 3 characters")
+    .max(63, "Subdomain must be at most 63 characters")
+    .regex(
+      /^[a-z0-9-]+$/,
+      "Subdomain can only contain lowercase letters, numbers, and hyphens"
+    )
+    .refine(
+      (val) => !val.startsWith("-") && !val.endsWith("-"),
+      "Subdomain cannot start or end with hyphen"
+    )
+    .refine(
+      (val) => !val.includes("--"),
+      "Subdomain cannot contain consecutive hyphens"
+    ),
+  adminEmail: z.string().email("Valid email is required"),
+  adminPassword: z.string().min(6, "Password must be at least 6 characters"),
   settings: TenantSettingsSchema.optional(),
 });
 
 export const TenantUpdateRequestSchema = z.object({
-  name: z.string().min(1, 'Company name is required').optional(),
+  name: z.string().min(1, "Company name is required").optional(),
   isActive: z.boolean().optional(),
   settings: TenantSettingsSchema.partial().optional(),
 });
@@ -69,7 +82,13 @@ export const TenantCreateResponseSchema = z.object({
 });
 
 export const TenantCheckResponseSchema = z.object({
-  tenant: TenantResponseSchema.optional(),
+  data: TenantResponseSchema.omit({
+    domain: true,
+    createdAt: true,
+    updatedAt: true,
+    settings: true,
+  }).optional(),
+  message: z.string().optional(),
 });
 
 // API Response wrapper schemas
@@ -112,5 +131,9 @@ export type TTenantCreateResponse = z.infer<typeof TenantCreateResponseSchema>;
 export type TTenantCheckResponse = z.infer<typeof TenantCheckResponseSchema>;
 export type TTenantApiResponse = z.infer<typeof TenantApiResponseSchema>;
 export type TTenantsApiResponse = z.infer<typeof TenantsApiResponseSchema>;
-export type TTenantCreateApiResponse = z.infer<typeof TenantCreateApiResponseSchema>;
-export type TTenantCheckApiResponse = z.infer<typeof TenantCheckApiResponseSchema>; 
+export type TTenantCreateApiResponse = z.infer<
+  typeof TenantCreateApiResponseSchema
+>;
+export type TTenantCheckApiResponse = z.infer<
+  typeof TenantCheckApiResponseSchema
+>;

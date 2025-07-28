@@ -29,7 +29,10 @@ router.get('/', async (req: CustomerRequest, res: Response) => {
     const tenantId = req.tenantId;
 
     if (!tenantId) {
-      return res.status(400).json({ message: 'Tenant ID required' });
+      return res.status(400).json({
+        success: false,
+        message: 'Tenant ID required',
+      });
     }
 
     const filter: any = { tenantId };
@@ -63,7 +66,10 @@ router.get('/', async (req: CustomerRequest, res: Response) => {
     });
   } catch (error) {
     console.error('Get customers error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal server error',
+    });
   }
 });
 
@@ -74,7 +80,10 @@ router.get('/:id', async (req: CustomerRequest, res: Response) => {
     const tenantId = req.tenantId;
 
     if (!tenantId) {
-      return res.status(400).json({ message: 'Tenant ID required' });
+      return res.status(400).json({
+        success: false,
+        message: 'Tenant ID required',
+      });
     }
 
     const customer = await Customer.findOne({ customerId: id, tenantId });
@@ -85,7 +94,10 @@ router.get('/:id', async (req: CustomerRequest, res: Response) => {
     res.json({ success: true, data: customer });
   } catch (error) {
     console.error('Get customer error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal server error',
+    });
   }
 });
 
@@ -94,7 +106,10 @@ router.post('/', async (req: CustomerCreateRequest, res: Response) => {
   try {
     const tenantId = req.tenantId;
     if (!tenantId) {
-      return res.status(400).json({ message: 'Tenant ID required' });
+      return res.status(400).json({
+        success: false,
+        message: 'Tenant ID required',
+      });
     }
 
     // const customerId = `CUST_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -108,7 +123,10 @@ router.post('/', async (req: CustomerCreateRequest, res: Response) => {
     res.status(201).json({ success: true, data: customer });
   } catch (error) {
     console.error('Create customer error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal server error',
+    });
   }
 });
 
@@ -119,7 +137,10 @@ router.put('/:id', async (req: CustomerRequest, res: Response) => {
     const tenantId = req.tenantId;
 
     if (!tenantId) {
-      return res.status(400).json({ message: 'Tenant ID required' });
+      return res.status(400).json({
+        success: false,
+        message: 'Tenant ID required',
+      });
     }
 
     const customer = await Customer.findOneAndUpdate(
@@ -154,13 +175,19 @@ router.delete('/:id', async (req: CustomerRequest, res: Response) => {
       tenantId,
     });
     if (!customer) {
-      return res.status(404).json({ message: 'Customer not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Customer not found',
+      });
     }
 
     res.json({ success: true, message: 'Customer deleted' });
   } catch (error) {
     console.error('Delete customer error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal server error',
+    });
   }
 });
 

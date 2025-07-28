@@ -4,7 +4,12 @@ import Tenant from '../models/Tenant';
 // Extend Request interface for this middleware
 interface TenantRequest extends Request {
   tenantId?: string;
-  tenant?: any;
+  tenant?: {
+    id: string;
+    name: string;
+    subdomain: string;
+    isActive: boolean;
+  };
   tenantNotFound?: boolean;
 }
 
@@ -18,13 +23,15 @@ async function extractTenantId(
     (req.headers['x-tenant-host'] as string) || req.headers.host;
 
   if (!tenantHost) {
-    res.status(400).json({ message: 'Tenant host header is required' });
+    res
+      .status(400)
+      .json({ success: false, message: 'Tenant host header is required' });
     return;
   }
 
   const subdomain = tenantHost.split('.')[0];
   if (!subdomain) {
-    res.status(400).json({ message: 'Invalid tenant' });
+    res.status(400).json({ success: false, message: 'Invalid tenant' });
     return;
   }
 
@@ -35,13 +42,22 @@ async function extractTenantId(
     if (!tenant) {
       req.tenantNotFound = true;
     } else {
-      req.tenant = tenant.toObject();
+      const tenantData: TenantRequest['tenant'] = {
+        id: tenant._id.toString(),
+        name: tenant.name,
+        subdomain: tenant.subdomain,
+        isActive: tenant.isActive,
+      };
+
+      // console.log('tenantData', tenantData);
+      req.tenant = tenantData;
     }
   } catch (err) {
     const error = err as Error;
-    res
-      .status(500)
-      .json({ message: 'Error checking tenant', error: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error checking tenant',
+    });
     return;
   }
   next();
