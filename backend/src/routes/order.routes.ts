@@ -13,6 +13,34 @@ interface OrderRequest extends Request {
   tenantId?: string;
 }
 
+// Get orders by customer ID
+router.get('/customer/:customerId', async (req: OrderRequest, res: Response) => {
+  try {
+    const { customerId } = req.params;
+    const tenantId = req.tenantId;
+
+    if (!tenantId) {
+      return res.status(400).json({ message: 'Tenant ID required' });
+    }
+
+    // Verify customer exists
+    const customer = await Customer.findOne({ customerId, tenantId });
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    const orders = await Order.find({ customerId, tenantId }).sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: orders,
+    });
+  } catch (error) {
+    console.error('Get orders by customer error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 // Get all orders with pagination and filters
 router.get('/', async (req: OrderRequest, res: Response) => {
   try {

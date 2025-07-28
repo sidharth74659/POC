@@ -60,14 +60,121 @@ interface AuthRequest extends Request {
   tenantId?: string;
 }
 
+// Temporary test endpoint to create users (remove in production)
+router.post('/test/create-user', async (req: AuthRequest, res: Response) => {
+  try {
+    const { email, password, roles = ['admin'], tenantId } = req.body;
+
+    if (!tenantId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Tenant ID required',
+        message: 'Tenant ID required',
+      });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email, tenantId });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        error: 'User already exists',
+        message: 'User already exists',
+      });
+    }
+
+    // Hash password
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    // Create user
+    const user = new User({
+      email,
+      passwordHash,
+      roles,
+      tenantId,
+    });
+
+    await user.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'User created successfully',
+      data: {
+        id: String(user._id),
+        email: user.email,
+        roles: user.roles,
+        tenantId: user.tenantId,
+      },
+    });
+  } catch (error) {
+    console.error('Create test user error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+      message: 'Internal server error',
+    });
+  }
+});
+
 // Create user in this tenant
 router.post(
   '/users',
   auth,
   authorizeRoles('admin'),
   async (req: AuthRequest, res: Response) => {
-    // Create user in this tenant
-    res.status(501).json({ message: 'Not implemented' });
+    try {
+      const { email, password, roles = ['admin'] } = req.body;
+      const tenantId = req.tenantId;
+
+      if (!tenantId) {
+        return res.status(400).json({
+          success: false,
+          error: 'Tenant not detected',
+          message: 'Tenant not detected',
+        });
+      }
+
+      // Check if user already exists
+      const existingUser = await User.findOne({ email, tenantId });
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          error: 'User already exists',
+          message: 'User already exists',
+        });
+      }
+
+      // Hash password
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      // Create user
+      const user = new User({
+        email,
+        passwordHash,
+        roles,
+        tenantId,
+      });
+
+      await user.save();
+
+      res.status(201).json({
+        success: true,
+        message: 'User created successfully',
+        data: {
+          id: String(user._id),
+          email: user.email,
+          roles: user.roles,
+          tenantId: user.tenantId,
+        },
+      });
+    } catch (error) {
+      console.error('Create user error:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Internal server error',
+        message: 'Internal server error',
+      });
+    }
   },
 );
 

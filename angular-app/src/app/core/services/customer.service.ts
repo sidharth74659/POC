@@ -7,8 +7,7 @@ import {
   ICustomerCreateRequest,
   ICustomerApiResponse,
   ICustomersApiResponse,
-  ICustomerUpdateRequest,
-  ICustomerResponse
+  ICustomerUpdateRequest
 } from '../../shared/models/customer.model';
 import { SchemaService } from '../../shared/services/schema.service';
 import { tap } from 'rxjs/operators';

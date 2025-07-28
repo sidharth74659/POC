@@ -2,7 +2,7 @@
   "watch": ["src", "public"],
   "ext": "ts,js,json,html,css",
   "ignore": ["src/**/*.spec.ts", "src/**/*.test.ts", "dist"],
-  "exec": "ts-node --transpile-only src/server.ts --watch",
+  "exec": "npm run build && node dist/server.js",
   "env": {
     "NODE_ENV": "development"
   },
@@ -10,4 +10,4 @@
   "events": {
     "restart": "echo 'Backend server restarted due to changes'"
   }
-} 
+}

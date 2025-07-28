@@ -92,7 +92,7 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/orders', orderRoutes);
 
 // Common error handling middleware
-app.use((err: Error, req: Request, res: Response) => {
+app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ message: 'An error occurred', error: err.message });
 });

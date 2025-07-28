@@ -6,7 +6,7 @@ import { CustomerService } from '../../core/services/customer.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { InputComponent } from '../../shared/components/input/input.component';
-import { ICustomer, ICustomersApiResponse, ICustomersResponse } from '../../shared/models/customer.model';
+import { ICustomer, ICustomersApiResponse } from '../../shared/models/customer.model';
 
 @Component({
   selector: 'app-customers',
