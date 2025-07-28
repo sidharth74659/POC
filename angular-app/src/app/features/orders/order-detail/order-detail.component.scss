@@ -1,0 +1,230 @@
+@use '../../../../styles/design-tokens' as *;
+
+.order-detail-container {
+  min-height: 100vh;
+  background-color: $secondary-50;
+}
+
+.order-detail-header {
+  background-color: white;
+  border-bottom: 1px solid $secondary-200;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .back-button {
+      background: none;
+      border: none;
+      color: $primary-600;
+      cursor: pointer;
+      font-size: 0.875rem;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        background-color: $primary-50;
+      }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: $secondary-900;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .user-info {
+      color: $secondary-600;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.order-detail-content {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.order-info-section {
+  .order-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: $shadow-base;
+    overflow: hidden;
+  }
+
+  .order-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid $secondary-200;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: $secondary-900;
+    }
+
+    .order-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+
+      &.status-pending {
+        background-color: $warning-100;
+        color: $warning-800;
+      }
+
+      &.status-confirmed {
+        background-color: $primary-100;
+        color: $primary-800;
+      }
+
+      &.status-processing {
+        background-color: $primary-100;
+        color: $primary-800;
+      }
+
+      &.status-shipped {
+        background-color: $primary-100;
+        color: $primary-800;
+      }
+
+      &.status-delivered {
+        background-color: $success-100;
+        color: $success-800;
+      }
+
+      &.status-cancelled {
+        background-color: $error-100;
+        color: $error-800;
+      }
+
+      &.status-refunded {
+        background-color: $secondary-100;
+        color: $secondary-800;
+      }
+    }
+  }
+
+  .order-details {
+    padding: 1.5rem;
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid $secondary-100;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .detail-label {
+        font-weight: 500;
+        color: $secondary-700;
+        min-width: 120px;
+      }
+
+      .detail-value {
+        color: $secondary-900;
+        text-align: right;
+
+        &.total {
+          font-weight: 600;
+          font-size: 1.125rem;
+          color: $primary-600;
+        }
+      }
+    }
+  }
+
+  .order-actions {
+    padding: 1.5rem;
+    border-top: 1px solid $secondary-200;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+  }
+}
+
+.loading-state {
+  text-align: center;
+  padding: 3rem;
+  color: $secondary-600;
+}
+
+// Responsive design
+@media (max-width: 640px) {
+  .order-detail-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+
+    .header-content {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .header-actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  .order-detail-content {
+    padding: 1rem;
+  }
+
+  .order-info-section {
+    .order-header {
+      padding: 1rem;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+
+    .order-details {
+      padding: 1rem;
+
+      .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+
+        .detail-label {
+          min-width: auto;
+        }
+
+        .detail-value {
+          text-align: left;
+        }
+      }
+    }
+
+    .order-actions {
+      padding: 1rem;
+      flex-direction: column;
+    }
+  }
+} 

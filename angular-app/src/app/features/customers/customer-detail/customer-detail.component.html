@@ -40,7 +40,7 @@
     <div class="orders-section" *ngIf="customer">
       <div class="orders-header">
         <h2>Orders</h2>
-        <app-button (clickEvent)="createOrder()">Add Order</app-button>
+        <app-button (clickEvent)="openCreateOrderModal()">Add Order</app-button>
       </div>
       
       <div class="orders-list" *ngIf="!isLoadingOrders; else loadingOrders">
@@ -63,7 +63,7 @@
         
         <div class="empty-orders" *ngIf="orders.length === 0">
           <p>No orders found for this customer.</p>
-          <app-button (clickEvent)="createOrder()">Create First Order</app-button>
+          <app-button (clickEvent)="openCreateOrderModal()">Create First Order</app-button>
         </div>
       </div>
     </div>
@@ -80,4 +80,12 @@
       </div>
     </ng-template>
   </main>
+
+  <!-- Order Create Modal -->
+  <app-order-create-modal
+    [isOpen]="showCreateOrderModal"
+    [customerId]="customer?.customerId || ''"
+    (closeEvent)="closeCreateOrderModal()"
+    (orderCreated)="onOrderCreated()">
+  </app-order-create-modal>
 </div> 

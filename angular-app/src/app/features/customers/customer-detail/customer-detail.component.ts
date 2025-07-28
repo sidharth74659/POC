@@ -8,12 +8,13 @@ import { OrderService } from '../../../core/services/order.service';
 import { ICustomer, ICustomerApiResponse } from '../../../shared/models/customer.model';
 import { IOrder, IOrdersApiResponse } from '../../../shared/models/order.model';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { OrderCreateModalComponent } from '../../orders/order-create-modal/order-create-modal.component';
 
 @Component({
   selector: 'app-customer-detail',
   templateUrl: './customer-detail.component.html',
   styleUrls: ['./customer-detail.component.scss'],
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule, ButtonComponent, OrderCreateModalComponent],
   standalone: true
 })
 export class CustomerDetailComponent implements OnInit, OnDestroy {
@@ -27,6 +28,7 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
   customer: ICustomer | null = null;
   orders: IOrder[] = [];
   isLoadingOrders = false;
+  showCreateOrderModal = false;
 
   get currentUser() {
     return this.authService.currentUser;
@@ -111,14 +113,20 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  createOrder(): void {
-    if (this.customer) {
-      this.router.navigate(['/customers', this.customer.customerId, 'orders', 'new']);
-    }
+  openCreateOrderModal(): void {
+    this.showCreateOrderModal = true;
+  }
+
+  closeCreateOrderModal(): void {
+    this.showCreateOrderModal = false;
+  }
+
+  onOrderCreated(): void {
+    this.loadOrders();
   }
 
   editOrder(order: IOrder): void {
-    this.router.navigate(['/customers', this.customer?.customerId, 'orders', order.orderId, 'edit']);
+    this.router.navigate(['/orders', order.orderId]);
   }
 
   logout(): void {

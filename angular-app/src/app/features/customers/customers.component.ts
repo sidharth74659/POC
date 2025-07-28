@@ -6,12 +6,13 @@ import { CustomerService } from '../../core/services/customer.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { InputComponent } from '../../shared/components/input/input.component';
+import { CustomerCreateModalComponent } from './customer-create-modal/customer-create-modal.component';
 import { ICustomer, ICustomersApiResponse } from '../../shared/models/customer.model';
 
 @Component({
   selector: 'app-customers',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, InputComponent],
+  imports: [CommonModule, ButtonComponent, InputComponent, CustomerCreateModalComponent],
   template: `
     <div class="customers-container">
       <header class="customers-header">
@@ -31,7 +32,7 @@ import { ICustomer, ICustomersApiResponse } from '../../shared/models/customer.m
             </app-input>
           </div>
           <div class="actions-section">
-            <app-button (clickEvent)="createCustomer()">Add Customer</app-button>
+            <app-button (clickEvent)="openCreateModal()">Add Customer</app-button>
           </div>
         </div>
 
@@ -51,7 +52,7 @@ import { ICustomer, ICustomersApiResponse } from '../../shared/models/customer.m
           
           <div class="empty-state" *ngIf="filteredCustomers.length === 0">
             <p>No customers found.</p>
-            <app-button (clickEvent)="createCustomer()">Add Your First Customer</app-button>
+            <app-button (clickEvent)="openCreateModal()">Add Your First Customer</app-button>
           </div>
         </div>
 
@@ -61,6 +62,13 @@ import { ICustomer, ICustomersApiResponse } from '../../shared/models/customer.m
           </div>
         </ng-template>
       </main>
+
+      <!-- Customer Create Modal -->
+      <app-customer-create-modal
+        [isOpen]="showCreateModal"
+        (closeEvent)="closeCreateModal()"
+        (customerCreated)="onCustomerCreated()">
+      </app-customer-create-modal>
     </div>
   `,
   styleUrls: ['./customers.component.scss']
@@ -75,6 +83,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
   filteredCustomers: ICustomer[] = [];
   searchTerm = '';
   isLoading = false;
+  showCreateModal = false;
 
   get currentUser() {
     return this.authService.currentUser;
@@ -124,8 +133,16 @@ export class CustomersComponent implements OnInit, OnDestroy {
     }
   }
 
-  createCustomer(): void {
-    this.router.navigate(['/customers/new']);
+  openCreateModal(): void {
+    this.showCreateModal = true;
+  }
+
+  closeCreateModal(): void {
+    this.showCreateModal = false;
+  }
+
+  onCustomerCreated(): void {
+    this.loadCustomers();
   }
 
   editCustomer(customer: ICustomer, event: Event): void {
@@ -150,7 +167,7 @@ export class CustomersComponent implements OnInit, OnDestroy {
   }
 
   viewCustomerOrders(customer: ICustomer): void {
-    this.router.navigate(['/customers', customer.customerId, 'orders']);
+    this.router.navigate(['/customers', customer.customerId]);
   }
 
   logout(): void {

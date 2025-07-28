@@ -1,5 +1,3 @@
-Note:
-
 Note: Replace {{subdomain}} with the subdomain of the tenant.
 
 
