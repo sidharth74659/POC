@@ -12,6 +12,16 @@ interface CustomerRequest extends Request {
   tenantId?: string;
 }
 
+interface CustomerCreateRequest extends Request {
+  customerId: string;
+  name: string;
+  contact: {
+    email: string;
+    phone: string;
+  };
+  tenantId: string;
+}
+
 // Get all customers with pagination and search
 router.get('/', async (req: CustomerRequest, res: Response) => {
   try {
@@ -80,13 +90,14 @@ router.get('/:id', async (req: CustomerRequest, res: Response) => {
 });
 
 // Create new customer
-router.post('/', async (req: CustomerRequest, res: Response) => {
+router.post('/', async (req: CustomerCreateRequest, res: Response) => {
   try {
     const tenantId = req.tenantId;
     if (!tenantId) {
       return res.status(400).json({ message: 'Tenant ID required' });
     }
 
+    // const customerId = `CUST_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const customerId = `CUST_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const customer = await Customer.create({
       ...req.body,

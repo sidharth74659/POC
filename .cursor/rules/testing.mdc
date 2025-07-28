@@ -46,7 +46,7 @@ For this project, to test the frontend, visit `hubnest.live` and check if the fr
 - Do not use `localhost:3000` for testing the backend APIs or frontend.
 
 - Existing tenants are:
-  - `tenantb.hubnest.live`. credentials: `admin@tenantb.com`, `password123`
+  - `tenantb.hubnest.live`. credentials: `admin@tenantb.com`, `password123` or
   - `tenantb.hubnest.live`. credentials: `admin@tenantb.com`, `TestPass123!`
   - `tenanta.hubnest.live`. credentials: `admin@tenanta.com`, `TestPass123!`
 - Non-existing tenants are:

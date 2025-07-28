@@ -1,5 +1,20 @@
+# Local Development:
+
 ```bash
+# From the project root (multi-tenant-saas/)
+npm run dev
+
+# This starts both servers concurrently:
+# - Frontend: Angular build watcher (npm run build:watch)
+# - Backend: Nodemon with auto-restart (npm run dev)
+
+# or:
+# cd backend && npm run dev
+# cd angular-app && npm run build:watch
+
+# Run this command to start the tunnel:
 cloudflared tunnel run --url http://localhost:3000 hubnest-tunnel
+docker start mongodb
 ```
 
 ---

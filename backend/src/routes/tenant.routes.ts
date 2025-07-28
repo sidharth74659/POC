@@ -18,10 +18,12 @@ router.post('/', async (req: TenantRequest, res: Response) => {
 
     const exists = await Tenant.findOne({ subdomain });
     if (exists) {
-      return res.status(409).json({ message: 'Subdomain taken' });
+      return res
+        .status(409)
+        .json({ success: false, message: 'Subdomain taken' });
     }
 
-    const tenant = await Tenant.create({
+    await Tenant.create({
       name,
       subdomain,
       // ? `dbUri` is not required, as we're doing Shared DB, Shared Collections By tenantId in each document, but not database-per-tenant pattern.
@@ -38,8 +40,11 @@ router.post('/', async (req: TenantRequest, res: Response) => {
       roles: ['admin'],
     });
 
-    // Create DNS record for subdomain
+    /* 
+    // ? Create DNS record for subdomain
     try {
+      // ? currently not being used, as we're using wildcard DNS for subdomains
+      // (if needed, we can use this in future
       // await createSubdomain(subdomain);
       console.log('DNS creation would happen here for:', subdomain);
     } catch (err) {
@@ -49,6 +54,7 @@ router.post('/', async (req: TenantRequest, res: Response) => {
         error: error.message,
       });
     }
+    */
 
     res.json({
       success: true,
@@ -56,7 +62,7 @@ router.post('/', async (req: TenantRequest, res: Response) => {
     });
   } catch (error) {
     console.error('Tenant creation error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
 
