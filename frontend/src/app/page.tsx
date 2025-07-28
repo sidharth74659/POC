@@ -1,80 +1,299 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Database, Server, FileText, Table, ChevronDown, ChevronRight, Loader2, AlertCircle, LayoutGrid, Rows, Columns, RefreshCw, Clipboard } from 'lucide-react';
+import { Database, Server, FileText, Table, ChevronDown, ChevronRight, Loader2, AlertCircle, LayoutGrid, Rows, RefreshCw, Clipboard, Search, ChevronUp, ChevronDown as ChevronDownIcon } from 'lucide-react';
+import './design-tokens.css';
 
 // API Integration Layer - Single file for all MongoDB operations
-type ConnectResponse = { success: boolean; message: string };
+type ConnectResponse = { success: boolean; message: string; connectionId?: string };
 type Database = { name: string; size?: string; collections?: number };
 type Collection = { name: string; count?: number; avgSize?: string };
 type Document = { [key: string]: unknown };
 
+// Sorting types
+type SortDirection = 'asc' | 'desc' | null;
+type SortConfig = { key: string; direction: SortDirection };
+
+// TableView component with sorting and search
+interface TableViewProps {
+  documents: Document[];
+  setCopyToast: (msg: string) => void;
+}
+const TableView = ({ documents, setCopyToast }: TableViewProps) => {
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: '', direction: null });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [tableColWidths, setTableColWidths] = useState<number[]>([]);
+  const [selectedCell, setSelectedCell] = useState<{ row: number; col: string } | null>(null);
+
+  // Update table column widths when documents change
+  useEffect(() => {
+    if (documents.length > 0) {
+      const keys = Object.keys(documents[0]);
+      const widths = keys.map(key => {
+        // Set reasonable max-widths based on content type
+        if (key === '_id') return 200;
+        if (key === 'email') return 250;
+        if (key === 'passwordHash') return 300;
+        if (key === 'roles') return 150;
+        if (key === 'tenantId') return 150;
+        if (key === '__v') return 80;
+        return 180; // default width
+      });
+      setTableColWidths(widths);
+    }
+  }, [documents]);
+
+  // Filter and sort documents
+  const filteredAndSortedDocuments = useCallback(() => {
+    let filtered = documents;
+
+    // Apply search filter
+    if (searchTerm) {
+      filtered = documents.filter(doc => {
+        return Object.entries(doc).some(([key, value]) => {
+          const strValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+          return strValue.toLowerCase().includes(searchTerm.toLowerCase());
+        });
+      });
+    }
+
+    // Apply sorting
+    if (sortConfig.key && sortConfig.direction) {
+      filtered = [...filtered].sort((a, b) => {
+        const aVal = a[sortConfig.key];
+        const bVal = b[sortConfig.key];
+        
+        // Handle different data types
+        let aStr = typeof aVal === 'object' ? JSON.stringify(aVal) : String(aVal);
+        let bStr = typeof bVal === 'object' ? JSON.stringify(bVal) : String(bVal);
+        
+        // Try to parse as numbers if possible
+        const aNum = parseFloat(aStr);
+        const bNum = parseFloat(bStr);
+        
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+          return sortConfig.direction === 'asc' ? aNum - bNum : bNum - aNum;
+        }
+        
+        // String comparison
+        aStr = aStr.toLowerCase();
+        bStr = bStr.toLowerCase();
+        
+        if (sortConfig.direction === 'asc') {
+          return aStr.localeCompare(bStr);
+        } else {
+          return bStr.localeCompare(aStr);
+        }
+      });
+    }
+
+    return filtered;
+  }, [documents, searchTerm, sortConfig]);
+
+  // Handle column sorting
+  const handleSort = (key: string) => {
+    setSortConfig(prev => {
+      if (prev.key === key) {
+        if (prev.direction === 'asc') {
+          return { key, direction: 'desc' };
+        } else if (prev.direction === 'desc') {
+          return { key, direction: null };
+        }
+      }
+      return { key, direction: 'asc' };
+    });
+  };
+
+  // Get sort icon for column
+  const getSortIcon = (key: string) => {
+    if (sortConfig.key !== key) {
+      return <ChevronDownIcon className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />;
+    }
+    if (sortConfig.direction === 'asc') {
+      return <ChevronUp className="h-3 w-3 text-blue-600" />;
+    }
+    if (sortConfig.direction === 'desc') {
+      return <ChevronDown className="h-3 w-3 text-blue-600" />;
+    }
+    return <ChevronDownIcon className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />;
+  };
+
+  // Handle cell click for full value display
+  const handleCellClick = (rowIndex: number, colKey: string, value: unknown) => {
+    const strValue = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
+    navigator.clipboard.writeText(strValue);
+    setCopyToast('Cell value copied to clipboard!');
+    setSelectedCell({ row: rowIndex, col: colKey });
+    setTimeout(() => setSelectedCell(null), 2000);
+  };
+
+  // Format cell value for display
+  const formatCellValue = (value: unknown, maxWidth: number) => {
+    const strValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+    const isLong = strValue.length > 20;
+    const shouldTruncate = maxWidth < 120;
+    
+    if (shouldTruncate && isLong) {
+      return strValue.slice(0, 20) + '…';
+    }
+    return strValue;
+  };
+
+  const processedDocs = filteredAndSortedDocuments();
+
+  if (!documents.length) {
+    return (
+      <div className="flex items-center justify-center h-full text-gray-500">
+        Select a collection to view documents
+      </div>
+    );
+  }
+
+  const keys = documents.length > 0 ? Object.keys(documents[0]) : [];
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Search Bar */}
+      <div className="p-4 border-b border-gray-200">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search across all fields..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        {searchTerm && (
+          <div className="mt-2 text-sm text-gray-600">
+            Found {processedDocs.length} of {documents.length} documents
+          </div>
+        )}
+      </div>
+
+      {/* Table */}
+      <div className="flex-1 overflow-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50 sticky top-0 z-10">
+            <tr>
+              <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 z-20 bg-gray-50" style={{ width: 36 }}>
+                <span className="sr-only">Actions</span>
+              </th>
+              {keys.map((key, idx) => (
+                <th
+                  key={key}
+                  className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer group hover:bg-gray-100 transition-colors"
+                  style={{ 
+                    minWidth: 80, 
+                    maxWidth: tableColWidths[idx] || 180,
+                    width: tableColWidths[idx] || 180
+                  }}
+                  onClick={() => handleSort(key)}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="truncate">{key}</span>
+                    <div className="flex items-center space-x-1">
+                      {getSortIcon(key)}
+                      <span
+                        className="absolute right-0 top-0 h-full w-2 cursor-col-resize group-hover:bg-blue-100"
+                        style={{ zIndex: 10 }}
+                        onMouseDown={e => {
+                          e.stopPropagation();
+                          const startX = e.clientX;
+                          const startWidth = tableColWidths[idx];
+                          const onMove = (moveEvent: MouseEvent) => {
+                            const delta = moveEvent.clientX - startX;
+                            setTableColWidths(w => {
+                              const newW = [...w];
+                              newW[idx] = Math.max(80, Math.min(600, startWidth + delta));
+                              return newW;
+                            });
+                          };
+                          const onUp = () => {
+                            document.removeEventListener('mousemove', onMove);
+                            document.removeEventListener('mouseup', onUp);
+                          };
+                          document.addEventListener('mousemove', onMove);
+                          document.addEventListener('mouseup', onUp);
+                        }}
+                      >
+                        <div className="w-1 h-6 bg-blue-400 opacity-0 group-hover:opacity-80" style={{ cursor: 'col-resize', marginLeft: '-2px' }} />
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {processedDocs.length === 0 ? (
+              <tr>
+                <td colSpan={keys.length + 1} className="px-6 py-4 text-center text-gray-500">
+                  {searchTerm ? 'No documents match your search' : 'No documents found'}
+                </td>
+              </tr>
+            ) : (
+              processedDocs.map((doc, index) => (
+                <tr key={String(doc._id ?? index)} className="hover:bg-blue-50">
+                  <td className="px-2 py-2 sticky left-0 z-10 bg-white">
+                    <Tooltip content="Copy row as JSON">
+                      <button
+                        className="p-0.5 rounded text-gray-500 hover:text-blue-700 hover:bg-blue-100"
+                        onClick={e => { 
+                          e.stopPropagation(); 
+                          navigator.clipboard.writeText(JSON.stringify(doc, null, 2)); 
+                          setCopyToast('Copied to clipboard!'); 
+                        }}
+                        aria-label="Copy row JSON"
+                        tabIndex={0}
+                      >
+                        <Clipboard className="h-4 w-4" />
+                      </button>
+                    </Tooltip>
+                  </td>
+                  {Object.entries(doc).map(([key, value], cellIndex) => {
+                    const colWidth = tableColWidths[cellIndex] || 180;
+                    const isSelected = selectedCell?.row === index && selectedCell?.col === key;
+                    
+                    return (
+                      <td
+                        key={cellIndex}
+                        className={`px-3 py-2 text-sm text-gray-900 cursor-pointer hover:bg-blue-100 transition-colors ${
+                          isSelected ? 'bg-blue-200' : ''
+                        }`}
+                        style={{ 
+                          minWidth: 'max-content', 
+                          maxWidth: colWidth,
+                          width: colWidth
+                        }}
+                        onClick={() => handleCellClick(index, key, value)}
+                        title={typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)}
+                      >
+                        <div className="truncate">
+                          {formatCellValue(value, colWidth)}
+                        </div>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 const mongoAPI = {
-  // Mock data - replace with actual API calls to backend server
-  mockDatabases: [
-    { name: 'ecommerce', size: '2.1 GB', collections: 12 },
-    { name: 'analytics', size: '845 MB', collections: 8 },
-    { name: 'users', size: '156 MB', collections: 4 },
-    { name: 'inventory', size: '3.2 GB', collections: 15 },
-    { name: 'logs', size: '12.8 GB', collections: 3 }
-  ],
-
-  mockCollections: {
-    ecommerce: [
-      { name: 'products', count: 15420, avgSize: '2.1 KB' },
-      { name: 'orders', count: 8932, avgSize: '3.4 KB' },
-      { name: 'customers', count: 5617, avgSize: '1.8 KB' },
-      { name: 'reviews', count: 23156, avgSize: '0.9 KB' },
-      { name: 'categories', count: 145, avgSize: '0.5 KB' }
-    ],
-    analytics: [
-      { name: 'events', count: 125000, avgSize: '0.8 KB' },
-      { name: 'sessions', count: 45000, avgSize: '1.2 KB' },
-      { name: 'pageviews', count: 890000, avgSize: '0.3 KB' }
-    ],
-    users: [
-      { name: 'profiles', count: 8500, avgSize: '2.1 KB' },
-      { name: 'preferences', count: 8200, avgSize: '0.7 KB' }
-    ],
-    inventory: [
-      { name: 'items', count: 25000, avgSize: '1.5 KB' },
-      { name: 'warehouses', count: 12, avgSize: '5.2 KB' },
-      { name: 'suppliers', count: 340, avgSize: '2.8 KB' }
-    ],
-    logs: [
-      { name: 'application', count: 2500000, avgSize: '0.4 KB' },
-      { name: 'errors', count: 15000, avgSize: '1.1 KB' }
-    ]
-  } as Record<string, Collection[]>,
-
-  mockDocuments: {
-    'ecommerce.products': [
-      { _id: '507f1f77bcf86cd799439011', name: 'Wireless Headphones', price: 299.99, category: 'Electronics', inStock: true },
-      { _id: '507f1f77bcf86cd799439012', name: 'Coffee Maker', price: 149.99, category: 'Appliances', inStock: false },
-      { _id: '507f1f77bcf86cd799439013', name: 'Running Shoes', price: 89.99, category: 'Sports', inStock: true },
-      { _id: '507f1f77bcf86cd799439014', name: 'Desk Lamp', price: 45.99, category: 'Furniture', inStock: true },
-      { _id: '507f1f77bcf86cd799439015', name: 'Smartphone Case', price: 24.99, category: 'Accessories', inStock: true }
-    ],
-    'ecommerce.orders': [
-      { _id: '507f1f77bcf86cd799439021', orderId: 'ORD-2024-001', customerId: 'CUST-456', total: 299.99, status: 'shipped' },
-      { _id: '507f1f77bcf86cd799439022', orderId: 'ORD-2024-002', customerId: 'CUST-789', total: 174.98, status: 'processing' },
-      { _id: '507f1f77bcf86cd799439023', orderId: 'ORD-2024-003', customerId: 'CUST-123', total: 89.99, status: 'delivered' }
-    ],
-    'analytics.events': [
-      { _id: '507f1f77bcf86cd799439031', event: 'page_view', userId: 'user123', timestamp: '2024-01-15T10:30:00Z', page: '/products' },
-      { _id: '507f1f77bcf86cd799439032', event: 'button_click', userId: 'user456', timestamp: '2024-01-15T10:31:15Z', element: 'add-to-cart' },
-      { _id: '507f1f77bcf86cd799439033', event: 'purchase', userId: 'user789', timestamp: '2024-01-15T10:32:30Z', amount: 299.99 }
-    ]
-  } as Record<string, Document[]>,
-
   // Validate MongoDB connection URI format
   validateConnectionURI: (uri: string): boolean => {
     const mongoRegex = /^mongodb(\+srv)?:\/\/([\w\-\.]+(:[\w\-\.]+)?@)?([\w\-\.]+)(:\d+)?(\/[\w\-\.]*)?(\?[\w\-\.\=\&]*)?$/;
     return mongoRegex.test(uri);
   },
 
-  // Simulate connection to MongoDB
-  // TODO: Replace with actual backend API call to /api/connect
+  // Connect to MongoDB
   connect: async (uri: string): Promise<ConnectResponse> => {
     try {
       const res = await fetch('http://localhost:4000/connect', {
@@ -93,19 +312,17 @@ const mongoAPI = {
   },
 
   // Fetch databases
-  // TODO: Replace with actual API call to /api/databases
-  getDatabases: async (uri: string, delayMs = 0): Promise<{ success: boolean; data: Database[]; message?: string }> => {
+  getDatabases: async (connectionId: string, delayMs = 0): Promise<{ success: boolean; data: Database[]; message?: string }> => {
     await delay(delayMs);
     try {
-      const res = await fetch('http://localhost:4000/databases', {
-        headers: { 'x-mongo-uri': uri }
-      });
+      const res = await fetch(`http://localhost:4000/databases/${connectionId}`);
       if (!res.ok) {
-        const err = await res.json();
-        return { success: false, data: [], message: err.error || 'Failed to fetch databases' };
+        const error = await res.json();
+        return { success: false, data: [], message: error.error || 'Failed to fetch databases' };
       }
-      const data = await res.json();
-      return { success: true, data: data.map((name: string) => ({ name })) };
+      const dbNames = await res.json();
+      const databases = dbNames.map((name: string) => ({ name }));
+      return { success: true, data: databases };
     } catch (err: unknown) {
       let message = 'Network error';
       if (err instanceof Error) message = err.message;
@@ -115,19 +332,17 @@ const mongoAPI = {
   },
 
   // Fetch collections for a database
-  // TODO: Replace with actual API call to /api/collections/{dbName}
-  getCollections: async (uri: string, dbName: string, delayMs = 0): Promise<{ success: boolean; data: Collection[]; message?: string }> => {
+  getCollections: async (connectionId: string, dbName: string, delayMs = 0): Promise<{ success: boolean; data: Collection[]; message?: string }> => {
     await delay(delayMs);
     try {
-      const res = await fetch(`http://localhost:4000/collections/${encodeURIComponent(dbName)}`, {
-        headers: { 'x-mongo-uri': uri }
-      });
+      const res = await fetch(`http://localhost:4000/collections/${connectionId}/${dbName}`);
       if (!res.ok) {
-        const err = await res.json();
-        return { success: false, data: [], message: err.error || 'Failed to fetch collections' };
+        const error = await res.json();
+        return { success: false, data: [], message: error.error || 'Failed to fetch collections' };
       }
-      const data = await res.json();
-      return { success: true, data: data.map((name: string) => ({ name })) };
+      const colNames = await res.json();
+      const collections = colNames.map((name: string) => ({ name }));
+      return { success: true, data: collections };
     } catch (err: unknown) {
       let message = 'Network error';
       if (err instanceof Error) message = err.message;
@@ -137,24 +352,37 @@ const mongoAPI = {
   },
 
   // Fetch documents from a collection
-  // TODO: Replace with actual API call to /api/documents/{dbName}/{collectionName}
-  getDocuments: async (uri: string, dbName: string, collectionName: string, skip = 0, limit = 25, delayMs = 0): Promise<{ success: boolean; data: Document[]; hasMore: boolean; message?: string }> => {
+  getDocuments: async (connectionId: string, dbName: string, colName: string, delayMs = 0): Promise<{ success: boolean; data: Document[]; message?: string }> => {
     await delay(delayMs);
     try {
-      const res = await fetch(`http://localhost:4000/documents/${encodeURIComponent(dbName)}/${encodeURIComponent(collectionName)}?skip=${skip}&limit=${limit}`, {
-        headers: { 'x-mongo-uri': uri }
-      });
+      const res = await fetch(`http://localhost:4000/documents/${connectionId}/${dbName}/${colName}`);
       if (!res.ok) {
-        const err = await res.json();
-        return { success: false, data: [], hasMore: false, message: err.error || 'Failed to fetch documents' };
+        const error = await res.json();
+        return { success: false, data: [], message: error.error || 'Failed to fetch documents' };
       }
-      const data = await res.json();
-      return { success: true, data: data.data, hasMore: data.hasMore };
+      const documents = await res.json();
+      return { success: true, data: documents };
     } catch (err: unknown) {
       let message = 'Network error';
       if (err instanceof Error) message = err.message;
       else if (typeof err === 'string') message = err;
-      return { success: false, data: [], hasMore: false, message };
+      return { success: false, data: [], message };
+    }
+  },
+
+  // Close connection
+  disconnect: async (connectionId: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch(`http://localhost:4000/connect/${connectionId}`, {
+        method: 'DELETE'
+      });
+      const data = await res.json();
+      return data;
+    } catch (err: unknown) {
+      let message = 'Network error';
+      if (err instanceof Error) message = err.message;
+      else if (typeof err === 'string') message = err;
+      return { success: false, message };
     }
   }
 };
@@ -169,11 +397,11 @@ interface ConnectionFormProps {
   error: string;
 }
 const ConnectionForm = ({ onConnect, isConnecting, error }: ConnectionFormProps) => (
-  <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-    <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+  <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--color-bg)' }}>
+    <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md" style={{ background: 'var(--color-surface)' }}>
       <div className="flex items-center mb-6">
         <Server className="h-8 w-8 text-green-600 mr-3" />
-        <h1 className="text-2xl font-bold text-gray-900">MongoDB Explorer</h1>
+        <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text)' }}>MongoDB Explorer</h1>
       </div>
       
       <div className="mb-4 p-3 bg-blue-50 rounded-md">
@@ -239,11 +467,11 @@ interface ColumnProps {
   width?: number; // pass width for conditional truncation
 }
 const Column = ({ title, items, selectedItem, onItemSelect, isLoading, icon: Icon, width }: ColumnProps) => (
-  <div className="flex-1 border-r border-gray-200 bg-white">
+  <div className="flex-1 border-r border-gray-200" style={{ background: 'var(--color-surface)' }}>
     <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-3">
       <div className="flex items-center">
         {Icon && <Icon className="h-4 w-4 text-gray-600 mr-2" />}
-        <h3 className="font-medium text-gray-900">{title}</h3>
+        <h3 className="font-medium" style={{ color: 'var(--color-text)' }}>{title}</h3>
         <span className="ml-2 text-xs text-gray-500">({items.length})</span>
       </div>
     </div>
@@ -253,7 +481,7 @@ const Column = ({ title, items, selectedItem, onItemSelect, isLoading, icon: Ico
           <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
         </div>
       ) : (
-        <div className="divide-y divide-gray-100">
+        <div className="divide-y divide-gray-100" style={{ borderColor: 'var(--color-border)' }}>
           {items.map((item, index) => {
             const content = item.name || item._id || 'Unnamed';
             // Only truncate if width is less than 180px (arbitrary threshold for demo)
@@ -262,12 +490,13 @@ const Column = ({ title, items, selectedItem, onItemSelect, isLoading, icon: Ico
               <div
                 key={String(index)}
                 className={`p-3 cursor-pointer hover:bg-blue-50 ${
-                  selectedItem === content ? 'bg-blue-100 border-r-2 border-blue-500' : ''
+                  selectedItem === content ? 'border-r-2 border-blue-500' : ''
                 }`}
+                style={{ background: selectedItem === content ? 'var(--color-accent-bg)' : undefined }}
                 onClick={() => onItemSelect(content)}
               >
                 <div
-                  className={`font-medium text-gray-900${shouldTruncate ? ' truncate' : ''}`}
+                  className={`font-medium${shouldTruncate ? ' truncate' : ''}`}
                   style={shouldTruncate ? { maxWidth: '12rem', textOverflow: 'ellipsis', overflow: 'hidden' } : {}}
                   title={shouldTruncate ? content : undefined}
                 >
@@ -322,14 +551,14 @@ const AccordionView = ({ documents, setCopyToast }: AccordionViewProps) => {
         // Only truncate if mainColWidths[2] is small
         const shouldTruncate = mainColWidths[2] !== undefined && mainColWidths[2] < 180;
         return (
-          <div key={String(index)} className="border border-gray-200 rounded-md relative">
+          <div key={String(index)} className="border border-gray-200 rounded-md relative" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
             <button
               onClick={() => toggleExpanded(id)}
-              className="w-full px-4 py-3 text-left flex items-center justify-between bg-gray-50 hover:bg-blue-50 cursor-pointer"
+              className="w-full px-4 py-3 text-left flex items-center justify-between cursor-pointer" style={{ background: 'var(--color-surface)' }}
               title={label}
               aria-label={`Toggle document ${label} details`}
             >
-              <span className={`font-medium text-gray-900${shouldTruncate ? ' truncate' : ''}`} style={shouldTruncate ? { maxWidth: '12rem', textOverflow: 'ellipsis', overflow: 'hidden' } : {}}>
+              <span className={`font-medium${shouldTruncate ? ' truncate' : ''}`} style={{ color: 'var(--color-text)' }}>
                 Document {label}
               </span>
               {isExpanded ? (
@@ -343,7 +572,7 @@ const AccordionView = ({ documents, setCopyToast }: AccordionViewProps) => {
                 <div className="absolute top-2 right-2 z-10">
                   <Tooltip content="Copy JSON">
                     <button
-                      className="p-0.5 rounded hover:bg-blue-100 text-gray-500 hover:text-blue-700"
+                      className="p-0.5 rounded text-gray-500 hover:text-blue-700" // TODO: theme hover background
                       onClick={() => handleCopy(doc)}
                       aria-label="Copy document JSON"
                       tabIndex={0}
@@ -380,11 +609,11 @@ const CardView = ({ documents, setCopyToast }: CardViewProps) => {
         // Only truncate if mainColWidths[2] is small
         const shouldTruncate = mainColWidths[2] !== undefined && mainColWidths[2] < 180;
         return (
-          <div key={String(index)} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-lg cursor-pointer relative">
+          <div key={String(index)} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-lg cursor-pointer relative" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
             <div className="absolute top-2 right-2 z-10">
               <Tooltip content="Copy JSON">
                 <button
-                  className="p-0.5 rounded hover:bg-blue-100 text-gray-500 hover:text-blue-700"
+                  className="p-0.5 rounded text-gray-500 hover:text-blue-700" // TODO: theme hover background
                   onClick={() => handleCopy(doc)}
                   aria-label="Copy document JSON"
                   tabIndex={0}
@@ -393,7 +622,7 @@ const CardView = ({ documents, setCopyToast }: CardViewProps) => {
                 </button>
               </Tooltip>
             </div>
-            <div className="font-medium text-gray-900 mb-2">
+            <div className="font-medium mb-2" style={{ color: 'var(--color-text)' }}>
               {typeof doc._id === 'string' ? `ID: ...${doc._id.slice(-6)}` : typeof doc._id === 'number' ? `ID: ...${doc._id}` : `Document ${index + 1}`}
             </div>
             <div className="space-y-1">
@@ -403,7 +632,7 @@ const CardView = ({ documents, setCopyToast }: CardViewProps) => {
                 return (
                   <div key={entryIndex} className={`text-sm${shouldTruncate && isLong ? ' truncate max-w-xs' : ''}`} title={strValue} style={shouldTruncate && isLong ? { maxWidth: '12rem', textOverflow: 'ellipsis', overflow: 'hidden' } : {}}>
                     <span className="font-medium text-gray-600">{key}:</span>{' '}
-                    <span className="text-gray-900">{isLong && shouldTruncate ? strValue.slice(0, 20) + '…' : strValue}</span>
+                    <span style={{ color: 'var(--color-text)' }}>{isLong && shouldTruncate ? strValue.slice(0, 20) + '…' : strValue}</span>
                   </div>
                 );
               })}
@@ -455,26 +684,24 @@ function useResizableWidths(defaults: number[], minWidths: number[] = [], maxWid
 
 // Toast component (branded for copy, solid color, animated progress bar)
 function CopyToast({ message, onClose }: { message: string; onClose: () => void }) {
-  const [progress, setProgress] = useState(100);
+  const [timeLeft, setTimeLeft] = useState(3);
   useEffect(() => {
-    let start = Date.now();
-    const duration = 2000;
     const tick = () => {
-      const elapsed = Date.now() - start;
-      setProgress(Math.max(0, 100 - (elapsed / duration) * 100));
-      if (elapsed < duration) requestAnimationFrame(tick);
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          onClose();
+          return 0;
+        }
+        return prev - 1;
+      });
     };
-    tick();
-    const timer = setTimeout(onClose, duration);
-    return () => clearTimeout(timer);
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
   }, [onClose]);
+
   return (
-    <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded shadow-lg z-50 animate-fade-in font-semibold text-base flex items-center gap-2 bg-blue-600">
-      <Clipboard className="h-4 w-4 mr-2 text-white" />
-      {message}
-      <div className="absolute left-0 bottom-0 w-full h-1 rounded-b overflow-hidden">
-        <div className="h-full rounded-b bg-blue-400 transition-all duration-200" style={{ width: `${progress}%` }} />
-      </div>
+    <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50">
+      {message} ({timeLeft}s)
     </div>
   );
 }
@@ -493,14 +720,15 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
 // Helper: SegmentTabIcon and SegmentTabLabel components
 function SegmentTabIcon<T extends string>({ options, value, onChange, className = '', ariaLabel }: { options: { icon: React.ReactNode; value: T; label: string; disabled?: boolean; tooltip?: string }[]; value: T; onChange: (v: T) => void; className?: string; ariaLabel?: string }) {
   return (
-    <div className={`inline-flex rounded-md bg-gray-100 border border-gray-200 ${className}`} role="tablist" aria-label={ariaLabel}>
+    <div className={`inline-flex rounded-md border ${className}`} role="tablist" aria-label={ariaLabel} style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
       {options.map(opt => (
         <Tooltip key={opt.value} content={opt.tooltip || opt.label}>
           <button
             type="button"
             className={`px-4 py-2 text-sm font-medium focus:outline-none transition-colors duration-75 flex items-center justify-center
-              ${value === opt.value ? 'bg-blue-100 text-blue-700 shadow-sm' : opt.disabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-200'}
+              ${value === opt.value ? 'text-blue-700 shadow-sm' : opt.disabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-200'}
               rounded-md first:rounded-l-md last:rounded-r-md border-0`}
+            style={{ background: value === opt.value ? 'var(--color-accent-bg)' : undefined }}
             aria-selected={value === opt.value}
             tabIndex={opt.disabled ? -1 : value === opt.value ? 0 : -1}
             onClick={() => !opt.disabled && onChange(opt.value)}
@@ -515,7 +743,7 @@ function SegmentTabIcon<T extends string>({ options, value, onChange, className 
 }
 function SegmentTabLabel<T extends string>({ options, value, onChange, className = '', ariaLabel, renderButton }: { options: { label: string; value: T }[]; value: T; onChange: (v: T) => void; className?: string; ariaLabel?: string; renderButton?: (opt: { label: string; value: T }, isSelected: boolean) => React.ReactNode }) {
   return (
-    <div className={`inline-flex rounded-md bg-gray-100 border border-gray-200 ${className}`} role="tablist" aria-label={ariaLabel}>
+    <div className={`inline-flex rounded-md border ${className}`} role="tablist" aria-label={ariaLabel} style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
       {options.map(opt => renderButton
         ? renderButton(opt, value === opt.value)
         : (
@@ -523,7 +751,7 @@ function SegmentTabLabel<T extends string>({ options, value, onChange, className
             key={opt.value}
             type="button"
             className={`px-4 py-2 text-sm font-medium focus:outline-none transition-colors duration-75
-              ${value === opt.value ? 'bg-blue-100 text-blue-700 shadow-sm' : 'text-gray-600 hover:bg-gray-200'}
+              ${value === opt.value ? 'text-blue-700 shadow-sm' : 'text-gray-600 hover:bg-gray-200'}
               rounded-md first:rounded-l-md last:rounded-r-md border-0`}
             aria-selected={value === opt.value}
             tabIndex={value === opt.value ? 0 : -1}
@@ -541,37 +769,49 @@ function SkeletonLoader({ rows = 5, height = 24, className = '' }: { rows?: numb
   return (
     <div className={`space-y-2 ${className}`}>
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="bg-gray-200 animate-pulse rounded" style={{ height, width: '100%' }} />
+        <div key={i} className="animate-pulse rounded" style={{ height, width: '100%', background: 'var(--color-skeleton)' }} />
       ))}
     </div>
   );
 }
 // --- App component: add loader and toast state ---
 const App = () => {
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [isConnecting, setIsConnecting] = useState<boolean>(false);
+  // Connection state
+  const [isConnected, setIsConnected] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
   const [connectionError, setConnectionError] = useState<string>('');
-  const [connectionURI, setConnectionURI] = useState<string>('mongodb://localhost:27017/mydb');
-  
+  const [connectionId, setConnectionId] = useState<string>('');
+  const [connectionURI, setConnectionURI] = useState<string>('');
+
+  // Data state
   const [databases, setDatabases] = useState<Database[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [hasMoreDocuments, setHasMoreDocuments] = useState<boolean>(true);
-  const [isLoadingDocuments, setIsLoadingDocuments] = useState<boolean>(false);
-  const DOCUMENTS_LIMIT = 25;
-  
   const [selectedDatabase, setSelectedDatabase] = useState<string>('');
   const [selectedCollection, setSelectedCollection] = useState<string>('');
-  
-  const [isLoadingDatabases, setIsLoadingDatabases] = useState<boolean>(false);
-  const [isLoadingCollections, setIsLoadingCollections] = useState<boolean>(false);
+
+  // Loading states
+  const [isLoadingDatabases, setIsLoadingDatabases] = useState(false);
+  const [isLoadingCollections, setIsLoadingCollections] = useState(false);
+  const [isLoadingDocuments, setIsLoadingDocuments] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+
+  // UI state
+  const [viewMode, setViewMode] = useState<'table' | 'accordion' | 'card'>('table');
+  const [layout, setLayout] = useState<'stacked' | 'top-split'>('stacked');
+  const [refreshInterval, setRefreshInterval] = useState<number>(0);
+  const [copyToast, setCopyToast] = useState<string>('');
+  const [toast, setToast] = useState<string>('');
+  const [hasMoreDocuments, setHasMoreDocuments] = useState(false);
+
+  // UI Options
   const VIEW_MODE_OPTIONS_ICON = [
     { label: 'Table View', value: 'table', icon: <Table className="h-4 w-4" /> },
     { label: 'Accordion View', value: 'accordion', icon: <ChevronDown className="h-4 w-4" /> },
     { label: 'Card View', value: 'card', icon: <FileText className="h-4 w-4" />, disabled: true, tooltip: 'Card view is not properly implemented yet' },
   ];
   const LAYOUT_OPTIONS_ICON = [
-    { label: 'Side-by-side Layout', value: 'columns', icon: <Columns className="h-4 w-4" /> },
     { label: 'Stacked Layout', value: 'stacked', icon: <Rows className="h-4 w-4" /> },
     { label: 'Top Split Layout', value: 'top-split', icon: <LayoutGrid className="h-4 w-4" />, disabled: true, tooltip: 'Top Split layout is not properly implemented yet' },
   ];
@@ -582,15 +822,8 @@ const App = () => {
     { label: '30s', value: '30000' },
     { label: '1 min', value: '60000' },
   ];
-  type RefreshOption = typeof REFRESH_OPTIONS_LABEL[number];
 
-  const [copyToast, setCopyToast] = useState<string>('');
-  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
-  const [refreshInterval, setRefreshInterval] = useState<number>(30000); // default 30s
-  const [showLoader, setShowLoader] = useState<boolean>(false);
-  const [toast, setToast] = useState<string>('');
-  const [viewMode, setViewMode] = useState<'table' | 'accordion' | 'card'>('table');
-  const [layout, setLayout] = useState<'columns' | 'stacked' | 'top-split'>('columns');
+  // Layout state
   const [stackedLeftWidth, setStackedLeftWidth] = useState(340); // px, for stacked layout
   const [stackedTopHeight, setStackedTopHeight] = useState(0.4); // percent, for stacked layout (Databases)
   const [topSplitTopHeight, setTopSplitTopHeight] = useState(0.4); // percent, for top-split layout
@@ -602,35 +835,36 @@ const App = () => {
 
   // Auto-refresh functionality
   useEffect(() => {
-    if (!isConnected || refreshInterval === 0) return;
+    if (!isConnected || refreshInterval === 0 || !connectionId) return;
     if (!selectedDatabase || !selectedCollection) return;
     const interval = setInterval(async () => {
       // Refresh databases
-      const dbResult = await mongoAPI.getDatabases(connectionURI, simulateDelay);
+      const dbResult = await mongoAPI.getDatabases(connectionId, simulateDelay);
       if (dbResult.success) {
         setDatabases(dbResult.data);
       }
       // Refresh documents if a collection is selected
       if (selectedDatabase && selectedCollection) {
-        const docResult = await mongoAPI.getDocuments(connectionURI, selectedDatabase, selectedCollection, 0, DOCUMENTS_LIMIT, simulateDelay);
+        const docResult = await mongoAPI.getDocuments(connectionId, selectedDatabase, selectedCollection, simulateDelay);
         if (docResult.success) {
           setDocuments(docResult.data);
-          setHasMoreDocuments(docResult.hasMore);
+          setHasMoreDocuments(docResult.data.length === 10); // Backend returns max 10 documents
         }
       }
     }, refreshInterval);
     return () => clearInterval(interval);
-  }, [isConnected, connectionURI, selectedDatabase, selectedCollection, refreshInterval, simulateDelay]);
+  }, [isConnected, connectionId, selectedDatabase, selectedCollection, refreshInterval, simulateDelay]);
 
   const handleManualRefresh = async () => {
+    if (!connectionId) return;
     // Refresh databases
-    const dbResult = await mongoAPI.getDatabases(connectionURI, simulateDelay);
+    const dbResult = await mongoAPI.getDatabases(connectionId, simulateDelay);
     if (dbResult.success) {
       setDatabases(dbResult.data);
     }
     // Refresh documents if a collection is selected
     if (selectedDatabase && selectedCollection) {
-      const docResult = await mongoAPI.getDocuments(connectionURI, selectedDatabase, selectedCollection, 0, DOCUMENTS_LIMIT, simulateDelay);
+      const docResult = await mongoAPI.getDocuments(connectionId, selectedDatabase, selectedCollection, simulateDelay);
       if (docResult.success) {
         setDocuments(docResult.data);
       }
@@ -656,10 +890,11 @@ const App = () => {
     setConnectionError('');
     try {
       const result: ConnectResponse = await mongoAPI.connect(uri);
-      if (result.success) {
+      if (result.success && result.connectionId) {
         setConnectionURI(uri);
+        setConnectionId(result.connectionId);
         setIsConnected(true);
-        loadDatabases(uri);
+        loadDatabases(result.connectionId);
       } else {
         setConnectionError(result.message);
       }
@@ -671,11 +906,11 @@ const App = () => {
   };
 
   // Load databases
-  const loadDatabases = useCallback(async (uri: string) => {
+  const loadDatabases = useCallback(async (connId: string) => {
     setIsLoadingDatabases(true);
     setDatabasesError(null);
     try {
-      const result = await mongoAPI.getDatabases(uri, simulateDelay);
+      const result = await mongoAPI.getDatabases(connId, simulateDelay);
       if (result.success) {
         setDatabases(result.data);
       } else {
@@ -692,6 +927,7 @@ const App = () => {
 
   // Handle database selection
   const handleDatabaseSelect = async (dbName: string) => {
+    if (!connectionId) return;
     setSelectedDatabase(dbName);
     setSelectedCollection('');
     setCollections([]);
@@ -699,7 +935,7 @@ const App = () => {
     setIsLoadingCollections(true);
     setCollectionsError(null);
     try {
-      const result = await mongoAPI.getCollections(connectionURI, dbName, simulateDelay);
+      const result = await mongoAPI.getCollections(connectionId, dbName, simulateDelay);
       if (result.success) {
         setCollections(result.data);
       } else {
@@ -714,16 +950,16 @@ const App = () => {
     }
   };
 
-  // Load first page of documents
-  const loadDocuments = useCallback(async (uri: string, db: string, col: string) => {
+  // Load documents
+  const loadDocuments = useCallback(async (connId: string, db: string, col: string) => {
     setIsLoadingDocuments(true);
     setHasMoreDocuments(true);
     setDocumentsError(null);
     try {
-      const result = await mongoAPI.getDocuments(uri, db, col, 0, DOCUMENTS_LIMIT, simulateDelay);
+      const result = await mongoAPI.getDocuments(connId, db, col, simulateDelay);
       if (result.success) {
         setDocuments(result.data);
-        setHasMoreDocuments(result.hasMore);
+        setHasMoreDocuments(result.data.length === 10); // Backend returns max 10 documents
       } else {
         setDocuments([]);
         setHasMoreDocuments(false);
@@ -740,14 +976,14 @@ const App = () => {
 
   // Load more documents (infinite scroll)
   const loadMoreDocuments = async () => {
-    if (!hasMoreDocuments || isLoadingMore) return;
+    if (!hasMoreDocuments || isLoadingMore || !connectionId) return;
     setIsLoadingMore(true);
     setDocumentsError(null);
     try {
-      const result = await mongoAPI.getDocuments(connectionURI, selectedDatabase, selectedCollection, documents.length, DOCUMENTS_LIMIT, simulateDelay);
+      const result = await mongoAPI.getDocuments(connectionId, selectedDatabase, selectedCollection, simulateDelay);
       if (result.success) {
         setDocuments(prev => [...prev, ...result.data]);
-        setHasMoreDocuments(result.hasMore);
+        setHasMoreDocuments(result.data.length === 10); // Backend returns max 10 documents
       } else {
         setDocumentsError(result.message || 'Failed to load more documents');
       }
@@ -760,16 +996,15 @@ const App = () => {
 
   // Handle collection selection
   const handleCollectionSelect = async (collectionName: string) => {
+    if (!connectionId) return;
     setSelectedCollection(collectionName);
     setDocuments([]);
-    setHasMoreDocuments(true);
-    setIsLoadingDocuments(true);
     setDocumentsError(null);
     try {
-      const result = await mongoAPI.getDocuments(connectionURI, selectedDatabase, collectionName, 0, DOCUMENTS_LIMIT, simulateDelay);
+      const result = await mongoAPI.getDocuments(connectionId, selectedDatabase, collectionName, simulateDelay);
       if (result.success) {
         setDocuments(result.data);
-        setHasMoreDocuments(result.hasMore);
+        setHasMoreDocuments(result.data.length === 10); // Backend returns max 10 documents
       } else {
         setDocuments([]);
         setHasMoreDocuments(false);
@@ -811,91 +1046,7 @@ const App = () => {
       case 'card':
         return <CardView documents={documents} setCopyToast={setCopyToast} />;
       default:
-        // TableView with resizable columns
-        return (
-          <div className="overflow-x-auto max-w-full" style={{ maxWidth: '100vw' }}>
-            <table
-              className="min-w-full divide-y divide-gray-200"
-              style={{ minWidth: 'max-content', width: '100%', tableLayout: 'auto' }}
-            >
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 z-20 bg-white" style={{ width: 36 }}></th>
-                  {documents.length > 0 && Object.keys(documents[0]).map((key, idx) => (
-                    <th
-                      key={key}
-                      className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider relative group"
-                      style={{ minWidth: 80, paddingRight: 24 }} // extra padding for resizer
-                    >
-                      <div className="flex items-center justify-between">
-                        <span>{key}</span>
-                        <span
-                          className="absolute right-0 top-0 h-full w-2 cursor-col-resize group-hover:bg-blue-100"
-                          style={{ zIndex: 10 }}
-                          onMouseDown={e => {
-                            e.preventDefault();
-                            const startX = e.clientX;
-                            const startWidth = tableColWidths[idx];
-                            const onMove = (moveEvent: MouseEvent) => {
-                              const delta = moveEvent.clientX - startX;
-                              setTableColWidths(w => {
-                                const newW = [...w];
-                                newW[idx] = Math.max(80, Math.min(600, startWidth + delta));
-                                return newW;
-                              });
-                            };
-                            const onUp = () => {
-                              document.removeEventListener('mousemove', onMove);
-                              document.removeEventListener('mouseup', onUp);
-                            };
-                            document.addEventListener('mousemove', onMove);
-                            document.addEventListener('mouseup', onUp);
-                          }}
-                        >
-                          <div className="w-1 h-6 bg-blue-400 opacity-0 group-hover:opacity-80" style={{ cursor: 'col-resize', marginLeft: '-2px' }} />
-                        </span>
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {documents.map((doc, index) => (
-                  <tr key={String(doc._id ?? index)} className="hover:bg-blue-50 cursor-pointer">
-                    <td className="px-2 py-2 sticky left-0 z-10 bg-white">
-                      <Tooltip content="Copy row as JSON">
-                        <button
-                          className="p-0.5 rounded hover:bg-blue-100 text-gray-500 hover:text-blue-700"
-                          onClick={e => { e.stopPropagation(); navigator.clipboard.writeText(JSON.stringify(doc, null, 2)); setCopyToast('Copied to clipboard!'); }}
-                          aria-label="Copy row JSON"
-                          tabIndex={0}
-                        >
-                          <Clipboard className="h-4 w-4" />
-                        </button>
-                      </Tooltip>
-                    </td>
-                    {Object.entries(doc).map(([key, value], cellIndex) => {
-                      const strValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
-                      const isLong = strValue.length > 20;
-                      const colWidth = tableColWidths[cellIndex] || 180;
-                      const shouldTruncate = colWidth < 120;
-                      return (
-                        <td
-                          key={cellIndex}
-                          className={`px-3 py-2 whitespace-nowrap text-sm text-gray-900${shouldTruncate && isLong ? ' max-w-xs truncate' : ''}`}
-                          title={shouldTruncate && isLong ? strValue : undefined}
-                          style={{ minWidth: 'max-content', width: colWidth ? colWidth + 24 : 'auto', maxWidth: 600, textOverflow: shouldTruncate && isLong ? 'ellipsis' : undefined, overflow: shouldTruncate && isLong ? 'hidden' : undefined }}
-                        >
-                          {shouldTruncate && isLong ? strValue.slice(0, 20) + '…' : strValue}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
+        return <TableView documents={documents} setCopyToast={setCopyToast} />;
     }
   };
 
@@ -978,6 +1129,16 @@ const App = () => {
     }
   };
 
+  // Theme toggle logic
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
+  }, [theme]);
+
   if (!isConnected) {
     return (
       <ConnectionForm
@@ -989,13 +1150,13 @@ const App = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
+    <div className="h-screen flex flex-col" style={{ background: 'var(--color-bg)', color: 'var(--color-text)' }}>
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 p-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="border-b p-4 flex flex-wrap items-center justify-between gap-4" style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="flex items-center gap-4 min-w-0">
           <Database className="h-6 w-6 text-green-600 mr-3 flex-shrink-0" />
-          <h1 className="text-xl font-semibold text-gray-900 whitespace-nowrap">MongoDB Explorer</h1>
-          <span className="ml-3 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full whitespace-nowrap">
+          <h1 className="text-xl font-semibold" style={{ color: 'var(--color-text)' }}>MongoDB Explorer</h1>
+          <span className="ml-3 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full whitespace-nowrap" style={{ background: 'var(--color-surface)', color: 'var(--color-text)' }}>
             READ-ONLY DEMO
           </span>
         </div>
@@ -1009,7 +1170,7 @@ const App = () => {
           <SegmentTabIcon
             options={LAYOUT_OPTIONS_ICON}
             value={layout}
-            onChange={v => setLayout(v as 'columns' | 'stacked' | 'top-split')}
+            onChange={v => setLayout(v as 'stacked' | 'top-split')}
             ariaLabel="Layout"
           />
           <SegmentTabLabel
@@ -1022,7 +1183,7 @@ const App = () => {
                 <button
                   type="button"
                   className={`px-4 py-2 text-sm font-medium focus:outline-none transition-colors duration-75
-                    ${isSelected ? 'bg-blue-100 text-blue-700 shadow-sm' : 'text-gray-600 hover:bg-gray-200'}
+                    ${isSelected ? 'text-blue-700 shadow-sm' : 'text-gray-600 hover:bg-gray-200'}
                     rounded-md first:rounded-l-md last:rounded-r-md border-0`}
                   aria-selected={isSelected}
                   tabIndex={isSelected ? 0 : -1}
@@ -1059,16 +1220,25 @@ const App = () => {
             </select>
           </div>
         </div>
+        <button
+          id="theme-toggle"
+          className="px-3 py-1 rounded-md text-sm font-medium border border-gray-300 focus:outline-none ml-auto"
+          style={{ background: theme === 'dark' ? 'var(--color-surface)' : 'var(--color-bg)', color: 'var(--color-text)' }}
+          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+          aria-label="Toggle theme"
+        >
+          {theme === 'light' ? '🌞 Light' : '🌙 Dark'}
+        </button>
       </div>
       {/* Main content area: layout switch */}
       {layout === 'columns' ? (
         <div className="flex-1 flex overflow-hidden" style={{ minWidth: 600 }}>
           <div style={{ width: mainColWidths[0], minWidth: 120, maxWidth: 500 }}>
-            <div style={{ height: '100%' }}>
+            <div style={{ height: '100%', background: 'var(--color-surface)', borderRight: '1px solid var(--color-border)' }}>
               {isLoadingDatabases ? (
                 <SkeletonLoader rows={5} height={28} className="mt-4" />
               ) : databasesError ? (
-                <div className="flex flex-col items-center justify-center h-full p-8 gap-2">
+                <div className="flex flex-col items-center justify-center h-full p-8 gap-2" style={{ background: 'var(--color-surface)', color: 'var(--color-danger)' }}>
                   <span className="text-red-600 text-sm font-medium">{databasesError}</span>
                   <button className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 shadow-sm" onClick={() => loadDatabases(connectionURI)}>
                     Retry
@@ -1089,7 +1259,7 @@ const App = () => {
           </div>
           {/* Resizer between Databases and Collections */}
           <div
-            style={{ width: 6, cursor: 'col-resize', background: '#e5e7eb', zIndex: 20 }}
+            style={{ width: 6, cursor: 'col-resize', background: 'var(--color-border)', zIndex: 20 }}
             onMouseDown={e => onMainColResize(e, 0)}
           />
           <div style={{ width: mainColWidths[1], minWidth: 120, maxWidth: 500 }}>
@@ -1105,24 +1275,24 @@ const App = () => {
           </div>
           {/* Resizer between Collections and Documents */}
           <div
-            style={{ width: 6, cursor: 'col-resize', background: '#e5e7eb', zIndex: 20 }}
+            style={{ width: 6, cursor: 'col-resize', background: 'var(--color-border)', zIndex: 20 }}
             onMouseDown={e => onMainColResize(e, 1)}
           />
           {/* Documents column: make entire column scrollable */}
-          <div style={{ flex: 1, minWidth: 300, height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-3 z-10 flex items-center justify-between">
+          <div style={{ flex: 1, minWidth: 300, height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--color-bg)' }}>
+            <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-3 z-10 flex items-center justify-between" style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}>
               <div className="flex items-center">
                 <FileText className="h-4 w-4 text-gray-600 mr-2" />
-                <h3 className="font-medium text-gray-900">Documents</h3>
+                <h3 className="font-medium" style={{ color: 'var(--color-text)' }}>Documents</h3>
                 <span className="ml-2 text-xs text-gray-500">({documents.length})</span>
               </div>
             </div>
             {/* Make the entire column scrollable, not just the table */}
-            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16 }} onScroll={handleDocumentsScroll}>
+            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16, color: 'var(--color-text)' }} onScroll={handleDocumentsScroll}>
               {isLoadingDocuments && selectedCollection ? (
                 <SkeletonLoader rows={8} height={32} className="mt-4" />
               ) : documentsError ? (
-                <div className="flex flex-col items-center justify-center p-8 gap-2">
+                <div className="flex flex-col items-center justify-center p-8 gap-2" style={{ background: 'var(--color-surface)', color: 'var(--color-danger)' }}>
                   <span className="text-red-600 text-sm font-medium">{documentsError}</span>
                   <button className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 shadow-sm" onClick={() => handleCollectionSelect(selectedCollection)}>
                     Retry
@@ -1135,7 +1305,7 @@ const App = () => {
                     <SkeletonLoader rows={2} height={32} className="mt-2" />
                   )}
                   {!hasMoreDocuments && documents.length > 0 && (
-                    <div className="text-center text-xs text-gray-400 mt-4">No more documents.</div>
+                    <div className="text-center text-xs text-gray-400 mt-4" style={{ color: 'var(--color-text)' }}>No more documents.</div>
                   )}
                 </>
               )}
@@ -1145,8 +1315,8 @@ const App = () => {
       ) : layout === 'stacked' ? (
         <div className="flex-1 flex overflow-hidden" style={{ minWidth: 600 }}>
           {/* Left: Databases and Collections stacked, resizable width */}
-          <div style={{ width: stackedLeftWidth, minWidth: 200, maxWidth: 700, display: 'flex', flexDirection: 'column', height: '100%' }} id="stacked-left">
-            <div style={{ flex: `${stackedTopHeight} 1 0%`, minHeight: 0, borderBottom: '1px solid #e5e7eb' }}>
+          <div style={{ width: stackedLeftWidth, minWidth: 200, maxWidth: 700, display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--color-bg)' }} id="stacked-left">
+            <div style={{ flex: `${stackedTopHeight} 1 0%`, minHeight: 0, borderBottom: '1px solid var(--color-border)' }}>
               <Column
                 title="Databases"
                 items={databases}
@@ -1159,10 +1329,10 @@ const App = () => {
             </div>
             {/* Horizontal resizer */}
             <div
-              style={{ height: 6, cursor: 'row-resize', background: '#e5e7eb', zIndex: 20 }}
+              style={{ height: 6, cursor: 'row-resize', background: 'var(--color-border)', zIndex: 20 }}
               onMouseDown={handleStackedHorizontalResize}
             />
-            <div style={{ flex: `${1 - stackedTopHeight} 1 0%`, minHeight: 0 }}>
+            <div style={{ flex: `${1 - stackedTopHeight} 1 0%`, minHeight: 0, background: 'var(--color-bg)' }}>
               <Column
                 title="Collections"
                 items={collections}
@@ -1176,19 +1346,19 @@ const App = () => {
           </div>
           {/* Vertical resizer */}
           <div
-            style={{ width: 6, cursor: 'col-resize', background: '#e5e7eb', zIndex: 20 }}
+            style={{ width: 6, cursor: 'col-resize', background: 'var(--color-border)', zIndex: 20 }}
             onMouseDown={handleStackedVerticalResize}
           />
           {/* Documents: right side, scrollable */}
-          <div style={{ flex: 1, minWidth: 300, height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-3 z-10 flex items-center justify-between">
+          <div style={{ flex: 1, minWidth: 300, height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--color-bg)' }}>
+            <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-3 z-10 flex items-center justify-between" style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}>
               <div className="flex items-center">
                 <FileText className="h-4 w-4 text-gray-600 mr-2" />
-                <h3 className="font-medium text-gray-900">Documents</h3>
+                <h3 className="font-medium" style={{ color: 'var(--color-text)' }}>Documents</h3>
                 <span className="ml-2 text-xs text-gray-500">({documents.length})</span>
               </div>
             </div>
-            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16 }} onScroll={handleDocumentsScroll}>
+            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16, color: 'var(--color-text)' }} onScroll={handleDocumentsScroll}>
               {isLoadingDocuments ? (
                 <SkeletonLoader rows={8} height={32} className="mt-4" />
               ) : (
@@ -1198,7 +1368,7 @@ const App = () => {
                     <SkeletonLoader rows={2} height={32} className="mt-2" />
                   )}
                   {!hasMoreDocuments && documents.length > 0 && (
-                    <div className="text-center text-xs text-gray-400 mt-4">No more documents.</div>
+                    <div className="text-center text-xs text-gray-400 mt-4" style={{ color: 'var(--color-text)' }}>No more documents.</div>
                   )}
                 </>
               )}
@@ -1207,10 +1377,10 @@ const App = () => {
         </div>
       ) : (
         // Top Split layout
-        <div className="flex-1 flex flex-col overflow-hidden" style={{ minWidth: 600 }} id="top-split-main">
+        <div className="flex-1 flex flex-col overflow-hidden" style={{ minWidth: 600, background: 'var(--color-bg)' }} id="top-split-main">
           {/* Top: Databases and Collections side by side, resizable height */}
-          <div style={{ flex: `0 0 ${topSplitTopHeight * 100}%`, minHeight: 0, display: 'flex', borderBottom: '1px solid #e5e7eb' }} id="top-split-top">
-            <div style={{ width: `${topSplitLeftWidth * 100}%`, minWidth: 120, maxWidth: 700, borderRight: '1px solid #e5e7eb', height: '100%' }}>
+          <div style={{ flex: `0 0 ${topSplitTopHeight * 100}%`, minHeight: 0, display: 'flex', borderBottom: '1px solid var(--color-border)' }} id="top-split-top">
+            <div style={{ width: `${topSplitLeftWidth * 100}%`, minWidth: 120, maxWidth: 700, borderRight: '1px solid var(--color-border)', height: '100%', background: 'var(--color-bg)' }}>
               <Column
                 title="Databases"
                 items={databases}
@@ -1223,10 +1393,10 @@ const App = () => {
             </div>
             {/* Vertical resizer */}
             <div
-              style={{ width: 6, cursor: 'col-resize', background: '#e5e7eb', zIndex: 20 }}
+              style={{ width: 6, cursor: 'col-resize', background: 'var(--color-border)', zIndex: 20 }}
               onMouseDown={handleTopSplitVerticalResize}
             />
-            <div style={{ width: `${(1 - topSplitLeftWidth) * 100}%`, minWidth: 120, maxWidth: 700, height: '100%' }}>
+            <div style={{ width: `${(1 - topSplitLeftWidth) * 100}%`, minWidth: 120, maxWidth: 700, height: '100%', background: 'var(--color-bg)' }}>
               <Column
                 title="Collections"
                 items={collections}
@@ -1240,19 +1410,19 @@ const App = () => {
           </div>
           {/* Horizontal resizer */}
           <div
-            style={{ height: 6, cursor: 'row-resize', background: '#e5e7eb', zIndex: 20 }}
+            style={{ height: 6, cursor: 'row-resize', background: 'var(--color-border)', zIndex: 20 }}
             onMouseDown={handleTopSplitHorizontalResize}
           />
           {/* Bottom: Documents column, fully scrollable */}
-          <div style={{ flex: '1 1 60%', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-            <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-3 z-10 flex items-center justify-between">
+          <div style={{ flex: '1 1 60%', minHeight: 0, display: 'flex', flexDirection: 'column', background: 'var(--color-bg)' }}>
+            <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-3 z-10 flex items-center justify-between" style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}>
               <div className="flex items-center">
                 <FileText className="h-4 w-4 text-gray-600 mr-2" />
-                <h3 className="font-medium text-gray-900">Documents</h3>
+                <h3 className="font-medium" style={{ color: 'var(--color-text)' }}>Documents</h3>
                 <span className="ml-2 text-xs text-gray-500">({documents.length})</span>
               </div>
             </div>
-            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16 }} onScroll={handleDocumentsScroll}>
+            <div style={{ flex: 1, overflowY: 'auto', minHeight: 0, padding: 16, color: 'var(--color-text)' }} onScroll={handleDocumentsScroll}>
               {isLoadingDocuments ? (
                 <SkeletonLoader rows={8} height={32} className="mt-4" />
               ) : (
@@ -1262,7 +1432,7 @@ const App = () => {
                     <SkeletonLoader rows={2} height={32} className="mt-2" />
                   )}
                   {!hasMoreDocuments && documents.length > 0 && (
-                    <div className="text-center text-xs text-gray-400 mt-4">No more documents.</div>
+                    <div className="text-center text-xs text-gray-400 mt-4" style={{ color: 'var(--color-text)' }}>No more documents.</div>
                   )}
                 </>
               )}
@@ -1293,8 +1463,13 @@ function Tooltip({ children, content, placement = 'top' }: { children: React.Rea
     >
       {children}
       {show && (
-        <span className={`absolute z-50 left-1/2 -translate-x-1/2 ${placement === 'top' ? 'mt-2' : 'mb-2'} px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg whitespace-nowrap pointer-events-none ${placement === 'top' ? '' : 'top-full'}`}
-          style={placement === 'bottom' ? { top: '100%' } : { bottom: '100%' }}
+        <span className={`absolute z-50 left-1/2 -translate-x-1/2 ${placement === 'top' ? 'mt-2' : 'mb-2'} text-xs rounded shadow-lg whitespace-nowrap pointer-events-none ${placement === 'top' ? '' : 'top-full'}`}
+          style={{
+            background: 'var(--color-tooltip-bg)',
+            color: 'var(--color-tooltip-text)',
+            padding: '0.25rem 0.5rem',
+            ...(placement === 'bottom' ? { top: '100%' } : { bottom: '100%' })
+          }}
         >
           {content}
         </span>

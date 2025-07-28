@@ -21,7 +21,6 @@ const { MongoClient } = require('mongodb');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://readonly:readonly@localhost:27017/?authSource=admin'; // Update as needed
 
 app.use(cors());
 app.use(express.json());
@@ -32,91 +31,119 @@ app.use((req, res, next) => {
   next();
 });
 
-// Helper to get a MongoClient for a given URI (or default)
-function getClientForUri(uri) {
-  return new MongoClient(uri || MONGO_URI);
+// Store active connections
+const connections = new Map();
+
+// POST /connect: Validate and store MongoDB connection
+app.post('/connect', async (req, res) => {
+  const { uri } = req.body;
+  
+  if (!uri) {
+    return res.status(400).json({ success: false, message: 'MongoDB URI is required' });
+  }
+
+  try {
+    // Validate URI format
+    const mongoRegex = /^mongodb(\+srv)?:\/\/([\w\-\.]+(:[\w\-\.]+)?@)?([\w\-\.]+)(:\d+)?(\/[\w\-\.]*)?(\?[\w\-\.\=\&]*)?$/;
+    if (!mongoRegex.test(uri)) {
+      return res.status(400).json({ success: false, message: 'Invalid MongoDB URI format' });
+    }
+
+    // Test connection
+    const client = new MongoClient(uri);
+    await client.connect();
+    
+    // Test if we can list databases (this requires proper permissions)
+    const adminDb = client.db().admin();
+    await adminDb.listDatabases();
+    
+    // Store connection with a unique ID
+    const connectionId = Date.now().toString();
+    connections.set(connectionId, client);
+    
+    res.json({ 
+      success: true, 
+      message: 'Connection successful',
+      connectionId 
+    });
+  } catch (err) {
+    console.error('Connection error:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: `Connection failed: ${err.message}` 
+    });
+  }
+});
+
+// Helper function to get client by connection ID
+async function getClient(connectionId) {
+  const client = connections.get(connectionId);
+  if (!client) {
+    throw new Error('Connection not found');
+  }
+  return client;
 }
 
 // GET /databases: List all databases
-app.get('/databases', async (req, res) => {
-  const uri = req.headers['x-mongo-uri'] || MONGO_URI;
-  let client;
+app.get('/databases/:connectionId', async (req, res) => {
+  const { connectionId } = req.params;
+  
   try {
-    client = getClientForUri(uri);
-    await client.connect();
+    const client = await getClient(connectionId);
     const adminDb = client.db().admin();
     const dbs = await adminDb.listDatabases();
     res.json(dbs.databases.map(db => db.name));
   } catch (err) {
     console.error('Error listing databases:', err);
-    res.status(500).json({ error: 'Failed to list databases', details: err.message });
-  } finally {
-    if (client) await client.close();
+    res.status(500).json({ error: 'Failed to list databases' });
   }
 });
 
-// GET /collections/:db: List collections in a given database
-app.get('/collections/:db', async (req, res) => {
-  const uri = req.headers['x-mongo-uri'] || MONGO_URI;
-  const dbName = req.params.db;
-  let client;
+// GET /collections/:connectionId/:db: List collections in a given database
+app.get('/collections/:connectionId/:db', async (req, res) => {
+  const { connectionId, db: dbName } = req.params;
+  
   try {
-    client = getClientForUri(uri);
-    await client.connect();
+    const client = await getClient(connectionId);
     const db = client.db(dbName);
     const collections = await db.listCollections().toArray();
     res.json(collections.map(col => col.name));
   } catch (err) {
     console.error(`Error listing collections for db ${dbName}:`, err);
-    res.status(500).json({ error: 'Failed to list collections', details: err.message });
-  } finally {
-    if (client) await client.close();
+    res.status(500).json({ error: 'Failed to list collections' });
   }
 });
 
-// GET /documents/:db/:col: Return paginated documents
-app.get('/documents/:db/:col', async (req, res) => {
-  const uri = req.headers['x-mongo-uri'] || MONGO_URI;
-  const dbName = req.params.db;
-  const colName = req.params.col;
-  const skip = parseInt(req.query.skip) || 0;
-  const limit = parseInt(req.query.limit) || 25;
-  let client;
+// GET /documents/:connectionId/:db/:col: Return sample documents (first 10)
+app.get('/documents/:connectionId/:db/:col', async (req, res) => {
+  const { connectionId, db: dbName, col: colName } = req.params;
+  
   try {
-    client = getClientForUri(uri);
-    await client.connect();
+    const client = await getClient(connectionId);
     const db = client.db(dbName);
     const collection = db.collection(colName);
-    const docs = await collection.find({}).skip(skip).limit(limit + 1).toArray();
-    const hasMore = docs.length > limit;
-    res.json({ data: docs.slice(0, limit), hasMore });
+    const docs = await collection.find({}).limit(10).toArray();
+    res.json(docs);
   } catch (err) {
     console.error(`Error fetching documents for ${dbName}.${colName}:`, err);
-    res.status(500).json({ data: [], hasMore: false, error: 'Failed to fetch documents', details: err.message });
-  } finally {
-    if (client) await client.close();
+    res.status(500).json({ error: 'Failed to fetch documents' });
   }
 });
 
-// POST /connect: Validate a MongoDB connection URI
-app.post('/connect', async (req, res) => {
-  const { uri } = req.body;
-  if (!uri || typeof uri !== 'string') {
-    return res.status(400).json({ success: false, message: 'Missing or invalid URI' });
-  }
-  let client;
+// DELETE /connect/:connectionId: Close a connection
+app.delete('/connect/:connectionId', async (req, res) => {
+  const { connectionId } = req.params;
+  
   try {
-    client = new MongoClient(uri);
-    await client.connect();
-    // Optionally, check permissions/read access
-    await client.db().admin().listDatabases();
-    res.json({ success: true, message: 'Connected successfully' });
-  } catch (err) {
-    res.status(400).json({ success: false, message: err.message || 'Connection failed' });
-  } finally {
+    const client = connections.get(connectionId);
     if (client) {
       await client.close();
+      connections.delete(connectionId);
     }
+    res.json({ success: true, message: 'Connection closed' });
+  } catch (err) {
+    console.error('Error closing connection:', err);
+    res.status(500).json({ error: 'Failed to close connection' });
   }
 });
 
@@ -132,9 +159,52 @@ const swaggerSpec = {
     { url: "http://localhost:" + PORT }
   ],
   paths: {
-    "/databases": {
+    "/connect": {
+      post: {
+        summary: "Connect to MongoDB",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  uri: { type: "string", description: "MongoDB connection URI" }
+                }
+              }
+            }
+          }
+        },
+        responses: {
+          200: {
+            description: "Connection successful",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean" },
+                    message: { type: "string" },
+                    connectionId: { type: "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/databases/{connectionId}": {
       get: {
         summary: "List all databases",
+        parameters: [
+          {
+            name: "connectionId",
+            in: "path",
+            required: true,
+            schema: { type: "string" }
+          }
+        ],
         responses: {
           200: {
             description: "A list of database names",
@@ -147,10 +217,16 @@ const swaggerSpec = {
         }
       }
     },
-    "/collections/{db}": {
+    "/collections/{connectionId}/{db}": {
       get: {
         summary: "List collections in a given database",
         parameters: [
+          {
+            name: "connectionId",
+            in: "path",
+            required: true,
+            schema: { type: "string" }
+          },
           {
             name: "db",
             in: "path",
@@ -170,10 +246,11 @@ const swaggerSpec = {
         }
       }
     },
-    "/documents/{db}/{col}": {
+    "/documents/{connectionId}/{db}/{col}": {
       get: {
         summary: "Return sample documents (first 10)",
         parameters: [
+          { name: "connectionId", in: "path", required: true, schema: { type: "string" } },
           { name: "db", in: "path", required: true, schema: { type: "string" } },
           { name: "col", in: "path", required: true, schema: { type: "string" } }
         ],
