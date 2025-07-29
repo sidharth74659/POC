@@ -107,15 +107,15 @@ const TableView = ({ documents, setCopyToast }: TableViewProps) => {
   // Get sort icon for column
   const getSortIcon = (key: string) => {
     if (sortConfig.key !== key) {
-      return <ChevronDownIcon className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />;
+      return <ChevronDownIcon className="h-3 w-3 text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity" />;
     }
     if (sortConfig.direction === 'asc') {
-      return <ChevronUp className="h-3 w-3 text-blue-600" />;
+      return <ChevronUp className="h-3 w-3 text-blue-600 dark:text-blue-400" />;
     }
     if (sortConfig.direction === 'desc') {
-      return <ChevronDown className="h-3 w-3 text-blue-600" />;
+      return <ChevronDown className="h-3 w-3 text-blue-600 dark:text-blue-400" />;
     }
-    return <ChevronDownIcon className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />;
+    return <ChevronDownIcon className="h-3 w-3 text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity" />;
   };
 
   // Handle cell click for full value display
@@ -154,19 +154,19 @@ const TableView = ({ documents, setCopyToast }: TableViewProps) => {
   return (
     <div className="flex flex-col h-full">
       {/* Search Bar */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             placeholder="Search across all fields..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400"
           />
         </div>
         {searchTerm && (
-          <div className="mt-2 text-sm text-gray-600">
+          <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Found {processedDocs.length} of {documents.length} documents
           </div>
         )}
@@ -174,16 +174,16 @@ const TableView = ({ documents, setCopyToast }: TableViewProps) => {
 
       {/* Table */}
       <div className="flex-1 overflow-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50 sticky top-0 z-10">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
             <tr>
-              <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 z-20 bg-gray-50" style={{ width: 36 }}>
+              <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider sticky left-0 z-20 bg-gray-50 dark:bg-gray-800" style={{ width: 36 }}>
                 <span className="sr-only">Actions</span>
               </th>
               {keys.map((key, idx) => (
                 <th
                   key={key}
-                  className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer group hover:bg-gray-100 transition-colors"
+                  className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer group hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   style={{ 
                     minWidth: 80, 
                     maxWidth: tableColWidths[idx] || 180,
@@ -196,7 +196,7 @@ const TableView = ({ documents, setCopyToast }: TableViewProps) => {
                     <div className="flex items-center space-x-1">
                       {getSortIcon(key)}
                       <span
-                        className="absolute right-0 top-0 h-full w-2 cursor-col-resize group-hover:bg-blue-100"
+                        className="absolute right-0 top-0 h-full w-2 cursor-col-resize group-hover:bg-blue-100 dark:group-hover:bg-blue-900"
                         style={{ zIndex: 10 }}
                         onMouseDown={e => {
                           e.stopPropagation();
@@ -218,7 +218,7 @@ const TableView = ({ documents, setCopyToast }: TableViewProps) => {
                           document.addEventListener('mouseup', onUp);
                         }}
                       >
-                        <div className="w-1 h-6 bg-blue-400 opacity-0 group-hover:opacity-80" style={{ cursor: 'col-resize', marginLeft: '-2px' }} />
+                        <div className="w-1 h-6 bg-blue-400 dark:bg-blue-500 opacity-0 group-hover:opacity-80" style={{ cursor: 'col-resize', marginLeft: '-2px' }} />
                       </span>
                     </div>
                   </div>
@@ -226,20 +226,20 @@ const TableView = ({ documents, setCopyToast }: TableViewProps) => {
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             {processedDocs.length === 0 ? (
               <tr>
-                <td colSpan={keys.length + 1} className="px-6 py-4 text-center text-gray-500">
+                <td colSpan={keys.length + 1} className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
                   {searchTerm ? 'No documents match your search' : 'No documents found'}
                 </td>
               </tr>
             ) : (
               processedDocs.map((doc, index) => (
-                <tr key={String(doc._id ?? index)} className="hover:bg-blue-50">
-                  <td className="px-2 py-2 sticky left-0 z-10 bg-white">
+                <tr key={String(doc._id ?? index)} className="hover:bg-blue-50 dark:hover:bg-blue-900/20">
+                  <td className="px-2 py-2 sticky left-0 z-10 bg-white dark:bg-gray-900">
                     <Tooltip content="Copy row as JSON">
                       <button
-                        className="p-0.5 rounded text-gray-500 hover:text-blue-700 hover:bg-blue-100"
+                        className="p-0.5 rounded text-gray-500 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30"
                         onClick={e => { 
                           e.stopPropagation(); 
                           navigator.clipboard.writeText(JSON.stringify(doc, null, 2)); 
@@ -259,8 +259,8 @@ const TableView = ({ documents, setCopyToast }: TableViewProps) => {
                     return (
                       <td
                         key={cellIndex}
-                        className={`px-3 py-2 text-sm text-gray-900 cursor-pointer hover:bg-blue-100 transition-colors ${
-                          isSelected ? 'bg-blue-200' : ''
+                        className={`px-3 py-2 text-sm text-gray-900 dark:text-gray-100 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors ${
+                          isSelected ? 'bg-blue-200 dark:bg-blue-800' : ''
                         }`}
                         style={{ 
                           minWidth: 'max-content', 
@@ -551,28 +551,28 @@ const AccordionView = ({ documents, setCopyToast }: AccordionViewProps) => {
         // Only truncate if mainColWidths[2] is small
         const shouldTruncate = mainColWidths[2] !== undefined && mainColWidths[2] < 180;
         return (
-          <div key={String(index)} className="border border-gray-200 rounded-md relative" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+          <div key={String(index)} className="border border-gray-200 dark:border-gray-700 rounded-md relative bg-white dark:bg-gray-800">
             <button
               onClick={() => toggleExpanded(id)}
-              className="w-full px-4 py-3 text-left flex items-center justify-between cursor-pointer" style={{ background: 'var(--color-surface)' }}
+              className="w-full px-4 py-3 text-left flex items-center justify-between cursor-pointer bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               title={label}
               aria-label={`Toggle document ${label} details`}
             >
-              <span className={`font-medium${shouldTruncate ? ' truncate' : ''}`} style={{ color: 'var(--color-text)' }}>
+              <span className={`font-medium text-gray-900 dark:text-gray-100${shouldTruncate ? ' truncate' : ''}`}>
                 Document {label}
               </span>
               {isExpanded ? (
-                <ChevronDown className="h-4 w-4 text-gray-500" />
+                <ChevronDown className="h-4 w-4 text-gray-500 dark:text-gray-400" />
               ) : (
-                <ChevronRight className="h-4 w-4 text-gray-500" />
+                <ChevronRight className="h-4 w-4 text-gray-500 dark:text-gray-400" />
               )}
             </button>
             {isExpanded && (
-              <div className="px-4 py-3 bg-white relative">
+              <div className="px-4 py-3 bg-gray-50 dark:bg-gray-900 relative">
                 <div className="absolute top-2 right-2 z-10">
                   <Tooltip content="Copy JSON">
                     <button
-                      className="p-0.5 rounded text-gray-500 hover:text-blue-700" // TODO: theme hover background
+                      className="p-0.5 rounded text-gray-500 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30"
                       onClick={() => handleCopy(doc)}
                       aria-label="Copy document JSON"
                       tabIndex={0}
@@ -581,7 +581,7 @@ const AccordionView = ({ documents, setCopyToast }: AccordionViewProps) => {
                     </button>
                   </Tooltip>
                 </div>
-                <pre className="text-xs text-gray-700 whitespace-pre-wrap overflow-x-auto">
+                <pre className="text-xs text-gray-700 dark:text-gray-300 whitespace-pre-wrap overflow-x-auto">
                   {JSON.stringify(doc, null, 2)}
                 </pre>
               </div>
@@ -609,11 +609,11 @@ const CardView = ({ documents, setCopyToast }: CardViewProps) => {
         // Only truncate if mainColWidths[2] is small
         const shouldTruncate = mainColWidths[2] !== undefined && mainColWidths[2] < 180;
         return (
-          <div key={String(index)} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-lg cursor-pointer relative" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+          <div key={String(index)} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800 hover:shadow-lg dark:hover:shadow-gray-900/20 cursor-pointer relative">
             <div className="absolute top-2 right-2 z-10">
               <Tooltip content="Copy JSON">
                 <button
-                  className="p-0.5 rounded text-gray-500 hover:text-blue-700" // TODO: theme hover background
+                  className="p-0.5 rounded text-gray-500 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30"
                   onClick={() => handleCopy(doc)}
                   aria-label="Copy document JSON"
                   tabIndex={0}
@@ -622,7 +622,7 @@ const CardView = ({ documents, setCopyToast }: CardViewProps) => {
                 </button>
               </Tooltip>
             </div>
-            <div className="font-medium mb-2" style={{ color: 'var(--color-text)' }}>
+            <div className="font-medium mb-2 text-gray-900 dark:text-gray-100">
               {typeof doc._id === 'string' ? `ID: ...${doc._id.slice(-6)}` : typeof doc._id === 'number' ? `ID: ...${doc._id}` : `Document ${index + 1}`}
             </div>
             <div className="space-y-1">
@@ -631,13 +631,13 @@ const CardView = ({ documents, setCopyToast }: CardViewProps) => {
                 const isLong = strValue.length > 20;
                 return (
                   <div key={entryIndex} className={`text-sm${shouldTruncate && isLong ? ' truncate max-w-xs' : ''}`} title={strValue} style={shouldTruncate && isLong ? { maxWidth: '12rem', textOverflow: 'ellipsis', overflow: 'hidden' } : {}}>
-                    <span className="font-medium text-gray-600">{key}:</span>{' '}
-                    <span style={{ color: 'var(--color-text)' }}>{isLong && shouldTruncate ? strValue.slice(0, 20) + '…' : strValue}</span>
+                    <span className="font-medium text-gray-600 dark:text-gray-400">{key}:</span>{' '}
+                    <span className="text-gray-900 dark:text-gray-100">{isLong && shouldTruncate ? strValue.slice(0, 20) + '…' : strValue}</span>
                   </div>
                 );
               })}
               {Object.keys(doc).length > 4 && (
-                <div className="text-xs text-gray-500 italic">
+                <div className="text-xs text-gray-500 dark:text-gray-400 italic">
                   ...and {Object.keys(doc).length - 4} more fields
                 </div>
               )}
