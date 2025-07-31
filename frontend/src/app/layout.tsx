@@ -9,7 +9,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Claude Artifact",
+  title: "MongoDB Viewer",
   description: "A starter template for Claude artifacts",
 }
 

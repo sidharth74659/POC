@@ -296,7 +296,7 @@ const mongoAPI = {
   // Connect to MongoDB
   connect: async (uri: string): Promise<ConnectResponse> => {
     try {
-      const res = await fetch('http://localhost:4000/connect', {
+      const res = await fetch('http://localhost:4300/connect', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ uri })
@@ -315,7 +315,7 @@ const mongoAPI = {
   getDatabases: async (connectionId: string, delayMs = 0): Promise<{ success: boolean; data: Database[]; message?: string }> => {
     await delay(delayMs);
     try {
-      const res = await fetch(`http://localhost:4000/databases/${connectionId}`);
+      const res = await fetch(`http://localhost:4300/databases/${connectionId}`);
       if (!res.ok) {
         const error = await res.json();
         return { success: false, data: [], message: error.error || 'Failed to fetch databases' };
@@ -335,7 +335,7 @@ const mongoAPI = {
   getCollections: async (connectionId: string, dbName: string, delayMs = 0): Promise<{ success: boolean; data: Collection[]; message?: string }> => {
     await delay(delayMs);
     try {
-      const res = await fetch(`http://localhost:4000/collections/${connectionId}/${dbName}`);
+      const res = await fetch(`http://localhost:4300/collections/${connectionId}/${dbName}`);
       if (!res.ok) {
         const error = await res.json();
         return { success: false, data: [], message: error.error || 'Failed to fetch collections' };
@@ -355,7 +355,7 @@ const mongoAPI = {
   getDocuments: async (connectionId: string, dbName: string, colName: string, delayMs = 0): Promise<{ success: boolean; data: Document[]; message?: string }> => {
     await delay(delayMs);
     try {
-      const res = await fetch(`http://localhost:4000/documents/${connectionId}/${dbName}/${colName}`);
+      const res = await fetch(`http://localhost:4300/documents/${connectionId}/${dbName}/${colName}`);
       if (!res.ok) {
         const error = await res.json();
         return { success: false, data: [], message: error.error || 'Failed to fetch documents' };
@@ -373,7 +373,7 @@ const mongoAPI = {
   // Close connection
   disconnect: async (connectionId: string): Promise<{ success: boolean; message: string }> => {
     try {
-      const res = await fetch(`http://localhost:4000/connect/${connectionId}`, {
+      const res = await fetch(`http://localhost:4300/connect/${connectionId}`, {
         method: 'DELETE'
       });
       const data = await res.json();
