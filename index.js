@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const express = require('express');
 const cors = require('cors');
-const { runStep1 } = require('./tool-call.js');
+const { runStep1 } = require('./tool-calls/run-step-one.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,6 +28,22 @@ app.post('/getPostsById', async (req, res) => {
     } catch (error) {
         console.error('Error running step 1:', error);
         res.status(500).json({ error: 'An error occurred while processing your request.' });
+    }
+});
+
+app.post('/getPostsByUserId', async (req, res) => {
+    const { query } = req.body;
+    if (!query) {
+        return res.status(400).json({ error: 'Query parameter is required.' });
+    }
+
+    try {
+        const { runStep2 } = require('./tool-calls/run-step-two.js');
+        const result = await runStep2(query);
+        res.json({ result });
+    } catch (error) {
+        console.error('Error running step 2:', error);
+        res.status(500).json({ error: 'An error occurred while processing your request.' + error.message });
     }
 });
 
