@@ -38,8 +38,9 @@ app.post('/getPostsByUserId', async (req, res) => {
     }
 
     try {
-        const { runStep2 } = require('./tool-calls/run-step-two.js');
-        const result = await runStep2(query);
+        const { runStep2, runStep2Dynamic } = require('./tool-calls/run-step-two.js');
+        // const result = await runStep2(query);
+        const result = await runStep2Dynamic(query);
         res.json({ result });
     } catch (error) {
         console.error('Error running step 2:', error);
@@ -48,5 +49,5 @@ app.post('/getPostsByUserId', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`);
+    console.log(`Server is listening on port http://localhost:${PORT}`);
 });
