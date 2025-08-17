@@ -1,0 +1,104 @@
+{
+  "poses": [
+    {
+      "timestamp": 0.0,
+      "bones": {
+        "mixamorigRightShoulder": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightArm": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightForeArm": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightHand": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigHead": {
+          "rotation": [0, 0, 0, 1]
+        }
+      }
+    },
+    {
+      "timestamp": 0.5,
+      "bones": {
+        "mixamorigRightShoulder": {
+          "rotation": [0, 0, 0.2, 0.9798]
+        },
+        "mixamorigRightArm": {
+          "rotation": [0, 0, 0.7071, 0.7071]
+        },
+        "mixamorigRightForeArm": {
+          "rotation": [0.5, 0, 0, 0.8660]
+        },
+        "mixamorigRightHand": {
+          "rotation": [0, 0.2588, 0, 0.9659]
+        },
+        "mixamorigHead": {
+          "rotation": [0, 0.2588, 0, 0.9659]
+        }
+      }
+    },
+    {
+      "timestamp": 1.0,
+      "bones": {
+        "mixamorigRightShoulder": {
+          "rotation": [0, 0, 0.2, 0.9798]
+        },
+        "mixamorigRightArm": {
+          "rotation": [0, 0, 0.7071, 0.7071]
+        },
+        "mixamorigRightForeArm": {
+          "rotation": [0.5, 0, 0, 0.8660]
+        },
+        "mixamorigRightHand": {
+          "rotation": [0, -0.2588, 0, 0.9659]
+        },
+        "mixamorigHead": {
+          "rotation": [0, -0.2588, 0, 0.9659]
+        }
+      }
+    },
+    {
+      "timestamp": 1.5,
+      "bones": {
+        "mixamorigRightShoulder": {
+          "rotation": [0, 0, 0.2, 0.9798]
+        },
+        "mixamorigRightArm": {
+          "rotation": [0, 0, 0.7071, 0.7071]
+        },
+        "mixamorigRightForeArm": {
+          "rotation": [0.5, 0, 0, 0.8660]
+        },
+        "mixamorigRightHand": {
+          "rotation": [0, 0.2588, 0, 0.9659]
+        },
+        "mixamorigHead": {
+          "rotation": [0, 0.2588, 0, 0.9659]
+        }
+      }
+    },
+    {
+      "timestamp": 2.0,
+      "bones": {
+        "mixamorigRightShoulder": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightArm": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightForeArm": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightHand": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigHead": {
+          "rotation": [0, 0, 0, 1]
+        }
+      }
+    }
+  ]
+}

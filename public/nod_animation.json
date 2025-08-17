@@ -1,0 +1,59 @@
+{
+  "poses": [
+    {
+      "timestamp": 0.0,
+      "bones": {
+        "mixamorigHead": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigNeck": {
+          "rotation": [0, 0, 0, 1]
+        }
+      }
+    },
+    {
+      "timestamp": 0.25,
+      "bones": {
+        "mixamorigHead": {
+          "rotation": [0.2588, 0, 0, 0.9659]
+        },
+        "mixamorigNeck": {
+          "rotation": [0.1305, 0, 0, 0.9914]
+        }
+      }
+    },
+    {
+      "timestamp": 0.5,
+      "bones": {
+        "mixamorigHead": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigNeck": {
+          "rotation": [0, 0, 0, 1]
+        }
+      }
+    },
+    {
+      "timestamp": 0.75,
+      "bones": {
+        "mixamorigHead": {
+          "rotation": [-0.2588, 0, 0, 0.9659]
+        },
+        "mixamorigNeck": {
+          "rotation": [-0.1305, 0, 0, 0.9914]
+        }
+      }
+    },
+    {
+      "timestamp": 1.0,
+      "bones": {
+        "mixamorigHead": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigNeck": {
+          "rotation": [0, 0, 0, 1]
+        }
+      }
+    }
+  ]
+}

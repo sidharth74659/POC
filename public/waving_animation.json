@@ -1,0 +1,119 @@
+{
+  "poses": [
+    {
+      "timestamp": 0.0,
+      "bones": {
+        "mixamorigRightShoulder": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightArm": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightForeArm": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightHand": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightHandThumb1": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightHandIndex1": {
+          "rotation": [0, 0, 0, 1]
+        }
+      }
+    },
+    {
+      "timestamp": 0.5,
+      "bones": {
+        "mixamorigRightShoulder": {
+          "rotation": [0, 0, 0.1, 0.9950]
+        },
+        "mixamorigRightArm": {
+          "rotation": [0, 0, 0.3827, 0.9239]
+        },
+        "mixamorigRightForeArm": {
+          "rotation": [0.2588, 0, 0, 0.9659]
+        },
+        "mixamorigRightHand": {
+          "rotation": [0, 0.2588, 0, 0.9659]
+        },
+        "mixamorigRightHandThumb1": {
+          "rotation": [0.1305, 0, 0, 0.9914]
+        },
+        "mixamorigRightHandIndex1": {
+          "rotation": [0.1305, 0, 0, 0.9914]
+        }
+      }
+    },
+    {
+      "timestamp": 1.0,
+      "bones": {
+        "mixamorigRightShoulder": {
+          "rotation": [0, 0, 0.2, 0.9798]
+        },
+        "mixamorigRightArm": {
+          "rotation": [0, 0, 0.7071, 0.7071]
+        },
+        "mixamorigRightForeArm": {
+          "rotation": [0.5, 0, 0, 0.8660]
+        },
+        "mixamorigRightHand": {
+          "rotation": [0, 0.5, 0, 0.8660]
+        },
+        "mixamorigRightHandThumb1": {
+          "rotation": [0.2588, 0, 0, 0.9659]
+        },
+        "mixamorigRightHandIndex1": {
+          "rotation": [0.2588, 0, 0, 0.9659]
+        }
+      }
+    },
+    {
+      "timestamp": 1.5,
+      "bones": {
+        "mixamorigRightShoulder": {
+          "rotation": [0, 0, 0.1, 0.9950]
+        },
+        "mixamorigRightArm": {
+          "rotation": [0, 0, 0.3827, 0.9239]
+        },
+        "mixamorigRightForeArm": {
+          "rotation": [0.2588, 0, 0, 0.9659]
+        },
+        "mixamorigRightHand": {
+          "rotation": [0, -0.2588, 0, 0.9659]
+        },
+        "mixamorigRightHandThumb1": {
+          "rotation": [0.1305, 0, 0, 0.9914]
+        },
+        "mixamorigRightHandIndex1": {
+          "rotation": [0.1305, 0, 0, 0.9914]
+        }
+      }
+    },
+    {
+      "timestamp": 2.0,
+      "bones": {
+        "mixamorigRightShoulder": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightArm": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightForeArm": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightHand": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightHandThumb1": {
+          "rotation": [0, 0, 0, 1]
+        },
+        "mixamorigRightHandIndex1": {
+          "rotation": [0, 0, 0, 1]
+        }
+      }
+    }
+  ]
+}

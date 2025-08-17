@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Loom - 3D Animation System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-bg: #1e1e1e;
+      --secondary-bg: #2d2d2d;
+      --border-color: #3d3d3d;
+      --text-color: #ffffff;
+      --accent-color: #0078d4;
+      --hover-color: #2b88d8;
+      --panel-width: 30%;
+      --header-height: 40px;
+      --icon-size: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--primary-bg);
+      color: var(--text-color);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+    }
+
+    /* Main Layout */
+    .app-container {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+    }
+
+    /* Model Viewer */
+    .model-container {
+      flex: 1;
+      position: relative;
+      border: 1px solid var(--border-color);
+      background-color: var(--primary-bg);
+      overflow: hidden;
+    }
+
+    #scene-container {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Model Controls */
+    .model-controls {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 8px;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+    }
+
+    .model-controls button {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s;
+    }
+
+    .model-controls button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .model-controls button i {
+      font-size: var(--icon-size);
+    }
+
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .zoom-controls span {
+      min-width: 60px;
+      text-align: center;
+      font-family: monospace;
+      font-size: 14px;
+      padding: 4px 8px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    /* Side Panel */
+    .side-panel {
+      width: var(--panel-width);
+      background-color: var(--secondary-bg);
+      border-left: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      height: var(--header-height);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      background-color: var(--primary-bg);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .panel-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    /* Accordion */
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .accordion-item {
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      padding: 12px 16px;
+      background-color: var(--primary-bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .accordion-header:hover {
+      background-color: var(--secondary-bg);
+    }
+
+    .accordion-header i {
+      font-size: var(--icon-size);
+      transition: transform 0.2s;
+    }
+
+    .accordion-content {
+      padding: 16px;
+      background-color: var(--secondary-bg);
+      display: none;
+    }
+
+    .accordion-item.open .accordion-content {
+      display: block;
+    }
+
+    .accordion-item.open .accordion-header i {
+      transform: rotate(180deg);
+    }
+
+    /* Controls */
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 4px;
+    }
+
+    .playback-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .timer {
+      font-family: monospace;
+      font-size: 14px;
+      padding: 4px 8px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+
+    .speed-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .speed-buttons {
+      display: flex;
+      gap: 4px;
+    }
+
+    .speed-button {
+      padding: 4px 8px;
+      font-size: 12px;
+      background-color: var(--secondary-bg);
+      border: 1px solid var(--border-color);
+    }
+
+    .speed-button.active {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+
+    .speed-button:hover:not(.active) {
+      background-color: var(--hover-color);
+      border-color: var(--hover-color);
+    }
+
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      background-color: var(--accent-color);
+      color: var(--text-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: var(--hover-color);
+    }
+
+    button i {
+      font-size: var(--icon-size);
+    }
+
+    /* Position Controls */
+    .position-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0;
+    }
+
+    .position-control label {
+      min-width: 24px;
+      text-align: right;
+    }
+
+    .position-control input[type="range"] {
+      flex: 1;
+      height: 4px;
+      -webkit-appearance: none;
+      background: var(--border-color);
+      border-radius: 2px;
+      outline: none;
+    }
+
+    .position-control input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .position-control input[type="range"]::-webkit-slider-thumb:hover {
+      background: var(--hover-color);
+    }
+
+    .position-control input[type="number"] {
+      width: 70px;
+      padding: 4px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: var(--primary-bg);
+      color: var(--text-color);
+      font-family: monospace;
+      -moz-appearance: textfield;
+    }
+
+    .position-control input[type="number"]::-webkit-outer-spin-button,
+    .position-control input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Loading Screen */
+    #loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .loading-content {
+      text-align: center;
+    }
+
+    .loading-spinner {
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-left-color: var(--accent-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* FPS Counter */
+    #fps {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: #00ff00;
+      font-family: monospace;
+      padding: 4px 8px;
+      border-radius: 4px;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Tooltip */
+    [data-tooltip] {
+      position: relative;
+    }
+
+    [data-tooltip]:before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 8px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      font-size: 12px;
+      border-radius: 4px;
+      white-space: nowrap;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    [data-tooltip]:hover:before {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Model Viewer -->
+    <div class="model-container">
+      <div id="scene-container"></div>
+      <div id="fps">FPS: 0</div>
+      
+      <!-- Model Controls -->
+      <div class="model-controls">
+        <div class="zoom-controls">
+          <button data-tooltip="Zoom Out">
+            <i class="fas fa-minus"></i>
+          </button>
+          <span>100%</span>
+          <button data-tooltip="Zoom In">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+        <button id="fit-view" data-tooltip="Fit to View">
+          <i class="fas fa-expand"></i>
+        </button>
+        <button data-tooltip="Reset Position">
+          <i class="fas fa-undo"></i>
+        </button>
+      </div>
+
+      <!-- Loading Screen -->
+      <div id="loading">
+        <div class="loading-content">
+          <div class="loading-spinner"></div>
+          <div>Loading model and animations...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="side-panel">
+      <div class="panel-header">
+        <h2>Animation Controls</h2>
+      </div>
+      <div class="panel-content">
+        <div class="accordion">
+          <!-- Animation Controls -->
+          <div class="accordion-item open">
+            <div class="accordion-header">
+              <span>Playback Controls</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+              <div class="control-group">
+                <div class="playback-controls">
+                  <div class="button-group">
+                    <button id="play-pause-animation" data-tooltip="Play/Pause">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button id="reset-animation" data-tooltip="Reset">
+                      <i class="fas fa-undo"></i>
+                    </button>
+                  </div>
+                  <div class="timer">
+                    <span id="current-time">0:00</span> / <span id="total-time">0:00</span>
+                  </div>
+                </div>
+                <div class="speed-controls">
+                  <label>Speed:</label>
+                  <div class="speed-buttons">
+                    <button class="speed-button" data-speed="0.5">0.5x</button>
+                    <button class="speed-button active" data-speed="1">1x</button>
+                    <button class="speed-button" data-speed="1.5">1.5x</button>
+                    <button class="speed-button" data-speed="2">2x</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Animation Selection -->
+          <div class="accordion-item open">
+            <div class="accordion-header">
+              <span>Animation Selection</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+              <div class="control-group">
+                <select id="animation-select" style="width: 100%; padding: 8px;">
+                  <option value="">Select Animation</option>
+                </select>
+                <div class="button-group">
+                  <button id="load-animation" data-tooltip="Load Animation File">
+                    <i class="fas fa-file-upload"></i>
+                    <span>Load File</span>
+                  </button>
+                  <button id="load-samples" data-tooltip="Load Sample Animations">
+                    <i class="fas fa-box-open"></i>
+                    <span>Load Samples</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Debug Controls -->
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <span>Debug Controls</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="accordion-content">
+              <div id="model-controls">
+                <div class="control-group">
+                  <h3>Model Position</h3>
+                  <div class="position-control">
+                    <label>X:</label>
+                    <input type="range" min="-20" max="20" step="0.1" value="0">
+                    <input type="number" step="0.1" value="0">
+                  </div>
+                  <div class="position-control">
+                    <label>Y:</label>
+                    <input type="range" min="-20" max="20" step="0.1" value="0">
+                    <input type="number" step="0.1" value="0">
+                  </div>
+                  <div class="position-control">
+                    <label>Z:</label>
+                    <input type="range" min="-20" max="20" step="0.1" value="0">
+                    <input type="number" step="0.1" value="0">
+                  </div>
+                  <button id="reset-position">
+                    <i class="fas fa-undo"></i>
+                    <span>Reset Position</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+  <script>
+    // Accordion functionality
+    document.querySelectorAll('.accordion-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const item = header.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+  </script>
+</body>
+</html>
