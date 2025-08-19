@@ -1,6 +1,9 @@
 import React from 'react';
 import { Button as UI5Button } from '@ui5/webcomponents-react';
-import { ButtonDesign, ButtonType } from '@ui5/webcomponents-react/dist/types';
+import ButtonDesign from '@ui5/webcomponents/dist/types/ButtonDesign.js';
+import type { Ui5CustomEvent } from '@ui5/webcomponents-react/dist/types/Ui5CustomEvent.d.ts';
+import type { ButtonDomRef } from '@ui5/webcomponents-react/dist/webComponents/Button/index.d.ts';
+import type { ButtonClickEventDetail } from '@ui5/webcomponents/dist/Button.js';
 import clsx from 'clsx';
 import './Button.css';
 
@@ -19,9 +22,7 @@ export interface ButtonProps {
   /** Whether button is in loading state */
   loading?: boolean;
   /** Click handler */
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  /** Button type */
-  type?: 'button' | 'submit' | 'reset';
+  onClick?: (event: Ui5CustomEvent<ButtonDomRef, ButtonClickEventDetail>) => void;
   /** Additional CSS classes */
   className?: string;
   /** Icon to display before text */
@@ -35,7 +36,7 @@ export interface ButtonProps {
 const variantToDesignMap: Record<ButtonVariant, ButtonDesign> = {
   primary: ButtonDesign.Emphasized,
   secondary: ButtonDesign.Default,
-  tertiary: ButtonDesign.Outlined,
+  tertiary: ButtonDesign.Transparent,
   danger: ButtonDesign.Negative,
   ghost: ButtonDesign.Transparent,
 };
@@ -47,7 +48,6 @@ export const Button: React.FC<ButtonProps> = ({
   disabled = false,
   loading = false,
   onClick,
-  type = 'button',
   className,
   icon,
   fullWidth = false,

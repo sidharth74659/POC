@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import toast, { Toaster, Toast as HotToast } from 'react-hot-toast';
 import { CheckCircle, AlertCircle, XCircle, Info, X } from 'lucide-react';
 import clsx from 'clsx';

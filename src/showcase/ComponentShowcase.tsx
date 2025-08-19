@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, Pause, Settings, Download, Share2, Heart } from 'lucide-react';
+import { Settings, Download, Share2, Heart } from 'lucide-react';
 import { Button, Card, SkeletonLoader, useToast, ThemeToggle } from '../components';
 import './ComponentShowcase.css';
 

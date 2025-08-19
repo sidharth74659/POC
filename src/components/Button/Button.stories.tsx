@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import { Download, Heart, Settings } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { Button } from './Button';
 
 const meta: Meta<typeof Button> = {
