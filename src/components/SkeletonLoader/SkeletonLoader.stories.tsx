@@ -78,7 +78,7 @@ export const Button: Story = {
   },
 };
 
-export const Card: Story = {
+export const CardSkeleton: Story = {
   args: {
     variant: 'card',
   },
