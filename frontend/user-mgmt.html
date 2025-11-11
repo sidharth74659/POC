@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Unified Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .users-list {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .user-item {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .user-item h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .user-item p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .user-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #999;
+            flex-wrap: wrap;
+        }
+
+        .roles {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .role-badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 User Management</h1>
+            <div class="actions">
+                <button class="btn-secondary" onclick="window.location.href='index.html'">← Back to Dashboard</button>
+            </div>
+        </div>
+
+        <div class="error" id="errorMessage"></div>
+        <div class="success" id="successMessage"></div>
+
+        <div class="form-section" id="assignRoleSection" style="display: none;">
+            <h2>Assign Role to User</h2>
+            <form id="assignRoleElement">
+                <div class="form-group">
+                    <label for="userId">User ID</label>
+                    <input type="text" id="userId" name="userId" required placeholder="e.g., user-001">
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <input type="text" id="role" name="role" required placeholder="e.g., admin, manager, user">
+                </div>
+                <div class="actions">
+                    <button type="submit" class="btn-primary">Assign Role</button>
+                    <button type="button" class="btn-secondary" onclick="hideAssignRole()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="users-list">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2>Users in Tenant</h2>
+                <button class="btn-primary" onclick="showAssignRole()">+ Assign Role</button>
+            </div>
+            <div id="usersContainer">
+                <p>Loading users...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api/v1';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadUsers();
+        });
+
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function getAuthHeaders() {
+            const token = localStorage.getItem('token');
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+        }
+
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/users`, {
+                    headers: getAuthHeaders()
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load users');
+                }
+
+                displayUsers(data.data || []);
+            } catch (error) {
+                showError(error.message);
+                document.getElementById('usersContainer').innerHTML = 
+                    `<p style="color: #c33;">Error loading users: ${error.message}</p>`;
+            }
+        }
+
+        function displayUsers(users) {
+            const container = document.getElementById('usersContainer');
+            
+            if (users.length === 0) {
+                container.innerHTML = '<p>No users found.</p>';
+                return;
+            }
+
+            container.innerHTML = users.map(user => `
+                <div class="user-item">
+                    <h3>${user.firstName} ${user.lastName}</h3>
+                    <p>${user.email}</p>
+                    <div class="user-meta">
+                        <span>ID: ${user.userId}</span>
+                        <span>Status: ${user.status}</span>
+                        <span>Created: ${new Date(user.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    ${user.roles && user.roles.length > 0 ? `
+                        <div class="roles">
+                            ${user.roles.map(role => `<span class="role-badge">${role}</span>`).join('')}
+                        </div>
+                    ` : '<p style="color: #999; font-size: 12px; margin-top: 10px;">No roles assigned</p>'}
+                </div>
+            `).join('');
+        }
+
+        function showAssignRole() {
+            document.getElementById('assignRoleSection').style.display = 'block';
+        }
+
+        function hideAssignRole() {
+            document.getElementById('assignRoleSection').style.display = 'none';
+            document.getElementById('assignRoleElement').reset();
+        }
+
+        document.getElementById('assignRoleElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userId = document.getElementById('userId').value;
+            const role = document.getElementById('role').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/${userId}/assign-role`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ role })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to assign role');
+                }
+
+                showSuccess('Role assigned successfully!');
+                hideAssignRole();
+                loadUsers();
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => errorDiv.classList.remove('show'), 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.add('show');
+            setTimeout(() => successDiv.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
+

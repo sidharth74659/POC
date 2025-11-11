@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: unified-platform-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - unified-platform-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: unified-platform-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - unified-platform-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: unified-platform-backend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      MONGODB_URI: mongodb://admin:admin123@mongo:27017/unified-platform?authSource=admin
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      KEYCLOAK_URL: http://localhost:8080
+      KEYCLOAK_REALM: unified-platform
+    volumes:
+      - ./backend:/app
+      - ./frontend:/app/frontend
+      - /app/node_modules
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - unified-platform-network
+    restart: unless-stopped
+
+volumes:
+  mongo-data:
+  redis-data:
+
+networks:
+  unified-platform-network:
+    driver: bridge
+

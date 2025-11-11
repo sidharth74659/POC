@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization - Unified Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            background: #667eea;
+            color: white;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .json-view {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Data Visualization</h1>
+            <div>
+                <button onclick="window.location.href='index.html'">← Back to Dashboard</button>
+                <button onclick="loadData()" style="margin-left: 10px;">🔄 Refresh</button>
+            </div>
+        </div>
+
+        <div id="errorMessage" style="display: none;"></div>
+
+        <div id="statsContainer"></div>
+
+        <div class="section">
+            <h2>MongoDB Data</h2>
+            <div id="mongoData"></div>
+        </div>
+
+        <div class="section">
+            <h2>Redis Data</h2>
+            <div id="redisData"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api/v1';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadData();
+        });
+
+        async function loadData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/data/visualize`);
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to load data');
+                }
+
+                displayData(result.data);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function displayData(data) {
+            // Display stats
+            const stats = calculateStats(data);
+            displayStats(stats);
+
+            // Display MongoDB data
+            displayMongoData(data.mongodb);
+
+            // Display Redis data
+            displayRedisData(data.redis);
+        }
+
+        function calculateStats(data) {
+            return {
+                tenants: data.mongodb.tenants?.length || 0,
+                users: data.mongodb.users?.length || 0,
+                forms: data.mongodb.forms?.length || 0,
+                workOrders: data.mongodb.workOrders?.length || 0,
+                roles: data.mongodb.roles?.length || 0,
+                redisKeys: data.redis.totalKeys || 0
+            };
+        }
+
+        function displayStats(stats) {
+            const container = document.getElementById('statsContainer');
+            container.innerHTML = `
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3>Tenants</h3>
+                        <div class="value">${stats.tenants}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Users</h3>
+                        <div class="value">${stats.users}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Forms</h3>
+                        <div class="value">${stats.forms}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Work Orders</h3>
+                        <div class="value">${stats.workOrders}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Roles</h3>
+                        <div class="value">${stats.roles}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Redis Keys</h3>
+                        <div class="value">${stats.redisKeys}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayMongoData(mongoData) {
+            const container = document.getElementById('mongoData');
+            
+            if (mongoData.error) {
+                container.innerHTML = `<div class="error">Error: ${mongoData.error}</div>`;
+                return;
+            }
+
+            let html = '';
+
+            // Tenants table
+            if (mongoData.tenants && mongoData.tenants.length > 0) {
+                html += '<h3 style="margin-top: 20px; margin-bottom: 10px;">Tenants</h3>';
+                html += '<table><thead><tr><th>Tenant ID</th><th>Name</th><th>Subdomain</th><th>Status</th><th>Created</th></tr></thead><tbody>';
+                mongoData.tenants.forEach(t => {
+                    html += `<tr>
+                        <td>${t.tenantId}</td>
+                        <td>${t.name}</td>
+                        <td>${t.subdomain}</td>
+                        <td><span class="badge badge-${t.status === 'active' ? 'success' : 'warning'}">${t.status}</span></td>
+                        <td>${new Date(t.createdAt).toLocaleString()}</td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+            }
+
+            // Users table
+            if (mongoData.users && mongoData.users.length > 0) {
+                html += '<h3 style="margin-top: 20px; margin-bottom: 10px;">Users</h3>';
+                html += '<table><thead><tr><th>User ID</th><th>Tenant ID</th><th>Email</th><th>Name</th><th>Roles</th><th>Status</th></tr></thead><tbody>';
+                mongoData.users.forEach(u => {
+                    html += `<tr>
+                        <td>${u.userId}</td>
+                        <td>${u.tenantId}</td>
+                        <td>${u.email}</td>
+                        <td>${u.firstName} ${u.lastName}</td>
+                        <td>${u.roles?.join(', ') || 'None'}</td>
+                        <td><span class="badge badge-${u.status === 'active' ? 'success' : 'warning'}">${u.status}</span></td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+            }
+
+            // Forms table
+            if (mongoData.forms && mongoData.forms.length > 0) {
+                html += '<h3 style="margin-top: 20px; margin-bottom: 10px;">Forms</h3>';
+                html += '<table><thead><tr><th>Form ID</th><th>Tenant ID</th><th>Title</th><th>Status</th><th>Created By</th></tr></thead><tbody>';
+                mongoData.forms.forEach(f => {
+                    html += `<tr>
+                        <td>${f.formId}</td>
+                        <td>${f.tenantId}</td>
+                        <td>${f.title}</td>
+                        <td><span class="badge badge-info">${f.status}</span></td>
+                        <td>${f.createdBy}</td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+            }
+
+            // Work Orders table
+            if (mongoData.workOrders && mongoData.workOrders.length > 0) {
+                html += '<h3 style="margin-top: 20px; margin-bottom: 10px;">Work Orders</h3>';
+                html += '<table><thead><tr><th>Work Order ID</th><th>Tenant ID</th><th>Title</th><th>Status</th><th>Priority</th><th>Assigned To</th></tr></thead><tbody>';
+                mongoData.workOrders.forEach(wo => {
+                    html += `<tr>
+                        <td>${wo.workOrderId}</td>
+                        <td>${wo.tenantId}</td>
+                        <td>${wo.title}</td>
+                        <td><span class="badge badge-info">${wo.status}</span></td>
+                        <td><span class="badge badge-warning">${wo.priority}</span></td>
+                        <td>${wo.assignedTo || 'Unassigned'}</td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+            }
+
+            // Roles table
+            if (mongoData.roles && mongoData.roles.length > 0) {
+                html += '<h3 style="margin-top: 20px; margin-bottom: 10px;">Roles</h3>';
+                html += '<table><thead><tr><th>Role ID</th><th>Tenant ID</th><th>Name</th><th>Permissions</th></tr></thead><tbody>';
+                mongoData.roles.forEach(r => {
+                    html += `<tr>
+                        <td>${r.roleId}</td>
+                        <td>${r.tenantId}</td>
+                        <td>${r.name}</td>
+                        <td>${r.permissions?.join(', ') || 'None'}</td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+            }
+
+            if (!html) {
+                html = '<p>No MongoDB data available.</p>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        function displayRedisData(redisData) {
+            const container = document.getElementById('redisData');
+            
+            if (redisData.error) {
+                container.innerHTML = `<div class="error">Error: ${redisData.error}</div>`;
+                return;
+            }
+
+            if (!redisData.keys || Object.keys(redisData.keys).length === 0) {
+                container.innerHTML = '<p>No Redis keys found.</p>';
+                return;
+            }
+
+            let html = `<p><strong>Total Keys:</strong> ${redisData.totalKeys}</p>`;
+            html += '<table><thead><tr><th>Key</th><th>Type</th><th>Value</th><th>TTL (seconds)</th></tr></thead><tbody>';
+
+            Object.entries(redisData.keys).forEach(([key, data]) => {
+                let valueDisplay = '';
+                if (typeof data.value === 'object') {
+                    valueDisplay = JSON.stringify(data.value, null, 2);
+                } else {
+                    valueDisplay = String(data.value);
+                }
+
+                html += `<tr>
+                    <td><code>${key}</code></td>
+                    <td><span class="badge badge-info">${data.type}</span></td>
+                    <td><div class="json-view">${escapeHtml(valueDisplay)}</div></td>
+                    <td>${data.ttl > 0 ? data.ttl : 'No expiry'}</td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = `Error: ${message}`;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+

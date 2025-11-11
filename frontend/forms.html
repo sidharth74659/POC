@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Forms - Unified Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .forms-list {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-item {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .form-item h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .form-item p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .form-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status.draft {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.published {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.archived {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Digital Forms</h1>
+            <div class="actions">
+                <button class="btn-secondary" onclick="window.location.href='index.html'">← Back to Dashboard</button>
+                <button class="btn-primary" onclick="showCreateForm()">+ Create Form</button>
+            </div>
+        </div>
+
+        <div class="error" id="errorMessage"></div>
+        <div class="success" id="successMessage"></div>
+
+        <div class="form-section" id="createFormSection" style="display: none;">
+            <h2>Create New Form</h2>
+            <form id="createFormElement">
+                <div class="form-group">
+                    <label for="formId">Form ID</label>
+                    <input type="text" id="formId" name="formId" required placeholder="e.g., form-001">
+                </div>
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required placeholder="Form Title">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3" placeholder="Form Description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+                <div class="actions">
+                    <button type="submit" class="btn-primary">Create Form</button>
+                    <button type="button" class="btn-secondary" onclick="hideCreateForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="forms-list">
+            <h2>All Forms</h2>
+            <div id="formsContainer">
+                <p>Loading forms...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api/v1';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadForms();
+        });
+
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function getAuthHeaders() {
+            const token = localStorage.getItem('token');
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+        }
+
+        async function loadForms() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/forms`, {
+                    headers: getAuthHeaders()
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load forms');
+                }
+
+                displayForms(data.data || []);
+            } catch (error) {
+                showError(error.message);
+                document.getElementById('formsContainer').innerHTML = 
+                    `<p style="color: #c33;">Error loading forms: ${error.message}</p>`;
+            }
+        }
+
+        function displayForms(forms) {
+            const container = document.getElementById('formsContainer');
+            
+            if (forms.length === 0) {
+                container.innerHTML = '<p>No forms found. Create your first form!</p>';
+                return;
+            }
+
+            container.innerHTML = forms.map(form => `
+                <div class="form-item">
+                    <h3>${form.title}</h3>
+                    <p>${form.description || 'No description'}</p>
+                    <div class="form-meta">
+                        <span>ID: ${form.formId}</span>
+                        <span class="status ${form.status}">${form.status}</span>
+                        <span>Created: ${new Date(form.createdAt).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showCreateForm() {
+            document.getElementById('createFormSection').style.display = 'block';
+        }
+
+        function hideCreateForm() {
+            document.getElementById('createFormSection').style.display = 'none';
+            document.getElementById('createFormElement').reset();
+        }
+
+        document.getElementById('createFormElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                formId: document.getElementById('formId').value,
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                status: document.getElementById('status').value,
+                fields: []
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/forms`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to create form');
+                }
+
+                showSuccess('Form created successfully!');
+                hideCreateForm();
+                loadForms();
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => errorDiv.classList.remove('show'), 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.add('show');
+            setTimeout(() => successDiv.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
+

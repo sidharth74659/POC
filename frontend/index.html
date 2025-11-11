@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Platform - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.show {
+            display: block;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header h2 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .dashboard-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .tiles {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .tile {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+        }
+
+        .tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .tile h3 {
+            margin-bottom: 8px;
+            font-size: 20px;
+        }
+
+        .tile p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            margin-top: 20px;
+            background: #e74c3c;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Form -->
+        <div id="loginForm">
+            <h1>Unified Platform</h1>
+            <p class="subtitle">Multi-Tenant SaaS Platform</p>
+            
+            <div class="error" id="errorMessage"></div>
+            
+            <form id="loginFormElement">
+                <div class="form-group" id="tenantIdGroup" style="display: none;">
+                    <label for="tenantId">Tenant ID</label>
+                    <input type="text" id="tenantId" name="tenantId" placeholder="e.g., tenant-001">
+                    <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">Auto-detected from subdomain if available</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="user@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+                
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboard">
+            <div class="dashboard-header">
+                <h2>Welcome to Dashboard</h2>
+                <p id="userInfo"></p>
+            </div>
+            
+            <div class="tiles">
+                <div class="tile" onclick="navigateTo('forms.html')">
+                    <h3>📋 Digital Forms</h3>
+                    <p>Create and manage digital forms</p>
+                </div>
+                
+                <div class="tile" onclick="navigateTo('maintenance.html')">
+                    <h3>🔧 Maintenance</h3>
+                    <p>Manage work orders and maintenance tasks</p>
+                </div>
+                
+                <div class="tile" onclick="navigateTo('user-mgmt.html')">
+                    <h3>👥 User Management</h3>
+                    <p>Manage users and roles</p>
+                </div>
+                
+                <div class="tile" onclick="navigateTo('data-visualization.html')">
+                    <h3>📊 Data Visualization</h3>
+                    <p>View all MongoDB and Redis data</p>
+                </div>
+            </div>
+            
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api/v1';
+
+        // Check if user is already logged in
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            if (token && user) {
+                showDashboard(JSON.parse(user));
+            }
+        });
+
+        // Auto-detect tenant from subdomain
+        function getTenantFromSubdomain() {
+            const hostname = window.location.hostname;
+            const parts = hostname.split('.');
+            if (parts.length >= 2) {
+                const subdomain = parts[0];
+                if (subdomain.startsWith('tenant') || subdomain.match(/^[a-z0-9-]+$/)) {
+                    return subdomain;
+                }
+            }
+            return null;
+        }
+
+        // Set tenant ID if detected from subdomain
+        window.addEventListener('DOMContentLoaded', () => {
+            const tenantId = getTenantFromSubdomain();
+            if (tenantId) {
+                document.getElementById('tenantId').value = tenantId;
+                document.getElementById('tenantIdGroup').style.display = 'block';
+            }
+        });
+
+        document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.classList.remove('show');
+            
+            const tenantId = document.getElementById('tenantId').value || getTenantFromSubdomain();
+            
+            const formData = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+            
+            // Only include tenantId if provided
+            if (tenantId) {
+                formData.tenantId = tenantId;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Login failed');
+                }
+
+                if (data.success && data.data.token) {
+                    localStorage.setItem('token', data.data.token);
+                    localStorage.setItem('user', JSON.stringify(data.data.user));
+                    showDashboard(data.data.user);
+                } else {
+                    throw new Error('Invalid response from server');
+                }
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.classList.add('show');
+            }
+        });
+
+        function showDashboard(user) {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('dashboard').classList.add('show');
+            document.getElementById('userInfo').textContent = 
+                `Logged in as ${user.firstName} ${user.lastName} (${user.email})`;
+        }
+
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
+

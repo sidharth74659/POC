@@ -1,0 +1,5 @@
+tunnel: 141650ac-3a3b-42e8-a953-f4a60995f067
+credentials-file: /Users/srikanthvudharapu/.cloudflared/141650ac-3a3b-42e8-a953-f4a60995f067.json
+
+ingress:
+  - service: http://localhost:3000
